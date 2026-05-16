@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Developer {
+  id           String        @id @default(uuid())
+  name         String
+  role         String
+  team         String
+  pullRequests PullRequest[]
+  issues       Issue[]
+}
+
+model PullRequest {
+  id         String    @id @default(uuid())
+  title      String
+  size       Int       // lines of code changed
+  status     String    // 'open', 'merged', 'closed'
+  createdAt  DateTime  @default(now())
+  mergedAt   DateTime?
+  
+  developerId String
+  developer   Developer @relation(fields: [developerId], references: [id])
+}
+
+model Deployment {
+  id         String    @id @default(uuid())
+  version    String
+  status     String    // 'success', 'failed'
+  deployedAt DateTime  @default(now())
+  bugs       Bug[]
+}
+
+model Issue {
+  id          String    @id @default(uuid())
+  title       String
+  type        String    // 'feature', 'bug', 'task'
+  status      String    // 'todo', 'in_progress', 'done'
+  startedAt   DateTime?
+  completedAt DateTime?
+  
+  developerId String?
+  developer   Developer? @relation(fields: [developerId], references: [id])
+}
+
+model Bug {
+  id                  String      @id @default(uuid())
+  title               String
+  severity            String      // 'low', 'medium', 'high', 'critical'
+  reportedAt          DateTime    @default(now())
+  
+  deploymentId        String?
+  relatedDeployment   Deployment? @relation(fields: [deploymentId], references: [id])
+}
