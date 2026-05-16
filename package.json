@@ -1,0 +1,13 @@
+{
+  "name": "devmetrics-platform",
+  "version": "1.0.0",
+  "description": "Engineering Intelligence Platform",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"cd backend && node server.js\" \"cd frontend && npm run dev\"",
+    "start": "cd backend && node server.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
