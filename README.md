@@ -1,46 +1,85 @@
-# Developer Workflow Intelligence Platform
+# DevMetrics — Engineering Intelligence Platform
 
-An AI-powered engineering command center built for modern teams. This platform converts raw engineering metrics into workflow intelligence, bottleneck detection, and actionable insights.
+DevMetrics is a professional engineering workflow analytics platform designed to provide real-time insights into team productivity, code quality, and deployment risks. It transforms raw engineering data into actionable intelligence through a modern, high-performance interface.
 
-## Overview
+![Dashboard Preview](https://raw.githubusercontent.com/Nathanjswamy/Developer-workflow-intelligence-/master/preview.png)
 
-Unlike standard productivity dashboards that just show numbers, this platform answers three questions:
-1. **What is happening?** (Metrics like Lead Time, Cycle Time, Bug Rate)
-2. **Why is it happening?** (AI Narrative Insights explaining bottlenecks)
-3. **What should happen next?** (Actionable recommendations)
+## ✨ Features
 
-## Tech Stack
+- **Intelligence Dashboard**: Real-time overview of core DORA metrics (Lead Time, Cycle Time, Deployment Frequency, Bug Rate).
+- **AI-Driven Insights**: Automated bottleneck detection and workflow recommendations.
+- **Developer Leaderboard**: Gamified performance tracking ranked by impact and efficiency.
+- **Code Review Queue**: Visual tracking of PR freshness with aging alerts (Fresh/Aging/Stale).
+- **Deployment Risk Meter**: Predictive risk scoring based on bug rates and deployment velocity.
+- **Advanced Analytics**: Sprint-over-sprint comparisons and lead time distribution analysis.
+- **Live Activity Stream**: Real-time team operation feed.
 
-- **Frontend:** React 18, Vite, Tailwind CSS, Framer Motion, Recharts
-- **Backend:** Node.js, Express, better-sqlite3
-- **Design:** Glassmorphism, deep dark mode, responsive layout
+## 🎨 Design System
 
-## Getting Started
+Built with a professional **White + Neon** aesthetic:
+- **Font**: Plus Jakarta Sans
+- **Palette**: Clean off-white foundation with high-contrast neon accents (Indigo, Violet, Cyan, Emerald, Red).
+- **Interactivity**: Smooth Framer Motion animations and responsive glassmorphism-inspired components.
 
-### 1. Backend Setup
+## 🛠 Tech Stack
 
-```bash
-cd backend
-npm install
-node seed.js    # Populates mock data for demoing
-node server.js  # Runs API on http://localhost:5000
-```
+### Frontend
+- **React 18** + **Vite**
+- **Tailwind CSS** (Custom Neon Design System)
+- **Framer Motion** (Animations)
+- **Recharts** (Data Visualization)
+- **Lucide React** (Iconography)
+- **Axios** (API Client)
+- **React Router 7** (Navigation)
 
-### 2. Frontend Setup
+### Backend
+- **Node.js** + **Express**
+- **SQLite** (Database)
+- **Better-SQLite3** (High-performance SQLite driver)
 
-```bash
-cd frontend
-npm install
-npm run dev     # Runs React app on http://localhost:5173
-```
+## 🚀 Getting Started
 
-## AI Heuristic Engine
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-For this MVP, the AI Engine uses a heuristic rule-based approach to detect patterns. For example:
-- **Rule:** If `deployment_frequency` decreases while `bug_rate` increases...
-- **Insight:** "Release batching detected. Larger releases are increasing regression risk."
-- **Recommendation:** "Shift to continuous deployment; break down PR sizes."
+### Installation
 
-## Design Philosophy
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Nathanjswamy/Developer-workflow-intelligence-.git
+   cd Developer-workflow-intelligence-
+   ```
 
-The UI is built to feel premium, intelligent, and highly legible. We avoid cluttered spreadsheet-style tables in favor of dynamic insight cards with smooth micro-animations.
+2. **Setup Backend**
+   ```bash
+   cd backend
+   npm install
+   # Initialize and seed the database
+   node seed.js
+   # Start the server
+   node server.js
+   ```
+
+3. **Setup Frontend**
+   ```bash
+   cd ../frontend
+   npm install
+   # Start the development server
+   npm run dev
+   ```
+
+4. **Access the App**
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 📊 API Endpoints
+
+- `GET /api/dashboard`: Core metrics and insights.
+- `GET /api/team`: Detailed engineering team performance.
+- `GET /api/leaderboard`: Ranked developer stats.
+- `GET /api/review-queue`: Open PR tracking.
+- `GET /api/analytics`: Sprint and distribution data.
+- `GET /api/activity`: Full operation history.
+
+---
+Built with ❤️ for high-performance engineering teams.
