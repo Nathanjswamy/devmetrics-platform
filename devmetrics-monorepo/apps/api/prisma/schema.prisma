@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  role      String   @default("developer")
+  githubId  String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teams             UserTeam[]
+  prs               PullRequest[] @relation("PrAuthor")
+  authoredReviews   Review[]      @relation("ReviewAuthor")
+  reviewComments    ReviewComment[] @relation("ReviewCommentAuthor")
+  requestedReviews  RequestedReviewer[]
+  commits           Commit[]
+  integrations Integration[]
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members   UserTeam[]
+  repos     Repository[]
+}
+
+model UserTeam {
+  userId String
+  teamId String
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  @@id([userId, teamId])
+}
+
+model Repository {
+  id          String   @id @default(uuid())
+  name        String
+  url         String
+  integration String   @default("github")
+  githubId    String?  @unique
+  teamId      String?
+  team        Team?    @relation(fields: [teamId], references: [id])
+  syncStatus  String   @default("idle") // idle, syncing, error
+  lastSyncedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  prs         PullRequest[]
+  commits     Commit[]
+}
+
+model PullRequest {
+  id        String   @id @default(uuid())
+  repoId    String
+  repo      Repository @relation(fields: [repoId], references: [id])
+  
+  title     String
+  status    String   // open, merged, closed
+  url       String
+  githubId  String?  @unique
+  githubCreatedAt DateTime?
+
+  authorId  String
+  author    User     @relation("PrAuthor", fields: [authorId], references: [id])
+  
+  additions Int      @default(0)
+  deletions Int      @default(0)
+
+  createdAt DateTime @default(now())
+  mergedAt  DateTime?
+  updatedAt DateTime @updatedAt
+
+  commits   Commit[]
+  reviews   Review[]
+  reviewComments ReviewComment[]
+  requestedReviewers RequestedReviewer[]
+
+  @@index([status, mergedAt])
+  @@index([githubId])
+}
+
+model Commit {
+  id        String   @id @default(uuid())
+  repoId    String
+  repo      Repository @relation(fields: [repoId], references: [id])
+  
+  message   String
+  hash      String   @unique
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  
+  pullRequestId String?
+  pullRequest   PullRequest? @relation(fields: [pullRequestId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Integration {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  provider     String   // 'github', 'gitlab', 'jira', 'linear'
+  profileId    String?  // GitHub username or ID
+  accessToken  String
+  refreshToken String?
+  connectedAt  DateTime @default(now())
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  githubId      String?  @unique
+  pullRequestId String
+  pullRequest   PullRequest @relation(fields: [pullRequestId], references: [id])
+  authorId      String
+  author        User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  state         String   // APPROVED, CHANGES_REQUESTED, COMMENTED, DISMISSED
+  body          String?
+  submittedAt   DateTime?
+  createdAt     DateTime @default(now())
+}
+
+model ReviewComment {
+  id            String   @id @default(uuid())
+  githubId      String?  @unique
+  pullRequestId String
+  pullRequest   PullRequest @relation(fields: [pullRequestId], references: [id])
+  authorId      String
+  author        User     @relation("ReviewCommentAuthor", fields: [authorId], references: [id])
+  body          String
+  createdAt     DateTime @default(now())
+}
+
+model RequestedReviewer {
+  id            String   @id @default(uuid())
+  pullRequestId String
+  pullRequest   PullRequest @relation(fields: [pullRequestId], references: [id])
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  
+  @@unique([pullRequestId, userId])
+}
+
+model Insight {
+  id             String   @id @default(uuid())
+  title          String
+  description    String
+  severity       String   // 'info', 'warning', 'critical', 'success'
+  category       String
+  affectedTeam   String?
+  confidence     Int
+  recommendation String
+  createdAt      DateTime @default(now())
+}

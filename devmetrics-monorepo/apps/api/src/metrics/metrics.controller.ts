@@ -1,0 +1,27 @@
+import { Controller, Get } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { MetricsService } from './metrics.service';
+
+@ApiTags('metrics')
+@Controller('metrics')
+export class MetricsController {
+  constructor(private readonly metricsService: MetricsService) {}
+
+  @Get('executive')
+  @ApiOperation({ summary: 'Get executive DORA metrics and health score' })
+  getExecutive() {
+    return this.metricsService.getExecutiveMetrics();
+  }
+
+  @Get('health')
+  @ApiOperation({ summary: 'Get engineering health score breakdown' })
+  getHealth() {
+    return this.metricsService.getHealthScore();
+  }
+
+  @Get('risk')
+  @ApiOperation({ summary: 'Get deployment risk assessment' })
+  getRisk() {
+    return this.metricsService.getDeploymentRisk();
+  }
+}
