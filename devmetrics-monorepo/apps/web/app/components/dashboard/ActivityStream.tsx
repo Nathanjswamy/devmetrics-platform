@@ -5,22 +5,26 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 
 const eventConfig = {
-  deploy: { Icon: Rocket, color: "#53798C", bg: "rgba(83,121,140,0.1)" }, // Blue
-  pr_merged: { Icon: GitMerge, color: "#787B4E", bg: "rgba(120,123,78,0.1)" }, // Olive
-  incident: { Icon: AlertCircle, color: "#D05A44", bg: "rgba(208,90,68,0.1)" }, // Terracotta
-  review: { Icon: Star, color: "#DE7A35", bg: "rgba(222,122,53,0.1)" }, // Orange
-  commit: { Icon: Zap, color: "#2B6B6D", bg: "rgba(43,107,109,0.1)" }, // Teal
-  alert: { Icon: Bell, color: "#D4AF37", bg: "rgba(212,175,55,0.1)" }, // Gold
+  deploy: { Icon: Rocket, color: "var(--text-primary)", bg: "var(--surface-2)" },
+  pr_merged: { Icon: GitMerge, color: "var(--text-primary)", bg: "var(--surface-2)" },
+  incident: { Icon: AlertCircle, color: "#C86A3D", bg: "rgba(200,106,61,0.05)" },
+  review: { Icon: Star, color: "var(--text-primary)", bg: "var(--surface-2)" },
+  commit: { Icon: Zap, color: "var(--text-primary)", bg: "var(--surface-2)" },
+  alert: { Icon: Bell, color: "#C86A3D", bg: "rgba(200,106,61,0.05)" },
 };
 
 function AvatarBadge({ initials }: { initials?: string }) {
   const safeInitials = initials || "?";
-  const colors = ["#53798C", "#787B4E", "#DE7A35", "#2B6B6D", "#D4AF37"];
-  const color = colors[safeInitials.charCodeAt(0) % colors.length];
+  if (safeInitials.startsWith("http")) {
+    return (
+      <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center overflow-hidden flex-shrink-0">
+        <img src={safeInitials} alt="Avatar" className="w-full h-full object-cover" />
+      </div>
+    );
+  }
   return (
     <div
-      className="w-7 h-7 rounded-sm flex items-center justify-center text-[10px] font-bold text-[#F8F6F1] flex-shrink-0"
-      style={{ background: color }}
+      className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-xs font-serif font-bold text-text-primary bg-surface flex-shrink-0"
     >
       {safeInitials}
     </div>
@@ -36,53 +40,53 @@ export function ActivityStream() {
 
   if (isLoading || !activityEvents) {
     return (
-      <div className="bauhaus-card p-5 h-full flex flex-col items-center justify-center">
+      <div className="editorial-card h-full flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-text-muted" />
       </div>
     );
   }
 
   return (
-    <div className="bauhaus-card p-5 h-full flex flex-col">
-      <div className="section-header">
+    <div className="editorial-card h-full flex flex-col">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <div className="section-title">Live Activity</div>
-          <div className="section-subtitle">Team operations feed</div>
+          <h2 className="editorial-header text-lg">Live Activity</h2>
+          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Team operations feed</div>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-none bg-[#787B4E] animate-ping" />
-          <span className="text-[10px] text-[#787B4E] font-semibold uppercase tracking-widest">Live</span>
+          <div className="w-1.5 h-1.5 rounded-full bg-accent-green" />
+          <span className="text-[10px] text-text-secondary font-semibold uppercase tracking-widest">Live</span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto space-y-1 -mr-1 pr-1" style={{ maxHeight: "320px" }}>
+      <div className="flex-1 overflow-y-auto space-y-4 -mr-1 pr-1" style={{ maxHeight: "360px" }}>
         {activityEvents.map((event, i) => {
           const cfg = eventConfig[event.type];
           const EventIcon = cfg.Icon;
           return (
             <div
               key={event.id}
-              className="flex items-start gap-2.5 p-2.5 rounded-xl transition-all duration-200 hover:bg-surface-3 cursor-default group"
+              className="flex items-start gap-4 pb-4 border-b border-border last:border-0"
             >
               <AvatarBadge initials={event.actorAvatar} />
               <div className="flex-1 min-w-0">
-                <div className="flex items-start gap-1.5">
+                <div className="flex items-start gap-2">
                   <div
-                    className="w-5 h-5 rounded-none flex items-center justify-center flex-shrink-0 mt-0.5"
+                    className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
                     style={{ background: cfg.bg }}
                   >
-                    <EventIcon size={11} style={{ color: cfg.color }} />
+                    <EventIcon size={10} style={{ color: cfg.color }} />
                   </div>
-                  <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-2 group-hover:text-text-primary transition-colors">
-                    <span className="font-semibold text-text-primary">{event.actor}</span>{" "}
+                  <p className="text-sm text-text-secondary leading-relaxed">
+                    <span className="font-semibold text-text-primary mr-1">{event.actor}</span>
                     {event.message}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 mt-1 ml-6">
+                <div className="flex items-center gap-3 mt-2 ml-7">
                   {event.repo && (
-                    <span className="text-[10px] text-[#53798C] font-mono font-bold">{event.repo}</span>
+                    <span className="text-xs text-text-primary font-mono">{event.repo}</span>
                   )}
-                  <span className="text-[10px] text-text-muted">{event.timestamp}</span>
+                  <span className="text-xs text-text-muted font-mono">{event.timestamp}</span>
                 </div>
               </div>
             </div>

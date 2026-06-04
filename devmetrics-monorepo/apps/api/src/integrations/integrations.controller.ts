@@ -20,12 +20,13 @@ export class IntegrationsController {
   async githubCallback(@Query('code') code: string, @Query('state') state: string, @Res() res: Response) {
     try {
       await this.service.handleGithubCallback(code, state);
-      
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      return res.redirect(`${frontendUrl}/integrations/github`);
+      const frontendUrl = process.env.FRONTEND_URL;
+      if (!frontendUrl) throw new Error('FRONTEND_URL is not configured');
+      return res.redirect(`${frontendUrl}/integrations/github?success=true`);
     } catch (error) {
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      return res.redirect(`${frontendUrl}/integrations?error=oauth_failed`);
+      console.error('OAuth callback failed', error);
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000'; // Keep localhost as fallback only for local error state if needed, but ideally throw
+      return res.redirect(`${frontendUrl}/integrations/github?error=oauth_failed`);
     }
   }
 

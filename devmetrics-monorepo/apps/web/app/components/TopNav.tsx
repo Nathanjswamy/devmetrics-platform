@@ -21,30 +21,20 @@ export function TopNav({ title, subtitle }: TopNavProps) {
 
   return (
     <header
-      className="sticky top-0 z-30 flex items-center justify-between px-6 h-14"
-      style={{
-        background: "rgba(248, 246, 241, 0.85)",
-        borderBottom: "2px solid var(--text-primary)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
+      className="sticky top-0 z-30 flex items-center justify-between px-8 h-16 bg-bg border-b border-border"
     >
       {/* Left: Page title */}
       <div>
-        <h1 className="text-base font-extrabold tracking-widest uppercase text-text-primary">{title}</h1>
-        {subtitle && <p className="text-[11px] font-medium text-text-secondary mt-0.5">{subtitle}</p>}
+        <h1 className="text-xl font-serif font-bold text-text-primary">{title}</h1>
+        {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}
       </div>
 
       {/* Right: Controls */}
       <div className="flex items-center gap-3">
         {/* Search */}
         <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-muted cursor-pointer transition-all duration-200 hover:border-border-bright"
-          style={{
-            background: "var(--surface-2)",
-            border: "1px solid var(--border)",
-            width: "200px",
-          }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs text-text-muted cursor-pointer transition-all duration-200 bg-surface border border-border hover:border-border-bright"
+          style={{ width: "220px" }}
         >
           <Search size={13} />
           <span>Search...</span>
@@ -55,8 +45,7 @@ export function TopNav({ title, subtitle }: TopNavProps) {
 
         {/* Date range */}
         <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-text-secondary transition-all duration-200 hover:text-text-primary hover:bg-surface-3"
-          style={{ border: "1px solid var(--border)", background: "var(--surface-2)" }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs text-text-secondary transition-all duration-200 hover:text-text-primary hover:bg-surface-2 bg-surface border border-border"
         >
           <Calendar size={13} />
           <span>Last 30 days</span>
@@ -66,17 +55,16 @@ export function TopNav({ title, subtitle }: TopNavProps) {
         {/* Refresh */}
         <button
           onClick={handleRefresh}
-          className="flex items-center justify-center w-8 h-8 rounded-lg text-text-muted transition-all duration-200 hover:text-text-primary hover:bg-surface-3"
-          style={{ border: "1px solid var(--border)", background: "var(--surface-2)" }}
+          className="flex items-center justify-center w-8 h-8 rounded-sm text-text-muted transition-all duration-200 hover:text-text-primary hover:bg-surface-2 bg-surface border border-border"
           title="Refresh data"
         >
-          <RefreshCw size={13} className={isRefreshing ? "animate-spin text-indigo-400" : ""} />
+          <RefreshCw size={13} className={isRefreshing ? "animate-spin text-accent-green" : ""} />
         </button>
 
         {/* Live indicator */}
-        <div className="flex items-center gap-1.5">
-          <div className="status-dot-green w-1.5 h-1.5" />
-          <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wide">Live</span>
+        <div className="flex items-center gap-1.5 ml-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent-green" />
+          <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wide">Live</span>
         </div>
       </div>
     </header>

@@ -52,18 +52,18 @@ export function SparklineChart() {
 
   if (isLoading || !sprintData) {
     return (
-      <div className="bauhaus-card p-5 h-full flex flex-col items-center justify-center">
+      <div className="editorial-card h-full flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-text-muted" />
       </div>
     );
   }
 
   return (
-    <div className="bauhaus-card p-5 h-full">
-      <div className="section-header">
+    <div className="editorial-card h-full">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <div className="section-title">Sprint Performance</div>
-          <div className="section-subtitle">Last 6 sprints · Story points & delivery</div>
+          <h2 className="editorial-header text-lg">Sprint Performance</h2>
+          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Last 6 sprints</div>
         </div>
         <div
           className="flex rounded-xl overflow-hidden"
@@ -73,10 +73,9 @@ export function SparklineChart() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className="px-3 py-1.5 text-xs font-semibold transition-all duration-200"
+              className={`px-4 py-1 text-xs font-semibold uppercase tracking-wider ${activeTab === tab ? "text-text-primary" : "text-text-muted hover:text-text-secondary"}`}
               style={{
-                background: activeTab === tab ? "rgba(43,107,109,0.1)" : "var(--surface-2)",
-                color: activeTab === tab ? "#2B6B6D" : "var(--text-muted)",
+                borderBottom: activeTab === tab ? "2px solid var(--text-primary)" : "2px solid transparent"
               }}
             >
               {tab === "velocity" ? "Velocity" : "Lead Time"}
@@ -88,8 +87,8 @@ export function SparklineChart() {
       <div style={{ height: "220px" }}>
         {activeTab === "velocity" ? (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={sprintData} barGap={4} barCategoryGap="30%">
-              <CartesianGrid strokeDasharray="3 3" stroke="#D5CEBC" vertical={false} />
+            <BarChart data={sprintData} barGap={8} barCategoryGap="25%">
+              <CartesianGrid strokeDasharray="1 3" stroke="var(--border)" vertical={false} />
               <XAxis
                 dataKey="sprint"
                 tick={{ fill: "#8C867A", fontSize: 10 }}
@@ -98,7 +97,7 @@ export function SparklineChart() {
                 tickFormatter={(v) => v.replace("Sprint ", "S")}
               />
               <YAxis
-                tick={{ fill: "#8C867A", fontSize: 10 }}
+                tick={{ fill: "var(--text-muted)", fontSize: 11, fontFamily: "Inter" }}
                 axisLine={false}
                 tickLine={false}
                 width={28}
@@ -108,9 +107,8 @@ export function SparklineChart() {
                 wrapperStyle={{ fontSize: "11px", paddingTop: "8px" }}
                 formatter={(v) => <span style={{ color: "#5C584E" }}>{v}</span>}
               />
-              <Bar dataKey="planned" name="Planned" fill="#DFD8C8" radius={[0, 0, 0, 0]} />
-              <Bar dataKey="completed" name="Completed" fill="#2B6B6D" radius={[0, 0, 0, 0]}>
-              </Bar>
+              <Bar dataKey="planned" name="Planned" fill="var(--border-bright)" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="completed" name="Completed" fill="var(--text-primary)" radius={[0, 0, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         ) : (
@@ -118,11 +116,11 @@ export function SparklineChart() {
             <AreaChart data={sprintData}>
               <defs>
                 <linearGradient id="leadTimeGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#DE7A35" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="#DE7A35" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#C86A3D" stopOpacity={0.15} />
+                  <stop offset="100%" stopColor="#C86A3D" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#D5CEBC" vertical={false} />
+              <CartesianGrid strokeDasharray="1 3" stroke="var(--border)" vertical={false} />
               <XAxis
                 dataKey="sprint"
                 tick={{ fill: "#8C867A", fontSize: 10 }}
@@ -131,7 +129,7 @@ export function SparklineChart() {
                 tickFormatter={(v) => v.replace("Sprint ", "S")}
               />
               <YAxis
-                tick={{ fill: "#8C867A", fontSize: 10 }}
+                tick={{ fill: "var(--text-muted)", fontSize: 11, fontFamily: "Inter" }}
                 axisLine={false}
                 tickLine={false}
                 width={28}
@@ -142,11 +140,11 @@ export function SparklineChart() {
                 type="monotone"
                 dataKey="leadTime"
                 name="Lead Time (days)"
-                stroke="#DE7A35"
-                strokeWidth={2}
+                stroke="#C86A3D"
+                strokeWidth={1.5}
                 fill="url(#leadTimeGradient)"
-                dot={{ fill: "#DE7A35", strokeWidth: 0, r: 4 }}
-                activeDot={{ r: 6, fill: "#D05A44" }}
+                dot={{ fill: "var(--surface)", stroke: "#C86A3D", strokeWidth: 1.5, r: 4 }}
+                activeDot={{ r: 6, fill: "#C86A3D", stroke: "var(--surface)", strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>

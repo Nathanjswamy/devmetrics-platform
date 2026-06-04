@@ -13,7 +13,7 @@ export function HealthScoreWidget() {
 
   if (isLoading || !healthScore) {
     return (
-      <div className="bauhaus-card p-5 h-full flex flex-col items-center justify-center">
+      <div className="editorial-card h-full flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-text-muted" />
       </div>
     );
@@ -29,11 +29,11 @@ export function HealthScoreWidget() {
     s >= 85 ? "Elite" : s >= 70 ? "High" : s >= 55 ? "Medium" : "Low";
 
   return (
-    <div className="bauhaus-card p-5 h-full flex flex-col">
-      <div className="section-header">
+    <div className="editorial-card h-full flex flex-col">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <div className="section-title">Engineering Health</div>
-          <div className="section-subtitle">Composite score</div>
+          <h2 className="editorial-header text-lg">Engineering Health</h2>
+          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Composite score</div>
         </div>
         <div
           className="px-2 py-0.5 rounded-lg text-xs font-semibold"
@@ -64,7 +64,7 @@ export function HealthScoreWidget() {
             />
             {/* Background track */}
             <RadialBar
-              background={{ fill: "#DFD8C8" }} // var(--surface-3) roughly
+              background={{ fill: "var(--surface-2)" }}
               dataKey="value"
               angleAxisId={0}
               cornerRadius={0}
@@ -73,25 +73,25 @@ export function HealthScoreWidget() {
         </ResponsiveContainer>
         {/* Center overlay */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-4xl font-bold" style={{ color: scoreColor }}>
+          <span className="text-5xl font-serif" style={{ color: scoreColor }}>
             {score}
           </span>
-          <span className="text-xs text-text-muted mt-0.5">out of 100</span>
+          <span className="text-[10px] text-text-muted mt-1 uppercase tracking-widest">out of 100</span>
         </div>
       </div>
 
       {/* Dimension bars */}
-      <div className="mt-4 space-y-2.5">
+      <div className="mt-8 space-y-4">
         {healthScore.dimensions.map((dim) => (
-          <div key={dim.label} className="flex items-center gap-3">
-            <div className="w-20 text-[11px] text-text-muted truncate">{dim.label}</div>
-            <div className="flex-1 h-2 rounded-none" style={{ background: "var(--surface-3)" }}>
+          <div key={dim.label} className="flex items-center gap-4">
+            <div className="w-24 text-xs text-text-secondary font-medium tracking-wide uppercase">{dim.label}</div>
+            <div className="flex-1 h-[2px]" style={{ background: "var(--border)" }}>
               <div
-                className="h-full rounded-none transition-all duration-1000"
+                className="h-full transition-all duration-1000"
                 style={{ width: `${dim.score}%`, background: scoreColor }}
               />
             </div>
-            <div className="w-7 text-[11px] font-semibold text-text-secondary text-right">
+            <div className="w-8 text-xs font-serif font-semibold text-text-primary text-right">
               {dim.score}
             </div>
           </div>

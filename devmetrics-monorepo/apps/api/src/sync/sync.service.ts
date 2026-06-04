@@ -52,7 +52,7 @@ export class SyncService implements OnModuleInit {
     
     try {
       // 1. Sync Repositories
-      const { data: repos } = await octokit.repos.listForAuthenticatedUser({ sort: 'updated', per_page: 5 });
+      const { data: repos } = await octokit.repos.listForAuthenticatedUser({ sort: 'updated', per_page: 100 });
       
       for (const repo of repos) {
         const dbRepo = await this.db.repository.upsert({
@@ -81,7 +81,6 @@ export class SyncService implements OnModuleInit {
           });
 
           for (const pr of prs) {
-            // Find or create PR author
             let authorId: string | null = null;
             if (pr.user) {
               let author = await this.db.user.findFirst({ where: { githubId: pr.user.id.toString() } });
@@ -97,6 +96,14 @@ export class SyncService implements OnModuleInit {
                 });
               }
               authorId = author.id;
+            } else {
+              let unknownUser = await this.db.user.findFirst({ where: { githubId: 'unknown' } });
+              if (!unknownUser) {
+                unknownUser = await this.db.user.create({
+                  data: { email: 'unknown@github.com', name: 'Unknown User', githubId: 'unknown', avatar: '' }
+                });
+              }
+              authorId = unknownUser.id;
             }
 
             const dbPr = await this.db.pullRequest.upsert({
@@ -113,7 +120,7 @@ export class SyncService implements OnModuleInit {
                 title: pr.title,
                 url: pr.html_url,
                 status: pr.state === 'open' ? 'fresh' : (pr.merged_at ? 'merged' : 'closed'),
-                authorId: authorId || 'unknown',
+                authorId: authorId,
                 githubCreatedAt: new Date(pr.created_at),
                 mergedAt: pr.merged_at ? new Date(pr.merged_at) : null,
               }

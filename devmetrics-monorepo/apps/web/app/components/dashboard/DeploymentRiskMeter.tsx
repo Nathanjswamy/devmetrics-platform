@@ -19,7 +19,7 @@ export function DeploymentRiskMeter() {
 
   if (isLoading || !deploymentRisk) {
     return (
-      <div className="bauhaus-card p-5 h-full flex flex-col items-center justify-center">
+      <div className="editorial-card h-full flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-text-muted" />
       </div>
     );
@@ -35,11 +35,11 @@ export function DeploymentRiskMeter() {
   const offset = circumference * (1 - score / 100);
 
   return (
-    <div className="bauhaus-card p-5 h-full flex flex-col">
-      <div className="section-header">
+    <div className="editorial-card h-full flex flex-col">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="section-title">Deployment Risk</div>
-          <div className="section-subtitle">Next 24h prediction</div>
+          <h2 className="editorial-header text-lg">Deployment Risk</h2>
+          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Next 24h prediction</div>
         </div>
         <div
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold"
@@ -58,17 +58,15 @@ export function DeploymentRiskMeter() {
             <path
               d="M 10 70 A 60 60 0 0 1 130 70"
               fill="none"
-              stroke="#DFD8C8" // var(--surface-3)
-              strokeWidth="12"
-              strokeLinecap="square" // Bauhaus sharp ends
+              stroke="var(--border)"
+              strokeWidth="2"
             />
             {/* Score fill */}
             <path
               d="M 10 70 A 60 60 0 0 1 130 70"
               fill="none"
               stroke={cfg.color}
-              strokeWidth="12"
-              strokeLinecap="square"
+              strokeWidth="4"
               strokeDasharray={`${circumference * (score / 100)} ${circumference}`}
             />
             {/* Score markers */}
@@ -82,11 +80,11 @@ export function DeploymentRiskMeter() {
               );
             })}
           </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-end pb-1">
-            <span className="text-3xl font-bold" style={{ color: cfg.color }}>
+          <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
+            <span className="text-4xl font-serif" style={{ color: cfg.color }}>
               {score}
             </span>
-            <span className="text-[10px] text-text-muted">/ 100</span>
+            <span className="text-[10px] text-text-muted tracking-widest uppercase">/ 100</span>
           </div>
         </div>
 
@@ -99,24 +97,15 @@ export function DeploymentRiskMeter() {
       </div>
 
       {/* Factors */}
-      <div className="mt-3 space-y-2.5 flex-1">
-        <div className="flex items-center gap-1 mb-2">
-          <Info size={11} className="text-text-muted" />
-          <span className="text-[10px] text-text-muted font-medium uppercase tracking-wider">Risk Factors</span>
+      <div className="mt-6 space-y-4 flex-1">
+        <div className="flex items-center gap-2 mb-4 border-b border-border pb-2">
+          <Info size={14} className="text-text-muted" />
+          <span className="text-xs text-text-primary font-medium uppercase tracking-widest">Risk Factors</span>
         </div>
         {factors.map((f) => (
           <div key={f.label} className="flex items-center justify-between">
-            <span className="text-[11px] text-text-muted flex-1">{f.label}</span>
-            <span className="text-[11px] font-semibold text-text-secondary">{f.value}</span>
-            <div className="w-16 h-1 rounded-full ml-3" style={{ background: "var(--border)" }}>
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${f.weight}%`,
-                  background: f.weight > 25 ? "#F59E0B" : "#6366F1",
-                }}
-              />
-            </div>
+            <span className="text-xs text-text-secondary flex-1">{f.label}</span>
+            <span className="text-xs font-serif text-text-primary">{f.value}</span>
           </div>
         ))}
       </div>

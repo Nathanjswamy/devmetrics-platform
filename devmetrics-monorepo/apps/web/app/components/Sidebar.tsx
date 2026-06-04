@@ -47,26 +47,18 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen w-60 flex flex-col z-40"
-      style={{
-        background: "linear-gradient(180deg, #0D0E14 0%, #0A0B0F 100%)",
-        borderRight: "1px solid #1E2130",
-      }}
+      className="fixed left-0 top-0 h-screen w-60 flex flex-col z-40 bg-surface border-r border-border"
     >
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-border">
         <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center"
-          style={{
-            background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
-            boxShadow: "0 0 20px rgba(99,102,241,0.4)",
-          }}
+          className="w-8 h-8 rounded flex items-center justify-center bg-text-primary"
         >
-          <Sparkles size={16} className="text-white" />
+          <Sparkles size={16} className="text-surface" />
         </div>
         <div>
-          <div className="text-sm font-bold text-text-primary tracking-tight">DevMetrics</div>
-          <div className="text-[10px] text-text-muted font-medium uppercase tracking-widest">
+          <div className="text-lg font-serif font-bold text-text-primary tracking-tight leading-none">DevMetrics</div>
+          <div className="text-[10px] text-text-muted font-medium uppercase tracking-widest mt-0.5">
             Intelligence
           </div>
         </div>
@@ -74,12 +66,12 @@ export function Sidebar() {
 
       {/* Org selector */}
       <div
-        className="mx-4 mt-4 flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all duration-200 hover:bg-surface-3"
+        className="mx-4 mt-4 flex items-center justify-between p-2.5 rounded cursor-pointer transition-all duration-200 hover:bg-surface-3"
         style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
       >
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-            <span className="text-[10px] font-bold text-indigo-400">AC</span>
+          <div className="w-6 h-6 rounded bg-surface border border-border flex items-center justify-center">
+            <span className="text-[10px] font-bold text-text-primary">AC</span>
           </div>
           <div>
             <div className="text-xs font-semibold text-text-primary">Acme Corp</div>
@@ -112,12 +104,12 @@ export function Sidebar() {
                       <span className="flex-1">{item.label}</span>
                       {item.badge && (
                         <span
-                          className="px-1.5 py-0.5 rounded-md text-[10px] font-bold"
+                          className="px-1.5 py-0.5 rounded text-[10px] font-bold"
                           style={{
                             background: isActive
-                              ? "rgba(99,102,241,0.2)"
-                              : "rgba(139,145,179,0.1)",
-                            color: isActive ? "#818CF8" : "#8B91B3",
+                              ? "var(--text-primary)"
+                              : "var(--surface-3)",
+                            color: isActive ? "var(--surface)" : "var(--text-secondary)",
                           }}
                         >
                           {item.badge}
@@ -132,24 +124,22 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom user card */}
       <div className="p-3 border-t border-border">
         <div
-          className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all duration-200 hover:bg-surface-3"
+          className="flex items-center gap-3 p-2.5 rounded cursor-pointer transition-all duration-200 hover:bg-surface-3"
         >
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)" }}
+            className="w-8 h-8 rounded flex items-center justify-center text-xs font-bold text-surface bg-text-primary flex-shrink-0"
           >
             EM
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-semibold text-text-primary truncate">Engineering Mgr</div>
+            <div className="text-xs font-medium text-text-primary truncate">Engineering Mgr</div>
             <div className="text-[10px] text-text-muted truncate">admin@acme.com</div>
           </div>
           <div className="flex-shrink-0 relative">
             <Bell size={14} className="text-text-muted" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-accent-orange rounded-full" />
           </div>
         </div>
       </div>

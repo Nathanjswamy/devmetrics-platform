@@ -6,10 +6,10 @@ import { api } from "../../lib/api";
 import Link from "next/link";
 
 const severityConfig = {
-  info: { Icon: Info, color: "#53798C", bg: "rgba(83,121,140,0.1)", border: "rgba(83,121,140,0.25)" }, // Blue
-  warning: { Icon: AlertTriangle, color: "#DE7A35", bg: "rgba(222,122,53,0.1)", border: "rgba(222,122,53,0.25)" }, // Orange
-  critical: { Icon: XCircle, color: "#D05A44", bg: "rgba(208,90,68,0.1)", border: "rgba(208,90,68,0.25)" }, // Terracotta
-  success: { Icon: CheckCircle, color: "#787B4E", bg: "rgba(120,123,78,0.1)", border: "rgba(120,123,78,0.25)" }, // Olive
+  info: { Icon: Info, color: "var(--text-secondary)", bg: "var(--surface-2)", border: "var(--border)" },
+  warning: { Icon: AlertTriangle, color: "#C86A3D", bg: "rgba(200,106,61,0.05)", border: "#C86A3D" },
+  critical: { Icon: XCircle, color: "#0F172A", bg: "rgba(15,23,42,0.05)", border: "#0F172A" },
+  success: { Icon: CheckCircle, color: "#7A8B6F", bg: "rgba(122,139,111,0.05)", border: "#7A8B6F" },
 };
 
 export function QuickInsights() {
@@ -20,7 +20,7 @@ export function QuickInsights() {
 
   if (isLoading || !aiInsights) {
     return (
-      <div className="bauhaus-card p-5 h-full flex flex-col items-center justify-center">
+      <div className="editorial-card h-full flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-text-muted" />
       </div>
     );
@@ -29,50 +29,44 @@ export function QuickInsights() {
   const topInsights = aiInsights.slice(0, 3);
 
   return (
-    <div className="bauhaus-card p-5 h-full flex flex-col">
-      <div className="section-header">
+    <div className="editorial-card h-full flex flex-col">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <div className="section-title">AI Insights</div>
-          <div className="section-subtitle">Latest recommendations</div>
+          <h2 className="editorial-header text-lg">AI Insights</h2>
+          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Latest recommendations</div>
         </div>
         <Link
           href="/intelligence"
-          className="text-[11px] text-[#2B6B6D] hover:text-[#53798C] font-semibold transition-colors flex items-center gap-1 uppercase tracking-widest"
+          className="text-xs text-text-primary hover:text-text-secondary font-medium transition-colors flex items-center gap-1 uppercase tracking-widest"
         >
-          View all <ArrowRight size={11} />
+          View all <ArrowRight size={13} />
         </Link>
       </div>
 
-      <div className="flex-1 space-y-2.5">
+      <div className="flex-1 space-y-4">
         {topInsights.map((insight) => {
-          const cfg = severityConfig[insight.severity];
+          const cfg = severityConfig[insight.severity as keyof typeof severityConfig] || severityConfig.info;
           const Icon = cfg.Icon;
           return (
             <div
               key={insight.id}
-              className="p-3 cursor-pointer transition-transform hover:-translate-y-0.5"
+              className="p-4 transition-all hover:bg-surface-2 border border-border"
               style={{
-                background: cfg.bg,
-                border: `1px solid ${cfg.border}`,
-                borderLeft: `3px solid ${cfg.color}`,
-                borderRadius: "2px"
+                borderLeft: `2px solid ${cfg.border}`,
               }}
             >
               <div className="flex items-start gap-2">
-                <Icon size={14} style={{ color: cfg.color }} className="mt-0.5 flex-shrink-0" />
+                <Icon size={14} style={{ color: cfg.color }} className="mt-1 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-[11px] font-semibold text-text-primary line-clamp-1">
+                  <div className="text-sm font-semibold text-text-primary">
                     {insight.title}
                   </div>
-                  <div className="text-[10px] text-text-muted mt-0.5 line-clamp-2">
+                  <div className="text-xs text-text-secondary mt-1 line-clamp-2 leading-relaxed">
                     {insight.description}
                   </div>
-                  <div className="flex items-center justify-between mt-1.5">
-                    <span className="text-[10px] text-text-muted">{insight.createdAt}</span>
-                    <div
-                      className="px-1.5 py-0.5 rounded text-[10px] font-bold"
-                      style={{ background: `${cfg.color}20`, color: cfg.color }}
-                    >
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-xs font-mono text-text-muted">{insight.createdAt}</span>
+                    <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: cfg.color }}>
                       {insight.confidence}% conf.
                     </div>
                   </div>

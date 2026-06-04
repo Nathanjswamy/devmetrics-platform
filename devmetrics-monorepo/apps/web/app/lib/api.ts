@@ -1,13 +1,13 @@
 import axios from "axios";
 import type {
-  DoraMetrics,
+  DoraMetric,
   HealthScore,
   DeploymentRisk,
-  Insight,
-  PRState,
-  SprintMetrics,
+  AIInsight,
+  PullRequest,
+  SprintData,
   ActivityEvent,
-  User,
+  DeveloperMetric,
 } from "../types";
 
 const apiClient = axios.create({
@@ -18,7 +18,7 @@ const apiClient = axios.create({
 export const api = {
   metrics: {
     getExecutive: async () => {
-      const { data } = await apiClient.get<{ dora: DoraMetrics[]; classification: string; period: string }>("/metrics/executive");
+      const { data } = await apiClient.get<{ kpis: any[]; classification?: string; period?: string; hasPrData?: boolean }>("/metrics/executive");
       return data;
     },
     getHealth: async () => {
@@ -32,17 +32,17 @@ export const api = {
   },
   insights: {
     getAll: async () => {
-      const { data } = await apiClient.get<Insight[]>("/insights");
+      const { data } = await apiClient.get<AIInsight[]>("/insights");
       return data;
     },
     getCritical: async () => {
-      const { data } = await apiClient.get<Insight[]>("/insights/critical");
+      const { data } = await apiClient.get<AIInsight[]>("/insights/critical");
       return data;
     },
   },
   prs: {
     getCommandCenter: async () => {
-      const { data } = await apiClient.get<{ fresh: PRState[]; aging: PRState[]; stale: PRState[] }>("/prs/command-center");
+      const { data } = await apiClient.get<{ fresh: PullRequest[]; aging: PullRequest[]; stale: PullRequest[] }>("/prs/command-center");
       // ensure labels are parsed since they might come as strings from SQLite
       const parseLabels = (prs: any[]) => prs.map(pr => ({ ...pr, labels: typeof pr.labels === 'string' ? JSON.parse(pr.labels) : pr.labels }));
       return {
@@ -60,13 +60,13 @@ export const api = {
   },
   team: {
     getLeaderboard: async () => {
-      const { data } = await apiClient.get<User[]>("/team/leaderboard");
+      const { data } = await apiClient.get<DeveloperMetric[]>("/team/leaderboard");
       return data;
     },
   },
   analytics: {
     getSprints: async () => {
-      const { data } = await apiClient.get<SprintMetrics[]>("/analytics/sprints");
+      const { data } = await apiClient.get<SprintData[]>("/analytics/sprints");
       return data;
     },
     getLeadTime: async () => {

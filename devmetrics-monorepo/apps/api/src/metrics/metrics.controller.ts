@@ -13,6 +13,12 @@ export class MetricsController {
     return this.metricsService.getExecutiveMetrics();
   }
 
+  @Get('dna')
+  @ApiOperation({ summary: 'Get Developer DNA profile' })
+  getDNA() {
+    return this.metricsService.getDeveloperDNA();
+  }
+
   @Get('health')
   @ApiOperation({ summary: 'Get engineering health score breakdown' })
   getHealth() {

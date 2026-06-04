@@ -9,27 +9,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#F8F6F1", // Warm Ivory
-        surface: "#F4EFE6", // Soft Cream
-        "surface-2": "#EAE4D9", // Stone White / Light Sand
-        "surface-3": "#DFD8C8", // Pale Beige
-        border: "#D5CEBC", // Muted structural border
-        "border-bright": "#C2B9A6",
-        "text-primary": "#2C2A26", // Deep charcoal for readability
-        "text-secondary": "#5C584E", // Softer text
-        "text-muted": "#8C867A",
-        // Bauhaus / Picasso Accent Colors
+        background: "#FAF7F2", // Warm Ivory
+        surface: "#FFFFFF", // Pure white for cards
+        "surface-2": "#F4F0E6", // Light sand
+        "surface-3": "#EAE4D9", 
+        border: "#E2E8F0", // Clean crisp border
+        "border-bright": "#CBD5E1",
+        "text-primary": "#0F172A", // Deep Navy
+        "text-secondary": "#475569", // Softer slate
+        "text-muted": "#94A3B8",
         accent: {
-          terracotta: "#D05A44",
-          orange: "#DE7A35",
-          teal: "#2B6B6D",
-          blue: "#53798C",
-          olive: "#787B4E",
-          gold: "#D4AF37"
+          navy: "#0F172A",
+          orange: "#C86A3D", // Burnt Orange
+          green: "#7A8B6F", // Sage Green
+          gold: "#B99B5F", // Dusty Gold
         }
       },
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "Inter", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        serif: ["Playfair Display", "serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
     },
