@@ -5,7 +5,6 @@ WORKDIR /app
 
 # Copy root config files
 COPY package.json package-lock.json ./
-COPY tsconfig.json ./
 
 # Copy API workspace
 COPY apps/api ./apps/api
