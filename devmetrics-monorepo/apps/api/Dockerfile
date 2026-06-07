@@ -13,6 +13,7 @@ COPY package.json package-lock.json ./
 COPY apps/api ./apps/api
 
 # Install dependencies (workspaces support)
+RUN apk add --no-cache openssl
 RUN npm install
 
 # Generate Prisma Client
