@@ -1,5 +1,8 @@
 # Base Image
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
+
+# Install build tools for native modules (better-sqlite3)
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
@@ -20,7 +23,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Production Image
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
