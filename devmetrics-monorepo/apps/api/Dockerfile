@@ -25,6 +25,8 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
+RUN apk add --no-cache openssl
+
 # Copy built artifacts and necessary files
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
