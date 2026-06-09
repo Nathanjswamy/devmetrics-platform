@@ -6,11 +6,8 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
-# Copy root config files
-COPY package.json package-lock.json ./
-
-# Copy API workspace
-COPY apps/api ./apps/api
+# Copy the entire monorepo to support npm workspaces during install
+COPY . .
 
 # Install dependencies (workspaces support)
 RUN apk add --no-cache openssl
