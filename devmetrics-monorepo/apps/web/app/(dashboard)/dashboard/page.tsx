@@ -29,6 +29,30 @@ export default function DashboardPage() {
   }
 
   const hasPrData = data?.hasPrData ?? false;
+  const isEmpty = !data?.kpis || data.kpis.length === 0 || data.kpis.every((kpi: any) => String(kpi.value) === "0" || String(kpi.value) === "0%" || !kpi.value);
+
+  if (isEmpty) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <TopNav title="Developer Intelligence Platform" subtitle="Welcome to DevMetrics" />
+        <main className="flex-1 px-8 py-20 max-w-4xl mx-auto w-full flex flex-col items-center text-center">
+          <div className="w-24 h-24 bg-surface border border-border rounded-full flex items-center justify-center mb-8">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-muted">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4M12 8h.01" />
+            </svg>
+          </div>
+          <h2 className="text-4xl font-serif text-text-primary mb-4">Your Dashboard is Empty</h2>
+          <p className="text-xl text-text-secondary mb-10 max-w-2xl">
+            We need data to generate your engineering intelligence. Connect your GitHub account or your first repository to start generating your Developer DNA and performance metrics.
+          </p>
+          <a href="/integrations/github" className="btn-primary px-8 py-4 text-base shadow-lg shadow-border-bright/20" style={{ background: "#2B6B6D", color: "#F8F6F1" }}>
+            Connect GitHub Repository
+          </a>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

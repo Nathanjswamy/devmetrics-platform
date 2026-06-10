@@ -49,37 +49,9 @@ export function Sidebar() {
     <aside
       className="fixed left-0 top-0 h-screen w-60 flex flex-col z-40 bg-surface border-r border-border"
     >
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-border">
-        <div
-          className="w-8 h-8 rounded flex items-center justify-center bg-text-primary"
-        >
-          <Sparkles size={16} className="text-surface" />
-        </div>
-        <div>
-          <div className="text-lg font-serif font-bold text-text-primary tracking-tight leading-none">DevMetrics</div>
-          <div className="text-[10px] text-text-muted font-medium uppercase tracking-widest mt-0.5">
-            Intelligence
-          </div>
-        </div>
-      </div>
+      {/* Branding moved to TopNav */}
 
-      {/* Org selector */}
-      <div
-        className="mx-4 mt-4 flex items-center justify-between p-2.5 rounded cursor-pointer transition-all duration-200 hover:bg-surface-3"
-        style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-surface border border-border flex items-center justify-center">
-            <span className="text-[10px] font-bold text-text-primary">AC</span>
-          </div>
-          <div>
-            <div className="text-xs font-semibold text-text-primary">Acme Corp</div>
-            <div className="text-[10px] text-text-muted">Pro Plan</div>
-          </div>
-        </div>
-        <ChevronRight size={12} className="text-text-muted" />
-      </div>
+      {/* Removed Org Selector */}
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
@@ -124,25 +96,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-3 border-t border-border">
-        <div
-          className="flex items-center gap-3 p-2.5 rounded cursor-pointer transition-all duration-200 hover:bg-surface-3"
-        >
-          <div
-            className="w-8 h-8 rounded flex items-center justify-center text-xs font-bold text-surface bg-text-primary flex-shrink-0"
-          >
-            EM
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-text-primary truncate">Engineering Mgr</div>
-            <div className="text-[10px] text-text-muted truncate">admin@acme.com</div>
-          </div>
-          <div className="flex-shrink-0 relative">
-            <Bell size={14} className="text-text-muted" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-accent-orange rounded-full" />
-          </div>
-        </div>
-      </div>
+      {/* Removed Fake User Profile */}
     </aside>
   );
 }

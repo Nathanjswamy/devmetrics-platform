@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, RefreshCw, Calendar, ChevronDown } from "lucide-react";
+import { Search, RefreshCw, Calendar, ChevronDown, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -23,10 +23,20 @@ export function TopNav({ title, subtitle }: TopNavProps) {
     <header
       className="sticky top-0 z-30 flex items-center justify-between px-8 h-16 bg-bg border-b border-border"
     >
-      {/* Left: Page title */}
-      <div>
-        <h1 className="text-xl font-serif font-bold text-text-primary">{title}</h1>
-        {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}
+      {/* Left: Branding & Page title */}
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2.5 border-r border-border pr-6">
+          <div className="w-8 h-8 rounded flex items-center justify-center bg-text-primary">
+            <Sparkles size={16} className="text-surface" />
+          </div>
+          <div>
+            <div className="text-lg font-serif font-bold text-text-primary tracking-tight leading-none">DevMetrics</div>
+          </div>
+        </div>
+        <div>
+          <h1 className="text-xl font-serif font-bold text-text-primary">{title}</h1>
+          {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}
+        </div>
       </div>
 
       {/* Right: Controls */}

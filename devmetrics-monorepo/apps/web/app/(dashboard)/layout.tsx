@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { Sidebar } from "../components/Sidebar";
 import { Providers } from "../components/Providers";
+import { createClient } from "../../utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "DevMetrics — AI-Powered Engineering Intelligence",
@@ -10,11 +12,23 @@ export const metadata: Metadata = {
   keywords: ["engineering metrics", "DORA metrics", "developer productivity", "AI insights", "code review analytics"],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect("/login");
+  }
+
+  const isSetup = user.user_metadata?.onboarding_complete;
+  if (!isSetup) {
+    redirect("/onboarding");
+  }
+
   return (
     <html lang="en">
       <head>

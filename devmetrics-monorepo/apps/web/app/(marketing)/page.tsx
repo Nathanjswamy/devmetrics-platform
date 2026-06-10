@@ -20,14 +20,14 @@ export default function MarketingPage() {
 
       {/* Hero Section */}
       <main className="w-full flex-1 flex flex-col items-center text-center px-4 mt-24 mb-32">
-        <h1 className="text-5xl md:text-7xl font-serif text-text-primary tracking-tight max-w-4xl mb-6">
-          Discover your engineering identity.
+        <h1 className="text-5xl md:text-7xl font-serif text-text-primary tracking-tight max-w-4xl mb-6 leading-tight">
+          Engineering Intelligence <br /> <span className="text-[#2B6B6D]">For High-Performing Teams</span>
         </h1>
         <p className="text-lg md:text-xl text-text-secondary max-w-2xl mb-10 leading-relaxed">
-          DevMetrics analyzes your commits, reviews, and repositories to generate your unique Developer DNA. Real, actionable metrics for elite software engineers.
+          Unlock your organization's Developer DNA. Track DORA metrics, eliminate deployment bottlenecks, and supercharge your code review velocity with DevMetrics.
         </p>
-        <Link href="/login" className="btn-primary px-8 py-4 text-base flex items-center gap-2 mb-16 shadow-lg shadow-border-bright/20">
-          Connect GitHub <ArrowRight size={18} />
+        <Link href="/signup" className="btn-primary px-8 py-4 text-base flex items-center gap-2 mb-16 shadow-lg shadow-border-bright/20" style={{ background: "#2B6B6D", color: "#F8F6F1" }}>
+          Get Started for Free <ArrowRight size={18} />
         </Link>
 
         {/* Product Screenshot */}
@@ -65,9 +65,31 @@ export default function MarketingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full border-t border-border py-12 text-center text-text-muted text-sm flex flex-col items-center">
-        <div className="font-serif text-xl mb-4 text-text-primary">DevMetrics</div>
-        <p>© {new Date().getFullYear()} DevMetrics. All rights reserved.</p>
+      <footer className="w-full border-t border-border py-12 flex flex-col items-center bg-surface">
+        <div className="w-full max-w-7xl px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div className="flex flex-col">
+            <div className="font-serif text-xl mb-4 text-text-primary">DevMetrics</div>
+            <p className="text-sm text-text-muted">Empowering engineering teams with data.</p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h4 className="text-text-primary font-bold mb-2">Product</h4>
+            <Link href="/login" className="text-sm text-text-secondary hover:text-text-primary">Login</Link>
+            <Link href="/signup" className="text-sm text-text-secondary hover:text-text-primary">Sign Up</Link>
+            <Link href="/docs" className="text-sm text-text-secondary hover:text-text-primary">Documentation</Link>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h4 className="text-text-primary font-bold mb-2">Legal</h4>
+            <Link href="/terms" className="text-sm text-text-secondary hover:text-text-primary">Terms of Service</Link>
+            <Link href="/privacy" className="text-sm text-text-secondary hover:text-text-primary">Privacy Policy</Link>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h4 className="text-text-primary font-bold mb-2">Company</h4>
+            <Link href="/contact" className="text-sm text-text-secondary hover:text-text-primary">Contact Us</Link>
+          </div>
+        </div>
+        <p className="text-center text-text-muted text-sm pt-8 border-t border-border w-full max-w-7xl">
+          © {new Date().getFullYear()} DevMetrics. All rights reserved.
+        </p>
       </footer>
     </div>
   );
