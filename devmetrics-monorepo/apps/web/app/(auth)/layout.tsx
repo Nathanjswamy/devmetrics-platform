@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import "../globals.css";
 import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "DevMetrics Authentication",
@@ -15,41 +16,45 @@ export default function AuthLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-text-primary antialiased min-h-screen flex flex-col md:flex-row">
-        {/* Left Panel - Visuals */}
-        <div className="hidden md:flex flex-col justify-between w-1/2 bg-surface border-r border-border relative overflow-hidden p-12">
-          {/* Subtle gradient background */}
-          <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-gradient-to-br from-[#2B6B6D]/20 via-background to-background z-0"></div>
+      <body className="bg-background text-text-primary antialiased min-h-screen flex flex-col md:flex-row m-0 p-0 overflow-hidden">
+        {/* Left Panel - Visuals (70%) */}
+        <div className="hidden lg:flex flex-col justify-between w-[70%] bg-[#060c18] relative overflow-hidden">
+          {/* Background Hero Image */}
+          <Image 
+            src="/hero-globe.png" 
+            alt="DevMetrics Background" 
+            fill
+            className="object-cover opacity-60 z-0 mix-blend-screen"
+            priority
+          />
           
-          <div className="relative z-10 flex items-center gap-2 mb-12">
-            <div className="w-8 h-8 rounded flex items-center justify-center bg-text-primary">
-              <Sparkles size={16} className="text-surface" />
-            </div>
-            <span className="text-xl font-serif font-bold tracking-tight">DevMetrics</span>
+          {/* Dark gradient overlay to ensure text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060c18] via-[#060c18]/40 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060c18]/80 to-transparent z-10 pointer-events-none"></div>
+
+          {/* Branding Header */}
+          <div className="relative z-20 flex items-center gap-2 p-12">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="w-10 h-10 rounded flex items-center justify-center bg-white">
+                <Sparkles size={20} className="text-[#060c18]" />
+              </div>
+              <span className="text-3xl font-serif font-bold tracking-tight text-white">DevMetrics</span>
+            </Link>
           </div>
 
-          <div className="relative z-10 flex-1 flex flex-col justify-center max-w-lg">
-            <h1 className="text-4xl lg:text-5xl font-serif font-bold leading-tight mb-6">
-              Understand your engineering identity.
+          {/* Value Prop */}
+          <div className="relative z-20 p-12 pb-24 max-w-2xl">
+            <h1 className="text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6 text-white drop-shadow-lg">
+              Know Your Developer DNA.
             </h1>
-            <p className="text-lg text-text-secondary">
-              Transform commits, code reviews, and deployments into actionable insights. Join elite software engineering teams who use DevMetrics to optimize their workflows.
+            <p className="text-xl text-blue-100 font-light drop-shadow-md">
+              Transform commits, pull requests, code reviews, and deployments into actionable engineering intelligence.
             </p>
-          </div>
-
-          <div className="relative z-10 mt-12 rounded-xl overflow-hidden border border-border shadow-2xl translate-y-12 translate-x-12 opacity-80 mix-blend-lighten">
-            <Image 
-              src="/screenshot-dna.png" 
-              alt="Dashboard Preview" 
-              width={800} 
-              height={500} 
-              className="object-cover w-full h-auto"
-            />
           </div>
         </div>
 
-        {/* Right Panel - Auth Form */}
-        <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-background overflow-y-auto">
+        {/* Right Panel - Auth Form (30%) */}
+        <div className="w-full lg:w-[30%] flex items-center justify-center p-8 bg-white text-gray-900 h-screen overflow-y-auto">
           <div className="w-full max-w-sm">
             {children}
           </div>

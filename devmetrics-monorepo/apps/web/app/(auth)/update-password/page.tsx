@@ -1,8 +1,7 @@
-import { resetPassword } from "../actions";
-import Link from "next/link";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { updatePassword } from "../actions";
+import { Sparkles } from "lucide-react";
 
-export default function ForgotPasswordPage({
+export default function UpdatePasswordPage({
   searchParams,
 }: {
   searchParams: { message: string; error: string };
@@ -18,12 +17,9 @@ export default function ForgotPasswordPage({
       </div>
 
       <div className="mb-8">
-        <Link href="/login" className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 transition-colors mb-4 font-medium">
-          <ArrowLeft size={12} /> Back to login
-        </Link>
-        <h2 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">Reset Password</h2>
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">Update Password</h2>
         <p className="text-sm text-gray-500">
-          Enter your email address and we'll send you a link to reset your password.
+          Enter your new password below.
         </p>
       </div>
 
@@ -41,24 +37,38 @@ export default function ForgotPasswordPage({
 
       <form className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-            Email Address
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+            New Password
           </label>
           <input
-            id="email"
-            name="email"
-            type="email"
+            id="password"
+            name="password"
+            type="password"
             required
             className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400"
-            placeholder="you@company.com"
+            placeholder="••••••••"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+            className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400"
+            placeholder="••••••••"
           />
         </div>
 
         <button
-          formAction={resetPassword}
+          formAction={updatePassword}
           className="w-full flex items-center justify-center py-2.5 px-4 text-sm font-medium text-white transition-colors bg-[#060c18] hover:bg-[#060c18]/90 rounded-md shadow-sm mt-6"
         >
-          Send Reset Link
+          Update Password
         </button>
       </form>
     </div>
