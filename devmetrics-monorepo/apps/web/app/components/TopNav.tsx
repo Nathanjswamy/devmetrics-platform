@@ -3,7 +3,6 @@
 import { Search, RefreshCw, Calendar, ChevronDown } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Logo } from "./Logo";
 import { UserAccountMenu } from "./UserAccountMenu";
 
 interface TopNavProps {
@@ -27,9 +26,6 @@ export function TopNav({ title, subtitle }: TopNavProps) {
     >
       {/* Left: Branding & Page title */}
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2.5 border-r border-border pr-6">
-          <Logo iconOnly={true} href="/dashboard" />
-        </div>
         <div>
           <h1 className="text-xl font-serif font-bold text-text-primary">{title}</h1>
           {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}

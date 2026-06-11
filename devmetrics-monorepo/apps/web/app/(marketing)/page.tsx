@@ -3,7 +3,7 @@ import { ArrowRight, Activity, GitCommit, Shield } from "lucide-react";
 import { createClient } from "../../utils/supabase/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { Logo } from "../components/Logo";
+import { BrandLogo } from "../components/BrandLogo";
 
 export default async function MarketingPage() {
   const supabase = await createClient();
@@ -18,18 +18,15 @@ export default async function MarketingPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center">
-      <div className="bg-red-500 text-white w-full text-center py-2">
-        DEBUG PATHNAME: {currentUrl}
-      </div>
       {/* Navigation */}
       <nav className="w-full max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
-        <Logo href="/" />
+        <BrandLogo href="/" size="lg" />
         <div className="flex items-center gap-6">
           <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
             Log in
           </Link>
-          <Link href="/dashboard" className="btn-primary">
-            Go to Dashboard
+          <Link href="/signup" className="btn-primary">
+            Sign Up
           </Link>
         </div>
       </nav>
@@ -84,7 +81,7 @@ export default async function MarketingPage() {
       <footer className="w-full border-t border-border py-12 flex flex-col items-center bg-surface">
         <div className="w-full max-w-7xl px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="flex flex-col">
-            <Logo href="/" className="mb-4" />
+            <BrandLogo href="/" size="sm" className="mb-4" />
             <p className="text-sm text-text-muted mt-2">Empowering engineering teams with data.</p>
           </div>
           <div className="flex flex-col gap-2">

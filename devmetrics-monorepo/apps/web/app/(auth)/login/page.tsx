@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GitBranch, Sparkles } from "lucide-react";
 import { createClient } from "../../../utils/supabase/client";
-import { Logo } from "../../components/Logo";
+import { BrandLogo } from "../../components/BrandLogo";
 
 function LoginContent() {
   const router = useRouter();
@@ -65,7 +65,7 @@ function LoginContent() {
     <div className="w-full">
       {/* Mobile-only Header */}
       <div className="lg:hidden flex items-center justify-center mb-8">
-        <Logo href="/" />
+        <BrandLogo href="/" size="md" />
       </div>
 
       <div className="mb-8">

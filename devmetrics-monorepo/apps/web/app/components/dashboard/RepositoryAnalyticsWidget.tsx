@@ -1,21 +1,30 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { api } from "../../lib/api";
 import { Loader2, FolderGit2, Activity } from "lucide-react";
 
 export function RepositoryAnalyticsWidget() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["repoAnalytics"],
-    queryFn: async () => {
-      const res = await fetch("/api/v1/analytics/repos");
-      return res.json();
-    },
+    queryFn: api.analytics.getRepos,
   });
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
-      <div className="editorial-card h-64 flex flex-col items-center justify-center">
-        <Loader2 className="animate-spin text-text-muted" />
+      <div className="editorial-card h-64 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="animate-spin text-accent-teal w-8 h-8" />
+        <span className="text-sm font-medium text-text-muted">Loading repositories...</span>
+      </div>
+    );
+  }
+
+  if (isError || !data || data.activity.length === 0) {
+    return (
+      <div className="editorial-card h-64 flex flex-col items-center justify-center space-y-2 p-6 text-center">
+        <FolderGit2 className="text-text-muted mb-2 w-8 h-8 opacity-50" />
+        <p className="text-sm font-medium text-text-primary">No repository data available</p>
+        <p className="text-xs text-text-muted">Connect GitHub to see active projects.</p>
       </div>
     );
   }

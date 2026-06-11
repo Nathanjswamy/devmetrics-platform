@@ -73,5 +73,13 @@ export const api = {
       const { data } = await apiClient.get<{ range: string; count: number; pct: number }[]>("/analytics/lead-time");
       return data;
     },
+    getCommits: async () => {
+      const { data } = await apiClient.get<any>("/analytics/commits");
+      return data;
+    },
+    getRepos: async () => {
+      const { data } = await apiClient.get<any>("/analytics/repos");
+      return data;
+    },
   },
 };

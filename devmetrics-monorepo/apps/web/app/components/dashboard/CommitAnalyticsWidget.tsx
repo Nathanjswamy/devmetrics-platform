@@ -37,18 +37,26 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function CommitAnalyticsWidget() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["commitAnalytics"],
-    queryFn: async () => {
-      const res = await fetch("/api/v1/analytics/commits");
-      return res.json();
-    },
+    queryFn: api.analytics.getCommits,
   });
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
-      <div className="editorial-card h-64 flex items-center justify-center">
-        <Loader2 className="animate-spin text-text-muted" />
+      <div className="editorial-card h-64 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="animate-spin text-accent-green w-8 h-8" />
+        <span className="text-sm font-medium text-text-muted">Analysis in progress...</span>
+      </div>
+    );
+  }
+
+  if (isError || !data || (data.dailyActivity && data.dailyActivity.length === 0)) {
+    return (
+      <div className="editorial-card h-64 flex flex-col items-center justify-center space-y-2 p-6 text-center">
+        <GitCommit className="text-text-muted mb-2 w-8 h-8 opacity-50" />
+        <p className="text-sm font-medium text-text-primary">No commit data available</p>
+        <p className="text-xs text-text-muted">Connect GitHub or push code to begin analysis.</p>
       </div>
     );
   }

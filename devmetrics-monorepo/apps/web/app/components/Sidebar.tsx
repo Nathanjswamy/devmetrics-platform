@@ -15,7 +15,7 @@ import {
   Activity,
   Sparkles,
 } from "lucide-react";
-import { Logo } from "./Logo";
+import { BrandLogo } from "./BrandLogo";
 
 const navItems = [
   {
@@ -52,7 +52,7 @@ export function Sidebar() {
     >
       {/* Branding */}
       <div className="h-16 flex items-center px-6 border-b border-border">
-        <Logo iconOnly={true} href="/dashboard" />
+        <BrandLogo iconOnly={true} size="md" href="/dashboard" />
       </div>
 
       {/* Nav */}

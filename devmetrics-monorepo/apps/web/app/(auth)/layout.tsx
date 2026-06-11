@@ -3,7 +3,7 @@ import Image from "next/image";
 import "../globals.css";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import { Logo } from "../components/Logo";
+import { BrandLogo } from "../components/BrandLogo";
 
 export const metadata: Metadata = {
   title: "DevMetrics",
@@ -50,7 +50,7 @@ export default function AuthLayout({
 
           {/* Branding Header */}
           <div className="relative z-20 flex items-center gap-2 p-12">
-            <Logo href="/" />
+            <BrandLogo href="/" />
           </div>
 
           {/* Value Prop */}

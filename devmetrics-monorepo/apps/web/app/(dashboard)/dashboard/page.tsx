@@ -17,8 +17,6 @@ import { Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export default function DashboardPage() {
-  const pathname = usePathname();
-  console.log("DASHBOARD PAGE RENDERED AT PATHNAME:", pathname);
 
   const { data, isLoading } = useQuery({
     queryKey: ["executiveMetrics"],
@@ -34,7 +32,10 @@ export default function DashboardPage() {
   }
 
   const hasPrData = data?.hasPrData ?? false;
-  const isEmpty = !data?.kpis || data.kpis.length === 0 || data.kpis.every((kpi: any) => String(kpi.value) === "0" || String(kpi.value) === "0%" || !kpi.value);
+  const isEmpty = !data?.kpis || data.kpis.length === 0 || data.kpis.every((kpi: any) => {
+    const valStr = String(kpi.value);
+    return valStr === "0" || valStr === "0.0" || valStr === "0%" || !kpi.value;
+  });
 
   if (isEmpty) {
     return (
