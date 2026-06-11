@@ -14,7 +14,7 @@ import { DeploymentRiskMeter } from "../../components/dashboard/DeploymentRiskMe
 import { ActivityStream } from "../../components/dashboard/ActivityStream";
 import { Loader2 } from "lucide-react";
 import { RepositoryStatusPanel } from "../../components/dashboard/RepositoryStatusPanel";
-import { createClient } from "../../../../utils/supabase/client";
+import { createClient } from "../../../utils/supabase/client";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
