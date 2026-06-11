@@ -3,9 +3,23 @@ import "../globals.css";
 import { Providers } from "../components/Providers";
 
 export const metadata: Metadata = {
-  title: "DevMetrics — The Developer DNA Platform",
-  description:
-    "Transform engineering activity into your Developer DNA. Real-time intelligence for elite software engineers.",
+  title: "DevMetrics",
+  description: "Engineering Intelligence Platform",
+  openGraph: {
+    title: "DevMetrics",
+    description: "Engineering Intelligence Platform",
+    images: [{ url: "/logo-full.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevMetrics",
+    description: "Engineering Intelligence Platform",
+    images: ["/logo-full.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function MarketingLayout({

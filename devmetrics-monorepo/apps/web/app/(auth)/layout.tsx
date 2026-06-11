@@ -3,10 +3,26 @@ import Image from "next/image";
 import "../globals.css";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "../components/Logo";
 
 export const metadata: Metadata = {
-  title: "DevMetrics Authentication",
-  description: "Understand your engineering identity.",
+  title: "DevMetrics",
+  description: "Engineering Intelligence Platform",
+  openGraph: {
+    title: "DevMetrics",
+    description: "Engineering Intelligence Platform",
+    images: [{ url: "/logo-full.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevMetrics",
+    description: "Engineering Intelligence Platform",
+    images: ["/logo-full.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function AuthLayout({
@@ -34,12 +50,7 @@ export default function AuthLayout({
 
           {/* Branding Header */}
           <div className="relative z-20 flex items-center gap-2 p-12">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 rounded flex items-center justify-center bg-white">
-                <Sparkles size={20} className="text-[#060c18]" />
-              </div>
-              <span className="text-3xl font-serif font-bold tracking-tight text-white">DevMetrics</span>
-            </Link>
+            <Logo href="/" />
           </div>
 
           {/* Value Prop */}

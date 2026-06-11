@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GitBranch, Sparkles } from "lucide-react";
 import { createClient } from "../../../utils/supabase/client";
+import { Logo } from "../../components/Logo";
 
 function LoginContent() {
   const router = useRouter();
@@ -63,11 +64,8 @@ function LoginContent() {
   return (
     <div className="w-full">
       {/* Mobile-only Header */}
-      <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
-        <div className="w-8 h-8 rounded flex items-center justify-center bg-[#060c18]">
-          <Sparkles size={16} className="text-white" />
-        </div>
-        <span className="text-xl font-serif font-bold tracking-tight text-gray-900">DevMetrics</span>
+      <div className="lg:hidden flex items-center justify-center mb-8">
+        <Logo href="/" />
       </div>
 
       <div className="mb-8">

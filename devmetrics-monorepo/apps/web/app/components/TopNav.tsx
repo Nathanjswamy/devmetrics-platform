@@ -1,8 +1,10 @@
 "use client";
 
-import { Search, RefreshCw, Calendar, ChevronDown, Sparkles } from "lucide-react";
+import { Search, RefreshCw, Calendar, ChevronDown } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { Logo } from "./Logo";
+import { UserAccountMenu } from "./UserAccountMenu";
 
 interface TopNavProps {
   title: string;
@@ -26,12 +28,7 @@ export function TopNav({ title, subtitle }: TopNavProps) {
       {/* Left: Branding & Page title */}
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2.5 border-r border-border pr-6">
-          <div className="w-8 h-8 rounded flex items-center justify-center bg-text-primary">
-            <Sparkles size={16} className="text-surface" />
-          </div>
-          <div>
-            <div className="text-lg font-serif font-bold text-text-primary tracking-tight leading-none">DevMetrics</div>
-          </div>
+          <Logo iconOnly={true} href="/dashboard" />
         </div>
         <div>
           <h1 className="text-xl font-serif font-bold text-text-primary">{title}</h1>
@@ -72,10 +69,14 @@ export function TopNav({ title, subtitle }: TopNavProps) {
         </button>
 
         {/* Live indicator */}
-        <div className="flex items-center gap-1.5 ml-2">
+        <div className="flex items-center gap-1.5 ml-2 mr-2">
           <div className="w-1.5 h-1.5 rounded-full bg-accent-green" />
           <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wide">Live</span>
         </div>
+        
+        <div className="h-6 w-px bg-border hidden sm:block"></div>
+        
+        <UserAccountMenu />
       </div>
     </header>
   );

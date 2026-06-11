@@ -3,6 +3,7 @@ import { ArrowRight, Activity, GitCommit, Shield } from "lucide-react";
 import { createClient } from "../../utils/supabase/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { Logo } from "../components/Logo";
 
 export default async function MarketingPage() {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export default async function MarketingPage() {
       </div>
       {/* Navigation */}
       <nav className="w-full max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
-        <div className="font-serif text-2xl tracking-tight text-text-primary">DevMetrics</div>
+        <Logo href="/" />
         <div className="flex items-center gap-6">
           <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
             Log in
@@ -83,8 +84,8 @@ export default async function MarketingPage() {
       <footer className="w-full border-t border-border py-12 flex flex-col items-center bg-surface">
         <div className="w-full max-w-7xl px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="flex flex-col">
-            <div className="font-serif text-xl mb-4 text-text-primary">DevMetrics</div>
-            <p className="text-sm text-text-muted">Empowering engineering teams with data.</p>
+            <Logo href="/" className="mb-4" />
+            <p className="text-sm text-text-muted mt-2">Empowering engineering teams with data.</p>
           </div>
           <div className="flex flex-col gap-2">
             <h4 className="text-text-primary font-bold mb-2">Product</h4>

@@ -15,6 +15,7 @@ import {
   Activity,
   Sparkles,
 } from "lucide-react";
+import { Logo } from "./Logo";
 
 const navItems = [
   {
@@ -49,9 +50,10 @@ export function Sidebar() {
     <aside
       className="fixed left-0 top-0 h-screen w-60 flex flex-col z-40 bg-surface border-r border-border"
     >
-      {/* Branding moved to TopNav */}
-
-      {/* Removed Org Selector */}
+      {/* Branding */}
+      <div className="h-16 flex items-center px-6 border-b border-border">
+        <Logo iconOnly={true} href="/dashboard" />
+      </div>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">

@@ -6,10 +6,24 @@ import { createClient } from "../../utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "DevMetrics — AI-Powered Engineering Intelligence",
-  description:
-    "Transform engineering activity into actionable workflow intelligence. DORA metrics, AI insights, code review analytics, and team performance in one platform.",
+  title: "DevMetrics",
+  description: "Engineering Intelligence Platform",
   keywords: ["engineering metrics", "DORA metrics", "developer productivity", "AI insights", "code review analytics"],
+  openGraph: {
+    title: "DevMetrics",
+    description: "Engineering Intelligence Platform",
+    images: [{ url: "/logo-full.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevMetrics",
+    description: "Engineering Intelligence Platform",
+    images: ["/logo-full.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default async function RootLayout({
