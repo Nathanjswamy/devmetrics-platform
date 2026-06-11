@@ -11,7 +11,13 @@ export class IntegrationsService {
 
   async getGithubAuthUrl(userId: string) {
     const clientId = process.env.GITHUB_CLIENT_ID;
-    const apiUrl = process.env.API_URL || 'http://localhost:4000';
+    
+    const isProd = process.env.NODE_ENV === 'production';
+    const defaultApiUrl = isProd 
+      ? 'https://devmetrics-platform-production.up.railway.app' 
+      : 'http://localhost:4000';
+    
+    const apiUrl = process.env.API_URL || defaultApiUrl;
     const redirectUri = encodeURIComponent(`${apiUrl}/api/v1/integrations/github/callback`);
     
     // Generate Signed State to prevent CSRF
@@ -20,7 +26,10 @@ export class IntegrationsService {
                             .update(payload).digest('hex');
     const state = Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
 
-    return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=repo,read:user&state=${state}`;
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=repo,read:user&state=${state}`;
+    
+    this.logger.log(`Generated OAuth URL: ${authUrl}`);
+    return authUrl;
   }
 
   async handleGithubCallback(code: string, state: string) {

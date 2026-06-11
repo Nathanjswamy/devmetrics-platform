@@ -25,7 +25,11 @@ export class IntegrationsController {
       return res.redirect(`${frontendUrl}/integrations/github?success=true`);
     } catch (error) {
       console.error('OAuth callback failed', error);
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000'; // Keep localhost as fallback only for local error state if needed, but ideally throw
+      const isProd = process.env.NODE_ENV === 'production';
+      const defaultFrontendUrl = isProd 
+        ? 'https://devmetrics-platform-production.up.railway.app' 
+        : 'http://localhost:3000';
+      const frontendUrl = process.env.FRONTEND_URL || defaultFrontendUrl;
       return res.redirect(`${frontendUrl}/integrations/github?error=oauth_failed`);
     }
   }
