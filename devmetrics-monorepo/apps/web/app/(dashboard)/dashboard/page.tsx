@@ -14,7 +14,12 @@ import { DeploymentRiskMeter } from "../../components/dashboard/DeploymentRiskMe
 import { ActivityStream } from "../../components/dashboard/ActivityStream";
 import { Loader2 } from "lucide-react";
 
+import { usePathname } from "next/navigation";
+
 export default function DashboardPage() {
+  const pathname = usePathname();
+  console.log("DASHBOARD PAGE RENDERED AT PATHNAME:", pathname);
+
   const { data, isLoading } = useQuery({
     queryKey: ["executiveMetrics"],
     queryFn: api.metrics.getExecutive,

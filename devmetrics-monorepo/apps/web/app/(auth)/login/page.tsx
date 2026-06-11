@@ -35,7 +35,7 @@ function LoginContent() {
       setError("Could not authenticate user: " + signInError.message);
       setIsLoading(false);
     } else {
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     }
   };

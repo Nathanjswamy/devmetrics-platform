@@ -1,10 +1,25 @@
 import Link from "next/link";
 import { ArrowRight, Activity, GitCommit, Shield } from "lucide-react";
+import { createClient } from "../../utils/supabase/server";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
-export default function MarketingPage() {
+export default async function MarketingPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
+  const headersList = await headers();
+  const currentUrl = headersList.get("x-url") || "unknown";
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center">
-      
+      <div className="bg-red-500 text-white w-full text-center py-2">
+        DEBUG PATHNAME: {currentUrl}
+      </div>
       {/* Navigation */}
       <nav className="w-full max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
         <div className="font-serif text-2xl tracking-tight text-text-primary">DevMetrics</div>
