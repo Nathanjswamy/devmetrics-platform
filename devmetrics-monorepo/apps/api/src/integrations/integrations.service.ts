@@ -39,6 +39,8 @@ export class IntegrationsService {
       const decoded = JSON.parse(Buffer.from(state, 'base64').toString('utf-8'));
       const { payload, signature } = decoded;
       
+      this.logger.log(`OAuth state payload: ${payload}`);
+
       const expectedSignature = crypto.createHmac('sha256', process.env.JWT_SECRET || 'dev-secret')
                                       .update(payload).digest('hex');
       
@@ -78,14 +80,66 @@ export class IntegrationsService {
     });
     const githubUser = userResponse.data;
 
+    this.logger.log(`[User Sync] Local user lookup initiated for ${userId}...`);
+    let localUser = await this.db.user.findUnique({ where: { id: userId } });
+    
+    if (localUser) {
+      this.logger.log(`[User Sync] User found: ${JSON.stringify(localUser)}`);
+    } else {
+      this.logger.log(`[User Sync] User not found locally. Attempting to create from GitHub data...`);
+      
+      let email = githubUser.email;
+      if (!email) {
+        // Fetch emails from GitHub API if primary email is missing/private
+        try {
+          const emailsResponse = await axios.get('https://api.github.com/user/emails', {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          const primaryEmailObj = emailsResponse.data.find((e: any) => e.primary) || emailsResponse.data[0];
+          email = primaryEmailObj?.email || `${githubUser.login}@users.noreply.github.com`;
+        } catch (e) {
+          this.logger.error('Failed to fetch user emails from GitHub', e);
+          email = `${githubUser.login}@users.noreply.github.com`;
+        }
+      }
+
+      // Upsert to handle potential race conditions or conflicting emails
+      try {
+        localUser = await this.db.user.upsert({
+          where: { id: userId },
+          update: {
+            githubId: githubUser.id.toString(),
+            avatar: githubUser.avatar_url,
+          },
+          create: {
+            id: userId,
+            email: email,
+            name: githubUser.name || githubUser.login,
+            username: githubUser.login,
+            avatar: githubUser.avatar_url,
+            githubId: githubUser.id.toString(),
+          }
+        });
+        this.logger.log(`[User Sync] User created dynamically: ${JSON.stringify(localUser)}`);
+        this.logger.log(`[User Sync] User synced successfully from Supabase/GitHub.`);
+      } catch (e) {
+        this.logger.error('Failed to auto-create user record', e);
+        throw new Error('User synchronization failed during OAuth. Please ensure your account is properly created.');
+      }
+    }
+
+    const integrationPayload = {
+      accessToken,
+      profileId: githubUser.login,
+      connectedAt: new Date(),
+    };
+    
+    this.logger.log(`[Integration Sync] Creating integration record... Payload: ${JSON.stringify({ userId, ...integrationPayload })}`);
+
     // Save to Integration table
     await this.db.integration.upsert({
       where: { id: userId + '_github' }, // Temporary unique ID strategy
-      update: {
-        accessToken,
-        profileId: githubUser.login,
-        connectedAt: new Date(),
-      },
+      update: integrationPayload,
       create: {
         id: userId + '_github',
         userId,

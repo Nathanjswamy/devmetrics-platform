@@ -23,13 +23,14 @@ export class IntegrationsController {
       const frontendUrl = process.env.FRONTEND_URL;
       if (!frontendUrl) throw new Error('FRONTEND_URL is not configured');
       return res.redirect(`${frontendUrl}/integrations/github?success=true`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('OAuth callback failed', error);
       const isProd = process.env.NODE_ENV === 'production';
       const defaultFrontendUrl = isProd 
         ? 'https://devmetrics-platform-production.up.railway.app' 
         : 'http://localhost:3000';
       const frontendUrl = process.env.FRONTEND_URL || defaultFrontendUrl;
+      
       return res.redirect(`${frontendUrl}/integrations/github?error=oauth_failed`);
     }
   }
