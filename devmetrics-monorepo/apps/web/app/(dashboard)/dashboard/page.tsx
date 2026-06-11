@@ -13,14 +13,31 @@ import { HealthScoreWidget } from "../../components/dashboard/HealthScoreWidget"
 import { DeploymentRiskMeter } from "../../components/dashboard/DeploymentRiskMeter";
 import { ActivityStream } from "../../components/dashboard/ActivityStream";
 import { Loader2 } from "lucide-react";
-
-import { usePathname } from "next/navigation";
+import { RepositoryStatusPanel } from "../../components/dashboard/RepositoryStatusPanel";
+import { createClient } from "../../../../utils/supabase/client";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
+  const [userId, setUserId] = useState<string | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUserId(user.id);
+      }
+    });
+  }, []);
 
   const { data, isLoading } = useQuery({
     queryKey: ["executiveMetrics"],
     queryFn: api.metrics.getExecutive,
+  });
+
+  const { data: githubData } = useQuery({
+    queryKey: ["githubStatus", userId],
+    queryFn: () => api.integrations.getGithubStatus(userId as string),
+    enabled: !!userId,
   });
 
   if (isLoading) {
@@ -38,6 +55,8 @@ export default function DashboardPage() {
   });
 
   if (isEmpty) {
+    const repoCount = githubData?.repos?.length || 0;
+
     return (
       <div className="flex flex-col min-h-screen">
         <TopNav title="Developer Intelligence Platform" subtitle="Welcome to DevMetrics" />
@@ -48,13 +67,15 @@ export default function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4M12 8h.01" />
             </svg>
           </div>
-          <h2 className="text-4xl font-serif text-text-primary mb-4">Your Dashboard is Empty</h2>
+          <h2 className="text-4xl font-serif text-text-primary mb-4">
+            {repoCount === 0 ? "No repositories imported." : `Repositories imported: ${repoCount}`}
+          </h2>
           <p className="text-xl text-text-secondary mb-10 max-w-2xl">
-            We need data to generate your engineering intelligence. Connect your GitHub account or your first repository to start generating your Developer DNA and performance metrics.
+            {repoCount === 0 
+              ? "We need data to generate your engineering intelligence. Connect your GitHub account or your first repository to start generating your Developer DNA and performance metrics."
+              : "Your repositories are synced, but we haven't generated enough metrics yet. Please ensure your repositories contain pull requests and commits."}
           </p>
-          <a href="/integrations/github" className="btn-primary px-8 py-4 text-base shadow-lg shadow-border-bright/20" style={{ background: "#2B6B6D", color: "#F8F6F1" }}>
-            Connect GitHub Repository
-          </a>
+          {userId && <RepositoryStatusPanel userId={userId} />}
         </main>
       </div>
     );
@@ -68,6 +89,9 @@ export default function DashboardPage() {
       />
 
       <main className="flex-1 px-8 py-10 max-w-7xl mx-auto w-full space-y-12">
+        {/* Status Panel if Data is incomplete or sync is needed */}
+        {userId && <div className="mb-8"><RepositoryStatusPanel userId={userId} /></div>}
+
         {/* Editorial Section 1: Dynamic KPIs */}
         <section>
           <div className="mb-6 flex items-baseline justify-between">

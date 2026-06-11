@@ -2,29 +2,39 @@
 import { useEffect, useState } from "react";
 import { TopNav } from "../../../components/TopNav";
 import { CheckCircle, AlertCircle, RefreshCw, GitBranch } from "lucide-react";
+import { api } from "../../../lib/api";
+import { createClient } from "../../../../utils/supabase/client";
 
 export default function GitHubIntegrationPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const supabase = createClient();
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/integrations/github?userId=1`)
-      .then(res => res.json())
-      .then(d => {
-        setData(d);
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUserId(user.id);
+        api.integrations.getGithubStatus(user.id)
+          .then(d => {
+            setData(d);
+            setLoading(false);
+          })
+          .catch(() => setLoading(false));
+      } else {
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      }
+    });
   }, []);
 
   const triggerSync = async () => {
+    if (!userId) return;
     setSyncing(true);
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/sync/trigger?userId=1`, { method: 'POST' });
+      await api.sync.trigger(userId);
       // Reload
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/integrations/github?userId=1`);
-      const d = await res.json();
+      const d = await api.integrations.getGithubStatus(userId);
       setData(d);
     } catch (e) {
       console.error(e);
@@ -47,7 +57,7 @@ export default function GitHubIntegrationPage() {
             <h2 className="editorial-header text-2xl mb-2">Not Connected</h2>
             <p className="text-text-secondary mt-2 mb-8 max-w-md">Authorize DevMetrics to securely analyze your repositories and pull requests.</p>
             <div className="flex gap-4">
-              <a href={`${process.env.NEXT_PUBLIC_API_URL}/api/v1/integrations/github/auth?userId=1`} className="btn-primary">
+              <a href={`${process.env.NEXT_PUBLIC_API_URL}/api/v1/integrations/github/auth?userId=${userId}`} className="btn-primary">
                 Connect GitHub Account
               </a>
             </div>

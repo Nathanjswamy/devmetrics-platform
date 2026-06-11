@@ -82,4 +82,16 @@ export const api = {
       return data;
     },
   },
+  integrations: {
+    getGithubStatus: async (userId: string) => {
+      const { data } = await apiClient.get<any>(`/integrations/github?userId=${userId}`);
+      return data;
+    },
+  },
+  sync: {
+    trigger: async (userId: string) => {
+      const { data } = await apiClient.post<any>(`/sync/trigger?userId=${userId}`);
+      return data;
+    },
+  },
 };

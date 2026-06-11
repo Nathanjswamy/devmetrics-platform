@@ -53,7 +53,9 @@ export class SyncService implements OnModuleInit {
     try {
       // 1. Sync Repositories
       const { data: repos } = await octokit.repos.listForAuthenticatedUser({ sort: 'updated', per_page: 100 });
+      this.logger.log('repositories fetched from GitHub');
       
+      let reposSaved = 0;
       for (const repo of repos) {
         const dbRepo = await this.db.repository.upsert({
           where: { githubId: repo.id.toString() },
@@ -70,6 +72,9 @@ export class SyncService implements OnModuleInit {
             syncStatus: 'syncing',
           }
         });
+        reposSaved++;
+        this.logger.log('repositories saved');
+        this.logger.log('analysis jobs started');
 
         // 2. Sync PRs for this repo
         try {
@@ -325,8 +330,12 @@ export class SyncService implements OnModuleInit {
             lastSyncedAt: new Date()
           }
         });
+        
+        this.logger.log('analysis jobs completed');
       }
 
+      this.logger.log('repositories saved');
+      this.logger.log('metrics generated');
       this.logger.log(`GitHub sync completed for ${integration.profileId}`);
       return { success: true, message: 'Sync completed' };
     } catch (error) {
