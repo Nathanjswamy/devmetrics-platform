@@ -1,12 +1,65 @@
-import { login, signInWithGithub } from "../actions";
-import Link from "next/link";
-import { GitBranch, Sparkles } from "lucide-react";
+"use client";
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { message: string; error: string };
-}) {
+import { useState, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { GitBranch, Sparkles } from "lucide-react";
+import { createClient } from "../../../utils/supabase/client";
+
+function LoginContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(searchParams?.get("error") || null);
+  const [message, setMessage] = useState<string | null>(searchParams?.get("message") || null);
+
+  const supabase = createClient();
+
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError("Could not authenticate user: " + signInError.message);
+      setIsLoading(false);
+    } else {
+      router.push("/");
+      router.refresh();
+    }
+  };
+
+  const handleGithubSignIn = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+      (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : 'http://localhost:3000');
+
+    const { error: githubError } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${redirectUrl}/api/auth/callback`,
+      },
+    });
+
+    if (githubError) {
+      setError("Could not authenticate with GitHub: " + githubError.message);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="w-full">
       {/* Mobile-only Header */}
@@ -24,23 +77,25 @@ export default function LoginPage({
         </p>
       </div>
 
-      {searchParams?.message && (
+      {message && (
         <div className="p-3 mb-6 text-sm text-green-700 bg-green-50 border border-green-200 rounded">
-          {searchParams.message}
+          {message}
         </div>
       )}
 
-      {searchParams?.error && (
+      {error && (
         <div className="p-3 mb-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">
-          {searchParams.error}
+          {error}
         </div>
       )}
 
-      <form className="space-y-4">
+      <form onSubmit={handleSignIn} className="space-y-4">
         {/* Primary Action - GitHub */}
         <button
-          formAction={signInWithGithub}
-          className="w-full flex items-center justify-center gap-3 py-2.5 px-4 text-sm font-medium text-gray-700 transition-colors bg-white hover:bg-gray-50 rounded-md border border-gray-300 shadow-sm"
+          type="button"
+          onClick={handleGithubSignIn}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-3 py-2.5 px-4 text-sm font-medium text-gray-700 transition-colors bg-white hover:bg-gray-50 rounded-md border border-gray-300 shadow-sm disabled:opacity-50"
         >
           <GitBranch size={16} /> Continue with GitHub
         </button>
@@ -64,7 +119,8 @@ export default function LoginPage({
               name="email"
               type="email"
               required
-              className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400"
+              disabled={isLoading}
+              className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50"
               placeholder="you@company.com"
             />
           </div>
@@ -83,17 +139,19 @@ export default function LoginPage({
               name="password"
               type="password"
               required
-              className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400"
+              disabled={isLoading}
+              className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50"
               placeholder="••••••••"
             />
           </div>
         </div>
 
         <button
-          formAction={login}
-          className="w-full flex items-center justify-center py-2.5 px-4 text-sm font-medium text-white transition-colors bg-[#060c18] hover:bg-[#060c18]/90 rounded-md shadow-sm mt-6"
+          type="submit"
+          disabled={isLoading}
+          className="w-full flex items-center justify-center py-2.5 px-4 text-sm font-medium text-white transition-colors bg-[#060c18] hover:bg-[#060c18]/90 rounded-md shadow-sm mt-6 disabled:opacity-50"
         >
-          Sign In
+          {isLoading ? "Signing In..." : "Sign In"}
         </button>
       </form>
 
@@ -114,3 +172,12 @@ export default function LoginPage({
     </div>
   );
 }
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="w-full flex justify-center py-8">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
