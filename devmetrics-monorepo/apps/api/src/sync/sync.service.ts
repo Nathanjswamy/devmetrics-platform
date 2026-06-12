@@ -84,6 +84,7 @@ export class SyncService implements OnModuleInit {
             state: 'all',
             per_page: 5
           });
+          this.logger.log(`[AUDIT] Fetched ${prs.length} PRs for repo ${repo.name}`);
 
           for (const pr of prs) {
             let authorId: string | null = null;
@@ -139,6 +140,7 @@ export class SyncService implements OnModuleInit {
                 pull_number: pr.number,
                 per_page: 5
               });
+              this.logger.log(`[AUDIT] Fetched ${prCommits.length} commits for PR ${pr.title}`);
 
               for (const c of prCommits) {
                  let cAuthorId = authorId;
@@ -199,6 +201,7 @@ export class SyncService implements OnModuleInit {
                 pull_number: pr.number,
                 per_page: 10
               });
+              this.logger.log(`[AUDIT] Fetched ${reviews.length} reviews for PR ${pr.title}`);
 
               for (const rev of reviews) {
                  if (!rev.user) continue;
@@ -243,6 +246,7 @@ export class SyncService implements OnModuleInit {
                 pull_number: pr.number,
                 per_page: 10
               });
+              this.logger.log(`[AUDIT] Fetched ${comments.length} review comments for PR ${pr.title}`);
 
               for (const c of comments) {
                  if (!c.user) continue;
@@ -287,6 +291,7 @@ export class SyncService implements OnModuleInit {
             repo: repo.name,
             per_page: 5
           });
+          this.logger.log(`[AUDIT] Fetched ${commits.length} commits for repo ${repo.name}`);
 
           for (const commit of commits) {
              let author = await this.db.user.findFirst({ where: { githubId: commit.author?.id?.toString() } });

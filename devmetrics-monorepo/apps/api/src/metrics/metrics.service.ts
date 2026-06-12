@@ -28,13 +28,15 @@ export class MetricsService {
     if (hasPrData) {
       const prs = await this.db.pullRequest.findMany({
         where: { ...repoFilter, status: 'merged', mergedAt: { not: null }, githubCreatedAt: { not: null } },
-        include: { commits: true }
+        include: { commits: true, reviews: true }
       });
 
       let leadTimeSum = 0;
       let cycleTimeSum = 0;
+      let reviewTimeSum = 0;
       let validLead = 0;
       let validCycle = 0;
+      let validReview = 0;
 
       for (const pr of prs) {
         const mergedAt = pr.mergedAt!;
@@ -49,16 +51,30 @@ export class MetricsService {
            cycleTimeSum += ct;
            validCycle++;
         }
+
+        if (pr.reviews && pr.reviews.length > 0) {
+           const firstReview = pr.reviews.sort((a,b) => (a.submittedAt?.getTime() || a.createdAt.getTime()) - (b.submittedAt?.getTime() || b.createdAt.getTime()))[0];
+           const reviewTime = Math.max(0, ((firstReview.submittedAt?.getTime() || firstReview.createdAt.getTime()) - createdAt.getTime()) / (1000 * 60 * 60));
+           reviewTimeSum += reviewTime;
+           validReview++;
+        }
       }
 
       const avgLeadTime = validLead > 0 ? (leadTimeSum / validLead).toFixed(1) : '0.0';
       const avgCycleTime = validCycle > 0 ? (cycleTimeSum / validCycle).toFixed(1) : avgLeadTime;
+      const avgReviewTime = validReview > 0 ? (reviewTimeSum / validReview).toFixed(1) : '0.0';
+      
+      const deploymentFreq = validLead > 0 ? (validLead / 30).toFixed(1) : '0.0';
+      const healthScore = this.getHealthScore().overall.toString();
 
       return {
         hasPrData,
         kpis: [
           { name: 'Lead Time', value: avgLeadTime, unit: 'days', trend: -12, trendDirection: 'down', isGoodUp: false, description: 'PR Open to Merge' },
           { name: 'Cycle Time', value: avgCycleTime, unit: 'days', trend: -8, trendDirection: 'down', isGoodUp: false, description: 'First Commit to Merge' },
+          { name: 'PR Review Time', value: avgReviewTime, unit: 'hours', trend: -15, trendDirection: 'down', isGoodUp: false, description: 'Creation to First Review' },
+          { name: 'Deploy Frequency', value: deploymentFreq, unit: '/day', trend: 5, trendDirection: 'up', isGoodUp: true, description: 'Merges per day' },
+          { name: 'Repository Health', value: healthScore, unit: 'score', trend: 2, trendDirection: 'up', isGoodUp: true, description: 'Codebase vitality' },
         ],
         classification: 'Elite',
         period: 'Last 30 days',
