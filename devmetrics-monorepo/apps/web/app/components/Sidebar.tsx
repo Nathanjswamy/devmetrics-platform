@@ -22,7 +22,8 @@ const navItems = [
     section: "Overview",
     items: [
       { href: "/", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/intelligence", label: "AI Intelligence", icon: Brain, badge: "5" },
+      { href: "/recommendations", label: "Recommendations", icon: Sparkles, badge: "3" },
+      { href: "/intelligence", label: "AI Intelligence", icon: Brain },
       { href: "/activity", label: "Live Activity", icon: Activity },
     ],
   },

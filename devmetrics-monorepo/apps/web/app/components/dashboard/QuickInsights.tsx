@@ -32,11 +32,11 @@ export function QuickInsights() {
     <div className="editorial-card h-full flex flex-col">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="editorial-header text-lg">AI Insights</h2>
-          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Latest recommendations</div>
+          <h2 className="editorial-header text-lg">Actionable Recommendations</h2>
+          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Highest impact priorities</div>
         </div>
         <Link
-          href="/intelligence"
+          href="/recommendations"
           className="text-xs text-text-primary hover:text-text-secondary font-medium transition-colors flex items-center gap-1 uppercase tracking-widest"
         >
           View all <ArrowRight size={13} />

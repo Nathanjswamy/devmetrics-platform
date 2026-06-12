@@ -122,8 +122,7 @@ export default function IntelligencePage() {
             <div>
               <div className="text-sm font-bold font-serif text-text-primary uppercase tracking-widest">AI Engine Active</div>
               <div className="text-xs text-text-secondary mt-0.5">
-                Analyzing 14-day rolling window · Next run in{" "}
-                <span className="text-text-primary font-medium">2h 14m</span>
+                Analyzing real-time database aggregations
               </div>
             </div>
           </div>
