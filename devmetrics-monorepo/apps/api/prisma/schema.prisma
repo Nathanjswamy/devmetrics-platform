@@ -28,7 +28,9 @@ model User {
   reviewComments    ReviewComment[] @relation("ReviewCommentAuthor")
   requestedReviews  RequestedReviewer[]
   commits           Commit[]
-  integrations Integration[]
+  integrations      Integration[]
+  authoredIssues    Issue[]       @relation("IssueAuthor")
+  assignedIssues    Issue[]       @relation("IssueAssignee")
 }
 
 model Team {
@@ -65,6 +67,7 @@ model Repository {
 
   prs         PullRequest[]
   commits     Commit[]
+  issues      Issue[]
 }
 
 model PullRequest {
@@ -168,4 +171,25 @@ model Insight {
   confidence     Int
   recommendation String
   createdAt      DateTime @default(now())
+}
+
+model Issue {
+  id        String   @id @default(uuid())
+  githubId  String?  @unique
+  repoId    String
+  repo      Repository @relation(fields: [repoId], references: [id])
+  number    Int
+  title     String
+  state     String   // open, closed
+  url       String
+  body      String?
+  labels    String   @default("[]") // JSON string array
+  createdAt DateTime @default(now())
+  closedAt  DateTime?
+  updatedAt DateTime @updatedAt
+
+  authorId  String?
+  author    User?    @relation("IssueAuthor", fields: [authorId], references: [id])
+  assigneeId String?
+  assignee   User?   @relation("IssueAssignee", fields: [assigneeId], references: [id])
 }

@@ -327,6 +327,84 @@ export class SyncService implements OnModuleInit {
           this.logger.error(`Error syncing Commits for ${repo.name}`, e);
         }
 
+        // 4. Sync Issues
+        try {
+          const { data: issues } = await octokit.issues.listForRepo({
+            owner: repo.owner.login,
+            repo: repo.name,
+            state: 'all',
+            per_page: 10
+          });
+          this.logger.log(`[AUDIT] Fetched ${issues.length} issues for repo ${repo.name}`);
+
+          for (const issue of issues) {
+             // GitHub API returns PRs as issues too. Ignore PRs.
+             if (issue.pull_request) continue;
+
+             let authorId: string | null = null;
+             if (issue.user) {
+               let author = await this.db.user.findFirst({ where: { githubId: issue.user.id.toString() } });
+               if (!author) {
+                 author = await this.db.user.create({
+                   data: {
+                     email: `${issue.user.login}@users.noreply.github.com`,
+                     name: issue.user.login,
+                     githubId: issue.user.id.toString(),
+                     avatar: issue.user.avatar_url,
+                   }
+                 });
+               }
+               authorId = author.id;
+             }
+
+             let assigneeId: string | null = null;
+             if (issue.assignee) {
+               let assignee = await this.db.user.findFirst({ where: { githubId: issue.assignee.id.toString() } });
+               if (!assignee) {
+                 assignee = await this.db.user.create({
+                   data: {
+                     email: `${issue.assignee.login}@users.noreply.github.com`,
+                     name: issue.assignee.login,
+                     githubId: issue.assignee.id.toString(),
+                     avatar: issue.assignee.avatar_url,
+                   }
+                 });
+               }
+               assigneeId = assignee.id;
+             }
+
+             const labels = JSON.stringify(issue.labels.map(l => typeof l === 'string' ? l : l.name));
+
+             await this.db.issue.upsert({
+               where: { githubId: issue.id.toString() },
+               update: {
+                 title: issue.title,
+                 state: issue.state,
+                 body: issue.body || undefined,
+                 labels: labels,
+                 closedAt: issue.closed_at ? new Date(issue.closed_at) : null,
+                 assigneeId: assigneeId
+               },
+               create: {
+                 githubId: issue.id.toString(),
+                 repoId: dbRepo.id,
+                 number: issue.number,
+                 title: issue.title,
+                 state: issue.state,
+                 url: issue.html_url,
+                 body: issue.body,
+                 labels: labels,
+                 createdAt: new Date(issue.created_at),
+                 closedAt: issue.closed_at ? new Date(issue.closed_at) : null,
+                 authorId: authorId,
+                 assigneeId: assigneeId
+               }
+             });
+          }
+        } catch(e) {
+          this.logger.error(`Error syncing Issues for ${repo.name}`, e);
+        }
+
         // Mark repo as synced
         await this.db.repository.update({
           where: { id: dbRepo.id },

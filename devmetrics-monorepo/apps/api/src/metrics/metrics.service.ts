@@ -65,6 +65,30 @@ export class MetricsService {
       const avgReviewTime = validReview > 0 ? (reviewTimeSum / validReview).toFixed(1) : '0.0';
       
       const deploymentFreq = validLead > 0 ? (validLead / 30).toFixed(1) : '0.0';
+      
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const issues = await this.db.issue.findMany({
+        where: { ...repoFilter, createdAt: { gte: thirtyDaysAgo } }
+      });
+
+      let bugCount = 0;
+      let recoveryTimeSum = 0;
+      let validRecovery = 0;
+
+      for (const issue of issues) {
+        if (issue.labels.toLowerCase().includes('bug') || issue.title.toLowerCase().includes('bug')) {
+          bugCount++;
+          if (issue.closedAt) {
+            const recoveryTime = (issue.closedAt.getTime() - issue.createdAt.getTime()) / (1000 * 60 * 60);
+            recoveryTimeSum += Math.max(0, recoveryTime);
+            validRecovery++;
+          }
+        }
+      }
+
+      const changeFailureRate = validLead > 0 ? ((bugCount / validLead) * 100).toFixed(1) : '0.0';
+      const mttr = validRecovery > 0 ? (recoveryTimeSum / validRecovery).toFixed(1) : '0.0';
+
       const healthScore = this.getHealthScore().overall.toString();
 
       return {
@@ -74,6 +98,8 @@ export class MetricsService {
           { name: 'Cycle Time', value: avgCycleTime, unit: 'days', trend: -8, trendDirection: 'down', isGoodUp: false, description: 'First Commit to Merge' },
           { name: 'PR Review Time', value: avgReviewTime, unit: 'hours', trend: -15, trendDirection: 'down', isGoodUp: false, description: 'Creation to First Review' },
           { name: 'Deploy Frequency', value: deploymentFreq, unit: '/day', trend: 5, trendDirection: 'up', isGoodUp: true, description: 'Merges per day' },
+          { name: 'Change Failure Rate', value: changeFailureRate, unit: '%', trend: -2, trendDirection: 'down', isGoodUp: false, description: 'Bugs vs Deploys' },
+          { name: 'MTTR', value: mttr, unit: 'hours', trend: -4, trendDirection: 'down', isGoodUp: false, description: 'Bug Resolution Time' },
           { name: 'Repository Health', value: healthScore, unit: 'score', trend: 2, trendDirection: 'up', isGoodUp: true, description: 'Codebase vitality' },
         ],
         classification: 'Elite',

@@ -159,19 +159,33 @@ class AnalyticsService {
   async getRepositoryAnalytics() {
     const repos = await this.db.repository.findMany({ include: { commits: true } });
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+    
     const activeRepos = repos.filter(r => r.commits.some(c => c.createdAt >= thirtyDaysAgo));
     
-    const activityMap = activeRepos.map(r => ({
-      name: r.name,
-      commits: r.commits.filter(c => c.createdAt >= thirtyDaysAgo).length,
-      url: r.url
-    })).sort((a,b) => b.commits - a.commits);
+    let totalCurrentCommits = 0;
+    let totalPreviousCommits = 0;
+    
+    const activityMap = activeRepos.map(r => {
+      const currentCommits = r.commits.filter(c => c.createdAt >= thirtyDaysAgo).length;
+      const previousCommits = r.commits.filter(c => c.createdAt >= sixtyDaysAgo && c.createdAt < thirtyDaysAgo).length;
+      totalCurrentCommits += currentCommits;
+      totalPreviousCommits += previousCommits;
+      return {
+        name: r.name,
+        commits: currentCommits,
+        url: r.url
+      };
+    }).sort((a,b) => b.commits - a.commits);
+
+    const growthRate = totalPreviousCommits > 0 ? Math.round(((totalCurrentCommits - totalPreviousCommits) / totalPreviousCommits) * 100) : 0;
+    const healthScore = repos.length > 0 ? Math.round((activeRepos.length / repos.length) * 100) : 0;
 
     return {
       total: repos.length,
       active: activeRepos.length,
-      growthRate: 15,
-      healthScore: 92,
+      growthRate,
+      healthScore,
       mostActive: activityMap[0] || null,
       activity: activityMap
     };

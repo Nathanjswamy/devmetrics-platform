@@ -94,4 +94,14 @@ export const api = {
       return data;
     },
   },
+  actions: {
+    suggestRefactor: async (insightId: string) => {
+      const { data } = await apiClient.post<{ success: boolean; suggestion: string }>("/actions/suggest-refactor", { insightId });
+      return data;
+    },
+    createIssue: async (userId: string, repoId: string, title: string, body: string) => {
+      const { data } = await apiClient.post<{ success: boolean; url: string }>("/actions/create-issue", { userId, repoId, title, body });
+      return data;
+    }
+  }
 };

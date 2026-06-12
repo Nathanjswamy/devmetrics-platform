@@ -1,9 +1,10 @@
 "use client";
 
 import { TopNav } from "../../components/TopNav";
-import { Brain, AlertTriangle, CheckCircle, XCircle, Info, Sparkles, ArrowRight, Clock, Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Brain, AlertTriangle, CheckCircle, XCircle, Info, Sparkles, ArrowRight, Clock, Loader2, ChevronDown } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "../../lib/api";
+import { useState } from "react";
 
 const severityConfig = {
   info: {
@@ -41,10 +42,25 @@ const severityConfig = {
 };
 
 export default function IntelligencePage() {
+  const [activeInsight, setActiveInsight] = useState<string | null>(null);
+  
   const { data: aiInsights, isLoading } = useQuery({
     queryKey: ["allInsights"],
     queryFn: api.insights.getAll,
   });
+
+  const suggestRefactorMutation = useMutation({
+    mutationFn: (insightId: string) => api.actions.suggestRefactor(insightId),
+  });
+
+  const handleTakeAction = (insightId: string) => {
+    if (activeInsight === insightId) {
+      setActiveInsight(null);
+      return;
+    }
+    setActiveInsight(insightId);
+    suggestRefactorMutation.mutate(insightId);
+  };
 
   if (isLoading || !aiInsights) {
     return (
@@ -201,12 +217,35 @@ export default function IntelligencePage() {
                         {insight.createdAt}
                       </div>
                       <button
+                        onClick={() => handleTakeAction(insight.id)}
                         className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors group-hover:underline"
                         style={{ color: cfg.color }}
                       >
-                        Take action <ArrowRight size={14} strokeWidth={2.5} className="ml-1" />
+                        Take action {activeInsight === insight.id ? <ChevronDown size={14} className="ml-1" /> : <ArrowRight size={14} strokeWidth={2.5} className="ml-1" />}
                       </button>
                     </div>
+
+                    {activeInsight === insight.id && (
+                      <div className="mt-6 pt-6 border-t border-border animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Sparkles size={16} className="text-text-primary" />
+                          <h4 className="text-sm font-bold uppercase tracking-widest text-text-primary">AI Refactor Plan</h4>
+                        </div>
+                        {suggestRefactorMutation.isPending && (
+                          <div className="flex items-center gap-2 text-sm text-text-secondary">
+                            <Loader2 size={16} className="animate-spin" /> Generating step-by-step plan...
+                          </div>
+                        )}
+                        {suggestRefactorMutation.isError && (
+                          <div className="text-sm text-red-500">Failed to generate refactor plan.</div>
+                        )}
+                        {suggestRefactorMutation.isSuccess && (
+                          <div className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap font-mono p-4 bg-surface rounded border border-border">
+                            {suggestRefactorMutation.data.suggestion}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

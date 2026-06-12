@@ -9,9 +9,25 @@ class PrsService {
   constructor(private readonly db: DatabaseService) {}
   async findAll() { return this.db.pullRequest.findMany({ include: { author: true, repo: true }, orderBy: { createdAt: 'desc' } }); }
   async getCommandCenter() {
-    const fresh = await this.db.pullRequest.findMany({ where: { status: 'fresh' }, include: { author: true, repo: true } });
-    const aging = await this.db.pullRequest.findMany({ where: { status: 'aging' }, include: { author: true, repo: true } });
-    const stale = await this.db.pullRequest.findMany({ where: { status: 'stale' }, include: { author: true, repo: true } });
+    const openPrs = await this.db.pullRequest.findMany({ where: { status: 'fresh' }, include: { author: true, repo: true } });
+    
+    const fresh: any[] = [];
+    const aging: any[] = [];
+    const stale: any[] = [];
+    
+    const now = Date.now();
+    for (const pr of openPrs) {
+      if (!pr.githubCreatedAt) continue;
+      const daysOld = (now - pr.githubCreatedAt.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysOld > 7) {
+        stale.push(pr);
+      } else if (daysOld > 3) {
+        aging.push(pr);
+      } else {
+        fresh.push(pr);
+      }
+    }
+    
     return { fresh, aging, stale };
   }
 }
