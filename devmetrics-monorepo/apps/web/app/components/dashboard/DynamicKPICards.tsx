@@ -4,10 +4,10 @@ import { TrendingUp, TrendingDown, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 
-export function DynamicKPICards() {
+export function DynamicKPICards({ userId }: { userId?: string }) {
   const { data, isLoading } = useQuery({
-    queryKey: ["executiveMetrics"],
-    queryFn: api.metrics.getExecutive,
+    queryKey: ["executiveMetrics", userId || "test-user"],
+    queryFn: () => api.metrics.getExecutive(userId || "test-user"),
   });
 
   if (isLoading || !data) {

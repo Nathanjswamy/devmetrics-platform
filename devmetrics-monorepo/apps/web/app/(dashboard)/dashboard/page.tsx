@@ -113,7 +113,7 @@ export default function DashboardPage() {
               {hasPrData ? "DORA & Velocity" : "Activity & Health"}
             </span>
           </div>
-          <DynamicKPICards />
+          <DynamicKPICards userId={userId as string} />
         </section>
 
         <hr className="border-border" />
