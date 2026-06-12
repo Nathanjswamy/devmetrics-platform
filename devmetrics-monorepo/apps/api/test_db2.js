@@ -1,4 +1,4 @@
-const { PrismaClient } = require('./node_modules/@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 Promise.all([
   prisma.pullRequest.count(),

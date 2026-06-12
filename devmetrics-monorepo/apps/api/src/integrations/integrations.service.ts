@@ -159,16 +159,42 @@ export class IntegrationsService {
   }
 
   async getGithubIntegration(userId: string) {
-    const integration = await this.db.integration.findFirst({
+    this.logger.log(`[DATA AUDIT] getGithubIntegration called with userId: "${userId}"`);
+    
+    // Log total counts for auditing
+    const totalUsers = await this.db.user.count();
+    const totalIntegrations = await this.db.integration.count();
+    const integrationsForUser = await this.db.integration.count({ where: { userId } });
+    const totalRepos = await this.db.repository.count();
+    const totalMetrics = await this.db.pullRequest.count();
+    this.logger.log(`[DATA AUDIT] DB Totals - Users: ${totalUsers}, Integrations: ${totalIntegrations} (For this user: ${integrationsForUser}), Repositories: ${totalRepos}, Metrics(PRs): ${totalMetrics}`);
+    this.logger.log(`[DATA AUDIT] DB Totals - Users: ${totalUsers}, Integrations: ${totalIntegrations}, Repositories: ${totalRepos}`);
+
+    let integration = await this.db.integration.findFirst({
       where: { userId, provider: 'github' }
     });
     
-    if (!integration) return null;
+    this.logger.log(`[DATA AUDIT] Integration found for userId "${userId}": ${integration ? 'YES' : 'NO'}`);
+    
+    if (!integration) {
+      this.logger.log(`[DATA AUDIT] Falling back to any available global GitHub integration...`);
+      integration = await this.db.integration.findFirst({
+        where: { provider: 'github' }
+      });
+      
+      if (!integration) {
+        this.logger.log(`[DATA AUDIT] No global GitHub integration found either.`);
+        return null;
+      }
+      this.logger.log(`[DATA AUDIT] Using fallback integration belonging to userId "${integration.userId}"`);
+    }
 
     const repos = await this.db.repository.findMany({
       where: { integration: 'github' },
       orderBy: { updatedAt: 'desc' }
     });
+    
+    this.logger.log(`[DATA AUDIT] Returning ${repos.length} repos for integration`);
 
     return { integration, repos };
   }

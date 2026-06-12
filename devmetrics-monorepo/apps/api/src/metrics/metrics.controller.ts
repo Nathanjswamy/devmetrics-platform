@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { MetricsService } from './metrics.service';
 
@@ -9,8 +9,8 @@ export class MetricsController {
 
   @Get('executive')
   @ApiOperation({ summary: 'Get executive DORA metrics and health score' })
-  getExecutive() {
-    return this.metricsService.getExecutiveMetrics();
+  getExecutive(@Query('userId') userId: string) {
+    return this.metricsService.getExecutiveMetrics(userId);
   }
 
   @Get('dna')

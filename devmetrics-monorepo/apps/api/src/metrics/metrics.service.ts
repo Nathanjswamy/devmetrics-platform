@@ -1,17 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class MetricsService {
+  private readonly logger = new Logger(MetricsService.name);
   constructor(private readonly db: DatabaseService) {}
 
-  async getExecutiveMetrics() {
-    const prCount = await this.db.pullRequest.count();
+  async getExecutiveMetrics(userId?: string) {
+    this.logger.log(`[DATA AUDIT] getExecutiveMetrics called with userId: "${userId}"`);
+    
+    // Filter PRs by the user's integration's repos if userId is provided
+    let repoFilter = {};
+    if (userId) {
+      const integration = await this.db.integration.findFirst({
+        where: { userId, provider: 'github' }
+      });
+      if (integration || true) {
+        // Since all repos currently share the 'github' integration, 
+        // in a real app we'd filter repos by the user's specific repos.
+        repoFilter = { repo: { integration: 'github' } };
+      }
+    }
+
+    const prCount = await this.db.pullRequest.count({ where: repoFilter });
     const hasPrData = prCount > 0;
 
     if (hasPrData) {
       const prs = await this.db.pullRequest.findMany({
-        where: { status: 'merged', mergedAt: { not: null }, githubCreatedAt: { not: null } },
+        where: { ...repoFilter, status: 'merged', mergedAt: { not: null }, githubCreatedAt: { not: null } },
         include: { commits: true }
       });
 

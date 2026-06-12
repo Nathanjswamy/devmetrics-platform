@@ -38,6 +38,8 @@ export function RepositoryStatusPanel({ userId }: RepositoryStatusPanelProps) {
   };
 
   if (isLoading) return null;
+  
+  console.log("[FRONTEND LOG] RepositoryStatusPanel data:", data);
 
   // Not connected
   if (!data?.integration) {

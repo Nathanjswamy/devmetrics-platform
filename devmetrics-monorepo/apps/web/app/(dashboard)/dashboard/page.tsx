@@ -30,8 +30,9 @@ export default function DashboardPage() {
   }, []);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["executiveMetrics"],
-    queryFn: api.metrics.getExecutive,
+    queryKey: ["executiveMetrics", userId],
+    queryFn: () => api.metrics.getExecutive(userId as string),
+    enabled: !!userId,
   });
 
   const { data: githubData } = useQuery({
@@ -39,6 +40,21 @@ export default function DashboardPage() {
     queryFn: () => api.integrations.getGithubStatus(userId as string),
     enabled: !!userId,
   });
+
+  useEffect(() => {
+    if (userId) {
+      console.log("[FRONTEND LOG] Current authenticated userId:", userId);
+      console.log("[FRONTEND LOG] UserId used in queries:", userId);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (data) console.log("[FRONTEND LOG] Executive metrics count/status:", !!data);
+    if (githubData) {
+      console.log("[FRONTEND LOG] Integration count:", githubData.integration ? 1 : 0);
+      console.log("[FRONTEND LOG] Repository count:", githubData.repos?.length || 0);
+    }
+  }, [data, githubData]);
 
   if (isLoading) {
     return (
@@ -49,10 +65,7 @@ export default function DashboardPage() {
   }
 
   const hasPrData = data?.hasPrData ?? false;
-  const isEmpty = !data?.kpis || data.kpis.length === 0 || data.kpis.every((kpi: any) => {
-    const valStr = String(kpi.value);
-    return valStr === "0" || valStr === "0.0" || valStr === "0%" || !kpi.value;
-  });
+  const isEmpty = !data?.kpis || data.kpis.length === 0;
 
   if (isEmpty) {
     const repoCount = githubData?.repos?.length || 0;

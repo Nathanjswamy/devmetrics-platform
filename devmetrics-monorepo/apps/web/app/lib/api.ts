@@ -17,8 +17,8 @@ const apiClient = axios.create({
 
 export const api = {
   metrics: {
-    getExecutive: async () => {
-      const { data } = await apiClient.get<{ kpis: any[]; classification?: string; period?: string; hasPrData?: boolean }>("/metrics/executive");
+    getExecutive: async (userId: string) => {
+      const { data } = await apiClient.get<{ kpis: any[]; classification?: string; period?: string; hasPrData?: boolean }>(`/metrics/executive?userId=${userId}`);
       return data;
     },
     getHealth: async () => {
