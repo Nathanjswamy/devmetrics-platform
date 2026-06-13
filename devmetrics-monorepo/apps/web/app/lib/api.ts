@@ -12,7 +12,7 @@ import type {
 
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1`,
-  timeout: 10000,
+  timeout: 30000, // higher for AI calls
 });
 
 export const api = {
@@ -39,11 +39,14 @@ export const api = {
       const { data } = await apiClient.get<AIInsight[]>("/insights/critical");
       return data;
     },
+    generate: async () => {
+      const { data } = await apiClient.post<{ message: string; count: number }>("/insights/generate");
+      return data;
+    },
   },
   prs: {
     getCommandCenter: async () => {
       const { data } = await apiClient.get<{ fresh: PullRequest[]; aging: PullRequest[]; stale: PullRequest[] }>("/prs/command-center");
-      // ensure labels are parsed since they might come as strings from SQLite
       const parseLabels = (prs: any[]) => prs.map(pr => ({ ...pr, labels: typeof pr.labels === 'string' ? JSON.parse(pr.labels) : pr.labels }));
       return {
         fresh: parseLabels(data.fresh),
@@ -102,6 +105,10 @@ export const api = {
     createIssue: async (userId: string, repoId: string, title: string, body: string) => {
       const { data } = await apiClient.post<{ success: boolean; url: string }>("/actions/create-issue", { userId, repoId, title, body });
       return data;
-    }
-  }
+    },
+    draftPrSummary: async (pullRequestId: string) => {
+      const { data } = await apiClient.post<{ success: boolean; summary: string }>("/actions/draft-pr-summary", { pullRequestId });
+      return data;
+    },
+  },
 };

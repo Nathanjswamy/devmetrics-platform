@@ -12,20 +12,46 @@ import { SparklineChart } from "../../components/dashboard/SparklineChart";
 import { HealthScoreWidget } from "../../components/dashboard/HealthScoreWidget";
 import { DeploymentRiskMeter } from "../../components/dashboard/DeploymentRiskMeter";
 import { ActivityStream } from "../../components/dashboard/ActivityStream";
-import { Loader2 } from "lucide-react";
 import { RepositoryStatusPanel } from "../../components/dashboard/RepositoryStatusPanel";
+import { PRCommandSummary } from "../../components/dashboard/PRCommandSummary";
 import { createClient } from "../../../utils/supabase/client";
 import { useEffect, useState } from "react";
+import { Loader2, GitPullRequest, Zap, Shield, TrendingUp, Sparkles, Activity, BarChart2 } from "lucide-react";
 
+/* ─── Section wrapper ───────────────────────────────────────── */
+function Section({ label, icon: Icon, children, accent = false }: {
+  label: string;
+  icon?: any;
+  children: React.ReactNode;
+  accent?: boolean;
+}) {
+  return (
+    <section>
+      <div className="flex items-center gap-3 mb-6">
+        {Icon && (
+          <div className="w-7 h-7 rounded-md flex items-center justify-center"
+            style={{ background: accent ? "var(--accent-maroon-dim)" : "var(--surface-2)", border: "1px solid var(--border)" }}>
+            <Icon size={14} style={{ color: accent ? "var(--accent-maroon-light)" : "var(--text-muted)" }} />
+          </div>
+        )}
+        <h2 className="font-serif font-bold text-lg" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+          {label}
+        </h2>
+        <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+      </div>
+      {children}
+    </section>
+  );
+}
+
+/* ─── Main ───────────────────────────────────────────────────── */
 export default function DashboardPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setUserId(user.id);
-      }
+      if (user) setUserId(user.id);
     });
   }, []);
 
@@ -41,25 +67,17 @@ export default function DashboardPage() {
     enabled: !!userId,
   });
 
-  useEffect(() => {
-    if (userId) {
-      console.log("[FRONTEND LOG] Current authenticated userId:", userId);
-      console.log("[FRONTEND LOG] UserId used in queries:", userId);
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    if (data) console.log("[FRONTEND LOG] Executive metrics count/status:", !!data);
-    if (githubData) {
-      console.log("[FRONTEND LOG] Integration count:", githubData.integration ? 1 : 0);
-      console.log("[FRONTEND LOG] Repository count:", githubData.repos?.length || 0);
-    }
-  }, [data, githubData]);
-
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen items-center justify-center bg-background">
-        <Loader2 className="animate-spin text-text-muted w-8 h-8" />
+      <div className="flex flex-col min-h-screen items-center justify-center" style={{ background: "var(--bg)" }}>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ background: "var(--accent-maroon-dim)", border: "1px solid var(--accent-maroon)" }}>
+            <BarChart2 size={22} style={{ color: "var(--accent-maroon-light)" }} />
+          </div>
+          <Loader2 className="animate-spin w-5 h-5" style={{ color: "var(--text-muted)" }} />
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading your engineering intelligence…</p>
+        </div>
       </div>
     );
   }
@@ -67,26 +85,24 @@ export default function DashboardPage() {
   const hasPrData = data?.hasPrData ?? false;
   const isEmpty = !data?.kpis || data.kpis.length === 0;
 
+  /* ── Empty / no-data state ── */
   if (isEmpty) {
     const repoCount = githubData?.repos?.length || 0;
-
     return (
-      <div className="flex flex-col min-h-screen">
-        <TopNav title="Developer Intelligence Platform" subtitle="Welcome to DevMetrics" />
+      <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
+        <TopNav title="DevMetrics" subtitle="Engineering Intelligence Platform" />
         <main className="flex-1 px-8 py-20 max-w-4xl mx-auto w-full flex flex-col items-center text-center">
-          <div className="w-24 h-24 bg-surface border border-border rounded-full flex items-center justify-center mb-8">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-muted">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4M12 8h.01" />
-            </svg>
+          <div className="w-24 h-24 rounded-full flex items-center justify-center mb-8"
+            style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
+            <Activity size={36} style={{ color: "var(--text-muted)" }} />
           </div>
-          <h2 className="text-4xl font-serif text-text-primary mb-4">
-            {repoCount === 0 ? "No repositories imported." : `Repositories imported: ${repoCount}`}
+          <h2 className="font-serif text-3xl mb-4" style={{ color: "var(--text-primary)" }}>
+            {repoCount === 0 ? "Connect your first repository" : `${repoCount} repo${repoCount > 1 ? "s" : ""} synced`}
           </h2>
-          <p className="text-xl text-text-secondary mb-10 max-w-2xl">
-            {repoCount === 0 
-              ? "We need data to generate your engineering intelligence. Connect your GitHub account or your first repository to start generating your Developer DNA and performance metrics."
-              : "Your repositories are synced, but we haven't generated enough metrics yet. Please ensure your repositories contain pull requests and commits."}
+          <p className="text-base mb-10 max-w-xl" style={{ color: "var(--text-secondary)" }}>
+            {repoCount === 0
+              ? "Connect GitHub to start generating real-time developer insights, DORA metrics, and AI recommendations."
+              : "Your repositories are synced. Ensure they have pull requests and commits to populate the dashboard."}
           </p>
           {userId && <RepositoryStatusPanel userId={userId} />}
         </main>
@@ -94,80 +110,78 @@ export default function DashboardPage() {
     );
   }
 
+  /* ── Full dashboard ── */
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
       <TopNav
-        title="Developer Intelligence Platform"
-        subtitle="Real-time overview of your engineering impact"
+        title="DevMetrics"
+        subtitle="Real-time engineering intelligence"
       />
 
-      <main className="flex-1 px-8 py-10 max-w-7xl mx-auto w-full space-y-12">
-        {/* Status Panel if Data is incomplete or sync is needed */}
-        {userId && <div className="mb-8"><RepositoryStatusPanel userId={userId} /></div>}
+      <main className="flex-1 px-8 py-8 max-w-7xl mx-auto w-full space-y-10">
 
-        {/* Editorial Section 1: Dynamic KPIs */}
-        <section>
-          <div className="mb-6 flex items-baseline justify-between">
-            <h2 className="text-2xl font-serif text-text-primary">Executive Summary</h2>
-            <span className="text-sm font-medium text-text-secondary uppercase tracking-wider">
-              {hasPrData ? "DORA & Velocity" : "Activity & Health"}
-            </span>
+        {/* Status / sync panel */}
+        {userId && (
+          <div>
+            <RepositoryStatusPanel userId={userId} />
           </div>
+        )}
+
+        {/* ── Section 1: KPI Summary ── */}
+        <Section label="Executive Summary" icon={TrendingUp} accent>
           <DynamicKPICards userId={userId as string} />
-        </section>
+        </Section>
 
-        <hr className="border-border" />
-
-        {/* Editorial Section 2: Developer DNA (New Flagship Feature) */}
-        <section>
+        {/* ── Section 2: Developer DNA ── */}
+        <Section label="Developer DNA" icon={Zap}>
           <DeveloperDNAWidget />
-        </section>
+        </Section>
 
-        <hr className="border-border" />
-
-        {/* Editorial Section 3: Universal Analytics (Always Available) */}
-        <section className="grid grid-cols-12 gap-8 items-start">
-          <div className="col-span-12 lg:col-span-8">
-            <CommitAnalyticsWidget />
+        {/* ── Section 3: Commit + Repository activity ── */}
+        <Section label="Repository Intelligence" icon={Activity}>
+          <div className="grid grid-cols-12 gap-6 items-start">
+            <div className="col-span-12 lg:col-span-8">
+              <CommitAnalyticsWidget />
+            </div>
+            <div className="col-span-12 lg:col-span-4 space-y-6">
+              <RepositoryAnalyticsWidget />
+            </div>
           </div>
-          <div className="col-span-12 lg:col-span-4 space-y-8">
-            <RepositoryAnalyticsWidget />
-          </div>
-        </section>
+        </Section>
 
-        {/* Editorial Section 4: PR Analytics (Conditional) */}
+        {/* ── Section 4: PR Tracking (real data only when PRs exist) ── */}
         {hasPrData && (
           <>
-            <hr className="border-border" />
-            <section>
-              <div className="mb-6 flex items-baseline justify-between">
-                <h2 className="text-2xl font-serif text-text-primary">Pull Request Analytics</h2>
-                <span className="text-sm font-medium text-text-secondary uppercase tracking-wider">Review & Delivery</span>
-              </div>
-              <div className="grid grid-cols-12 gap-8 items-start">
-                <div className="col-span-12 lg:col-span-5 space-y-8">
+            <Section label="Pull Request Command Center" icon={GitPullRequest}>
+              <div className="grid grid-cols-12 gap-6 items-start">
+                <div className="col-span-12 lg:col-span-7">
+                  <PRCommandSummary />
+                </div>
+                <div className="col-span-12 lg:col-span-5 space-y-6">
                   <HealthScoreWidget />
                   <DeploymentRiskMeter />
                 </div>
-                <div className="col-span-12 lg:col-span-7">
-                  <SparklineChart />
-                </div>
               </div>
-            </section>
+            </Section>
+
+            <Section label="Lead Time & Velocity Trends" icon={BarChart2}>
+              <SparklineChart />
+            </Section>
           </>
         )}
 
-        <hr className="border-border" />
+        {/* ── Section 5: AI Intelligence + Live Feed ── */}
+        <Section label="AI Insights & Live Activity" icon={Sparkles} accent>
+          <div className="grid grid-cols-12 gap-6 items-start">
+            <div className="col-span-12 lg:col-span-8">
+              <QuickInsights />
+            </div>
+            <div className="col-span-12 lg:col-span-4">
+              <ActivityStream />
+            </div>
+          </div>
+        </Section>
 
-        {/* Editorial Section 5: AI Intelligence & Live Activity */}
-        <section className="grid grid-cols-12 gap-8 items-start">
-          <div className="col-span-12 lg:col-span-8">
-            <QuickInsights />
-          </div>
-          <div className="col-span-12 lg:col-span-4">
-            <ActivityStream />
-          </div>
-        </section>
       </main>
     </div>
   );

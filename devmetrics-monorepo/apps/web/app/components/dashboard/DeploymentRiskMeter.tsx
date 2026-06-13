@@ -5,10 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 
 const riskConfig = {
-  low: { color: "#787B4E", bg: "rgba(120,123,78,0.1)", border: "rgba(120,123,78,0.25)", label: "Low Risk", Icon: CheckCircle }, // Olive
-  medium: { color: "#DE7A35", bg: "rgba(222,122,53,0.1)", border: "rgba(222,122,53,0.25)", label: "Medium Risk", Icon: AlertTriangle }, // Orange
-  high: { color: "#D05A44", bg: "rgba(208,90,68,0.1)", border: "rgba(208,90,68,0.25)", label: "High Risk", Icon: AlertTriangle }, // Terracotta
-  critical: { color: "#D05A44", bg: "rgba(208,90,68,0.15)", border: "rgba(208,90,68,0.35)", label: "Critical Risk", Icon: AlertTriangle },
+  low: { color: "#3A9B95", bg: "rgba(58,155,149,0.1)", border: "rgba(58,155,149,0.25)", label: "Low Risk", Icon: CheckCircle },
+  medium: { color: "#C9A96E", bg: "rgba(201,169,110,0.1)", border: "rgba(201,169,110,0.25)", label: "Medium Risk", Icon: AlertTriangle },
+  high: { color: "#B8752E", bg: "rgba(184,117,46,0.1)", border: "rgba(184,117,46,0.25)", label: "High Risk", Icon: AlertTriangle },
+  critical: { color: "#A62035", bg: "rgba(166,32,53,0.12)", border: "rgba(166,32,53,0.3)", label: "Critical Risk", Icon: AlertTriangle },
 };
 
 export function DeploymentRiskMeter() {
@@ -19,8 +19,12 @@ export function DeploymentRiskMeter() {
 
   if (isLoading || !deploymentRisk) {
     return (
-      <div className="editorial-card h-full flex flex-col items-center justify-center">
-        <Loader2 className="animate-spin text-text-muted" />
+      <div className="editorial-card h-full flex flex-col gap-4 p-6">
+        <div className="skeleton h-5 w-36" />
+        <div className="skeleton h-24 w-36 rounded-full mx-auto" />
+        <div className="space-y-2">
+          {[1, 2, 3].map((i) => <div key={i} className="skeleton h-2 w-full" />)}
+        </div>
       </div>
     );
   }
@@ -76,7 +80,7 @@ export function DeploymentRiskMeter() {
               const x = 70 + 60 * Math.cos(rad);
               const y = 70 + 60 * Math.sin(rad);
               return (
-                <circle key={i} cx={x} cy={y} r="2" fill="#2A2E42" />
+                <circle key={i} cx={x} cy={y} r="2" fill="var(--surface-3)" />
               );
             })}
           </svg>
@@ -84,15 +88,15 @@ export function DeploymentRiskMeter() {
             <span className="text-4xl font-serif" style={{ color: cfg.color }}>
               {score}
             </span>
-            <span className="text-[10px] text-text-muted tracking-widest uppercase">/ 100</span>
+            <span className="text-[10px] tracking-widest uppercase" style={{ color: "var(--text-muted)" }}>/ 100</span>
           </div>
         </div>
 
         {/* Scale labels */}
         <div className="flex justify-between w-36 -mt-1">
-          <span className="text-[10px] text-[#787B4E] font-bold tracking-widest uppercase">Low</span>
-          <span className="text-[10px] text-[#DE7A35] font-bold tracking-widest uppercase">Med</span>
-          <span className="text-[10px] text-[#D05A44] font-bold tracking-widest uppercase">High</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#3A9B95" }}>Low</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#C9A96E" }}>Med</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#A62035" }}>High</span>
         </div>
       </div>
 

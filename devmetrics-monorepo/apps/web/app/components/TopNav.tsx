@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, RefreshCw, Calendar, ChevronDown } from "lucide-react";
+import { Search, RefreshCw, ChevronDown } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { UserAccountMenu } from "./UserAccountMenu";
@@ -17,40 +17,64 @@ export function TopNav({ title, subtitle }: TopNavProps) {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await queryClient.invalidateQueries();
-    setTimeout(() => setIsRefreshing(false), 500);
+    setTimeout(() => setIsRefreshing(false), 700);
   };
 
   return (
     <header
-      className="sticky top-0 z-30 flex items-center justify-between px-8 h-16 bg-bg border-b border-border"
+      className="sticky top-0 z-30 flex items-center justify-between px-8 h-14"
+      style={{
+        background: "rgba(17, 13, 14, 0.92)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: "1px solid var(--border)",
+      }}
     >
-      {/* Left: Branding & Page title */}
-      <div className="flex items-center gap-6">
+      {/* Left: title */}
+      <div className="flex items-center gap-3">
         <div>
-          <h1 className="text-xl font-serif font-bold text-text-primary">{title}</h1>
-          {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}
+          <h1 className="font-serif font-bold text-base" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-[11px] mt-0.5 uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+              {subtitle}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Right: Controls */}
-      <div className="flex items-center gap-3">
+      {/* Right: controls */}
+      <div className="flex items-center gap-2">
         {/* Search */}
         <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs text-text-muted cursor-pointer transition-all duration-200 bg-surface border border-border hover:border-border-bright"
-          style={{ width: "220px" }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs transition-all cursor-pointer"
+          style={{
+            width: "200px",
+            background: "var(--surface-2)",
+            border: "1px solid var(--border)",
+            color: "var(--text-muted)",
+          }}
         >
-          <Search size={13} />
-          <span>Search...</span>
-          <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded border border-border font-mono">
+          <Search size={12} />
+          <span>Search…</span>
+          <span
+            className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-mono"
+            style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          >
             ⌘K
           </span>
         </div>
 
         {/* Date range */}
         <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs text-text-secondary transition-all duration-200 hover:text-text-primary hover:bg-surface-2 bg-surface border border-border"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-all"
+          style={{
+            background: "var(--surface-2)",
+            border: "1px solid var(--border)",
+            color: "var(--text-secondary)",
+          }}
         >
-          <Calendar size={13} />
           <span>Last 30 days</span>
           <ChevronDown size={11} />
         </button>
@@ -58,20 +82,30 @@ export function TopNav({ title, subtitle }: TopNavProps) {
         {/* Refresh */}
         <button
           onClick={handleRefresh}
-          className="flex items-center justify-center w-8 h-8 rounded-sm text-text-muted transition-all duration-200 hover:text-text-primary hover:bg-surface-2 bg-surface border border-border"
-          title="Refresh data"
+          className="flex items-center justify-center w-8 h-8 rounded-md transition-all"
+          title="Refresh all data"
+          style={{
+            background: isRefreshing ? "var(--accent-maroon-dim)" : "var(--surface-2)",
+            border: `1px solid ${isRefreshing ? "var(--accent-maroon)" : "var(--border)"}`,
+          }}
         >
-          <RefreshCw size={13} className={isRefreshing ? "animate-spin text-accent-green" : ""} />
+          <RefreshCw
+            size={13}
+            className={isRefreshing ? "animate-spin" : ""}
+            style={{ color: isRefreshing ? "var(--accent-maroon-light)" : "var(--text-muted)" }}
+          />
         </button>
 
-        {/* Live indicator */}
-        <div className="flex items-center gap-1.5 ml-2 mr-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-accent-green" />
-          <span className="text-[10px] text-text-secondary font-medium uppercase tracking-wide">Live</span>
+        {/* Live badge */}
+        <div className="flex items-center gap-1.5 px-2">
+          <div className="status-dot-green" />
+          <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+            Live
+          </span>
         </div>
-        
-        <div className="h-6 w-px bg-border hidden sm:block"></div>
-        
+
+        <div className="h-5 w-px" style={{ background: "var(--border)" }} />
+
         <UserAccountMenu />
       </div>
     </header>

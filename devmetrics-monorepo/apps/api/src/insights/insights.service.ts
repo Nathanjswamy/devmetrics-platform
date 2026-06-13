@@ -63,7 +63,7 @@ export class InsightsService {
       }
     }
 
-    const contextArr = [];
+    const contextArr: string[] = [];
     if (staleRepos.length > 0) {
       contextArr.push(`Stale Repositories (no commits in 60+ days): ${staleRepos.map(r => r.name).join(', ')}`);
     }

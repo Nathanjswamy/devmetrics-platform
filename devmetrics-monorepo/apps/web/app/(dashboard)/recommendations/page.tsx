@@ -1,9 +1,10 @@
 "use client";
 
 import { TopNav } from "../../components/TopNav";
-import { AlertTriangle, CheckCircle, Info, ArrowRight, Loader2, Target, Zap } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { AlertTriangle, CheckCircle, ArrowRight, Loader2, Target, Zap, Sparkles, GitBranch } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "../../lib/api";
+import Link from "next/link";
 
 export default function RecommendationsPage() {
   const { data: aiInsights, isLoading } = useQuery({
@@ -11,99 +12,163 @@ export default function RecommendationsPage() {
     queryFn: api.insights.getAll,
   });
 
+  const generateMutation = useMutation({
+    mutationFn: api.insights.generate,
+  });
+
   if (isLoading || !aiInsights) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <TopNav title="Actionable Recommendations" subtitle="Top developer actions ranked by impact" />
-        <main className="flex-1 p-6 flex items-center justify-center">
-          <Loader2 className="animate-spin text-text-muted" />
+      <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
+        <TopNav title="Recommendations" subtitle="Highest-impact actions ranked by AI" />
+        <main className="flex-1 p-8 flex items-center justify-center">
+          <Loader2 className="animate-spin" size={20} style={{ color: "var(--text-muted)" }} />
         </main>
       </div>
     );
   }
 
-  // Filter out non-actionable insights and sort by severity
   const actions = [...aiInsights]
-    .filter(i => i.severity === 'critical' || i.severity === 'warning')
-    .sort((a, b) => a.severity === 'critical' ? -1 : 1);
+    .filter((i) => i.severity === "critical" || i.severity === "warning")
+    .sort((a) => (a.severity === "critical" ? -1 : 1));
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <TopNav
-        title="Actionable Recommendations"
-        subtitle="Top developer actions ranked by impact"
-      />
+    <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
+      <TopNav title="Recommendations" subtitle="Highest-impact actions ranked by AI" />
 
-      <main className="flex-1 p-6 max-w-5xl mx-auto w-full">
-        <div className="mb-8 flex items-center justify-between border-b border-border pb-4">
+      <main className="flex-1 p-8 max-w-5xl mx-auto w-full">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
           <div>
-            <h2 className="text-2xl font-serif text-text-primary mb-1">Top Priorities Today</h2>
-            <p className="text-text-secondary">Based on real-time database aggregations of your repository activity.</p>
+            <h2 className="font-serif text-2xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+              Top Priorities
+            </h2>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+              Derived from real-time analysis of your repository activity.
+            </p>
           </div>
-          <div className="flex items-center gap-2 bg-surface-2 px-3 py-1.5 rounded border border-border text-sm font-bold tracking-widest uppercase text-text-primary">
-            <Target size={16} className="text-accent-blue" />
-            {actions.length} Action{actions.length !== 1 && 's'} Found
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest"
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border)", color: "var(--text-primary)" }}
+            >
+              <Target size={13} style={{ color: "var(--accent-maroon-light)" }} />
+              {actions.length} action{actions.length !== 1 && "s"}
+            </div>
+            <Link
+              href="/intelligence"
+              className="btn-primary text-xs"
+            >
+              <Sparkles size={13} /> Run AI Analysis
+            </Link>
           </div>
         </div>
 
+        {/* Empty state */}
         {actions.length === 0 ? (
-          <div className="editorial-card p-12 text-center flex flex-col items-center">
-            <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle size={32} className="text-accent-green" />
+          <div className="editorial-card p-16 flex flex-col items-center text-center gap-6">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
+              <CheckCircle size={28} style={{ color: "var(--severity-success)" }} />
             </div>
-            <h3 className="text-xl font-serif text-text-primary mb-2">You're all caught up!</h3>
-            <p className="text-text-secondary">No actionable recommendations found across your repositories.</p>
+            <div>
+              <h3 className="font-serif text-xl" style={{ color: "var(--text-primary)" }}>All caught up!</h3>
+              <p className="text-sm mt-2" style={{ color: "var(--text-secondary)" }}>
+                No critical or warning-level issues found. Your codebase looks healthy.
+              </p>
+            </div>
+            <button
+              onClick={() => generateMutation.mutate()}
+              disabled={generateMutation.isPending}
+              className="btn-ghost"
+            >
+              {generateMutation.isPending ? <><Loader2 size={13} className="animate-spin" /> Analyzing…</> : "Refresh Analysis"}
+            </button>
           </div>
         ) : (
           <div className="space-y-4">
             {actions.map((action, index) => {
-              const isCritical = action.severity === 'critical';
+              const isCritical = action.severity === "critical";
+              const accentColor = isCritical ? "var(--severity-critical)" : "var(--severity-warning)";
+              const accentBg = isCritical ? "rgba(166,32,53,0.08)" : "rgba(184,117,46,0.08)";
+              const accentBorder = isCritical ? "rgba(166,32,53,0.25)" : "rgba(184,117,46,0.25)";
+
               return (
-                <div 
+                <div
                   key={action.id}
-                  className="editorial-card overflow-hidden group hover:bg-surface-2 transition-colors cursor-pointer"
-                  style={{ borderLeft: `4px solid ${isCritical ? '#0F172A' : '#C86A3D'}` }}
+                  className="editorial-card overflow-hidden animate-fade-in-up"
+                  style={{
+                    borderLeft: `3px solid ${accentColor}`,
+                    background: accentBg,
+                    animationDelay: `${index * 50}ms`,
+                  }}
                 >
-                  <div className="p-6 flex items-start gap-6">
-                    <div className="flex flex-col items-center justify-center mt-1">
-                      <div className="w-10 h-10 bg-surface-2 border border-border rounded flex items-center justify-center font-serif text-lg font-bold text-text-primary">
-                        #{index + 1}
+                  <div className="flex items-start gap-5">
+                    {/* Rank number */}
+                    <div className="flex flex-col items-center flex-shrink-0">
+                      <div
+                        className="w-9 h-9 rounded-md flex items-center justify-center font-serif text-base font-bold"
+                        style={{ background: "var(--surface-3)", border: `1px solid ${accentBorder}`, color: accentColor }}
+                      >
+                        {index + 1}
                       </div>
                     </div>
+
+                    {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded" style={{ background: isCritical ? 'rgba(15,23,42,0.1)' : 'rgba(200,106,61,0.1)', color: isCritical ? '#0F172A' : '#C86A3D' }}>
-                          {action.category}
+                      {/* Tags */}
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-[0.1em] px-2 py-0.5 rounded-sm"
+                          style={{ background: accentBg, border: `1px solid ${accentBorder}`, color: accentColor }}
+                        >
+                          {isCritical ? "Critical" : "Warning"}
                         </span>
-                        <span className="text-xs font-mono text-text-secondary">
-                          {action.affectedTeam || 'Global'}
-                        </span>
+                        <span className="badge-gold">{action.category}</span>
+                        {action.affectedTeam && (
+                          <span className="badge-info">{action.affectedTeam}</span>
+                        )}
                       </div>
-                      <h3 className="text-lg font-serif font-bold text-text-primary mb-2">{action.title}</h3>
-                      
-                      <div className="space-y-4 mt-4">
-                        <div className="flex items-start gap-2">
-                          <AlertTriangle size={16} className="text-text-muted mt-0.5" />
+
+                      <h3 className="font-serif text-lg font-bold mb-3 leading-snug" style={{ color: "var(--text-primary)" }}>
+                        {action.title}
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-2.5">
+                          <AlertTriangle size={13} style={{ color: "var(--text-muted)", marginTop: 2, flexShrink: 0 }} />
                           <div>
-                            <span className="text-xs font-bold uppercase tracking-widest text-text-secondary block mb-1">The Problem</span>
-                            <p className="text-sm text-text-primary leading-relaxed">{action.description}</p>
+                            <span className="text-[10px] font-bold uppercase tracking-widest block mb-1" style={{ color: "var(--text-muted)" }}>
+                              The Problem
+                            </span>
+                            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                              {action.description}
+                            </p>
                           </div>
                         </div>
-                        
-                        <div className="flex items-start gap-2">
-                          <Zap size={16} className="text-accent-blue mt-0.5" />
+                        <div className="flex items-start gap-2.5">
+                          <Zap size={13} style={{ color: accentColor, marginTop: 2, flexShrink: 0 }} />
                           <div>
-                            <span className="text-xs font-bold uppercase tracking-widest text-text-secondary block mb-1">Suggested Action</span>
-                            <p className="text-sm text-text-primary leading-relaxed">{action.recommendation}</p>
+                            <span className="text-[10px] font-bold uppercase tracking-widest block mb-1" style={{ color: "var(--text-muted)" }}>
+                              Recommended Action
+                            </span>
+                            <p className="text-sm leading-relaxed" style={{ color: "var(--text-primary)" }}>
+                              {action.recommendation}
+                            </p>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex flex-col items-end pt-2 space-y-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <button className="flex items-center gap-2 px-4 py-2 bg-text-primary text-surface text-xs font-bold uppercase tracking-widest rounded hover:bg-text-secondary transition-colors">
-                         Resolve <ArrowRight size={14} />
-                       </button>
+
+                      <div className="flex items-center gap-3 mt-5">
+                        <Link href="/intelligence" className="btn-ghost text-xs flex items-center gap-1.5">
+                          <ArrowRight size={11} /> View in Intelligence
+                        </Link>
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-widest"
+                          style={{ color: accentColor }}
+                        >
+                          {action.confidence}% confidence
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

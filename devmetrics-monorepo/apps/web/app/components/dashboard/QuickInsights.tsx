@@ -1,15 +1,43 @@
 "use client";
 
-import { ArrowRight, AlertTriangle, CheckCircle, XCircle, Info, Loader2 } from "lucide-react";
+import { ArrowRight, AlertTriangle, CheckCircle, XCircle, Info, Loader2, Sparkles } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 import Link from "next/link";
 
 const severityConfig = {
-  info: { Icon: Info, color: "var(--text-secondary)", bg: "var(--surface-2)", border: "var(--border)" },
-  warning: { Icon: AlertTriangle, color: "#C86A3D", bg: "rgba(200,106,61,0.05)", border: "#C86A3D" },
-  critical: { Icon: XCircle, color: "#0F172A", bg: "rgba(15,23,42,0.05)", border: "#0F172A" },
-  success: { Icon: CheckCircle, color: "#7A8B6F", bg: "rgba(122,139,111,0.05)", border: "#7A8B6F" },
+  info: {
+    Icon: Info,
+    color: "var(--severity-info)",
+    border: "rgba(44,120,115,0.35)",
+    bg: "rgba(44,120,115,0.06)",
+    badge: "badge-info",
+    label: "Info",
+  },
+  warning: {
+    Icon: AlertTriangle,
+    color: "var(--severity-warning)",
+    border: "rgba(184,117,46,0.35)",
+    bg: "rgba(184,117,46,0.06)",
+    badge: "badge-warning",
+    label: "Warning",
+  },
+  critical: {
+    Icon: XCircle,
+    color: "var(--severity-critical)",
+    border: "rgba(166,32,53,0.35)",
+    bg: "rgba(166,32,53,0.06)",
+    badge: "badge-critical",
+    label: "Critical",
+  },
+  success: {
+    Icon: CheckCircle,
+    color: "var(--severity-success)",
+    border: "rgba(74,124,89,0.35)",
+    bg: "rgba(74,124,89,0.06)",
+    badge: "badge-success",
+    label: "Positive",
+  },
 };
 
 export function QuickInsights() {
@@ -20,55 +48,88 @@ export function QuickInsights() {
 
   if (isLoading || !aiInsights) {
     return (
-      <div className="editorial-card h-full flex flex-col items-center justify-center">
-        <Loader2 className="animate-spin text-text-muted" />
+      <div className="editorial-card h-full flex flex-col gap-4 p-6">
+        <div className="skeleton h-5 w-48" />
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="skeleton h-20 w-full rounded-lg" />
+        ))}
       </div>
     );
   }
 
-  const topInsights = aiInsights.slice(0, 3);
+  // Sort: critical first, then warning, then others
+  const sorted = [...aiInsights].sort((a, b) => {
+    const order: Record<string, number> = { critical: 0, warning: 1, info: 2, success: 3 };
+    return (order[a.severity] ?? 4) - (order[b.severity] ?? 4);
+  });
+  const topInsights = sorted.slice(0, 4);
 
   return (
     <div className="editorial-card h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="editorial-header text-lg">Actionable Recommendations</h2>
-          <div className="text-xs text-text-secondary mt-1 tracking-wide uppercase">Highest impact priorities</div>
+          <div className="flex items-center gap-2">
+            <Sparkles size={14} style={{ color: "var(--accent-maroon-light)" }} />
+            <h2 className="editorial-header text-base">AI Recommendations</h2>
+          </div>
+          <div className="text-[11px] mt-1 uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+            Highest impact priorities
+          </div>
         </div>
         <Link
-          href="/recommendations"
-          className="text-xs text-text-primary hover:text-text-secondary font-medium transition-colors flex items-center gap-1 uppercase tracking-widest"
+          href="/intelligence"
+          className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-colors"
+          style={{ color: "var(--accent-maroon-light)" }}
         >
-          View all <ArrowRight size={13} />
+          View all <ArrowRight size={12} />
         </Link>
       </div>
 
-      <div className="flex-1 space-y-4">
-        {topInsights.map((insight) => {
-          const cfg = severityConfig[insight.severity as keyof typeof severityConfig] || severityConfig.info;
+      {/* Insights */}
+      <div className="flex-1 space-y-3">
+        {topInsights.length === 0 ? (
+          <div className="py-10 text-center">
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              No insights yet.{" "}
+              <Link href="/intelligence" className="underline" style={{ color: "var(--accent-maroon-light)" }}>
+                Run Analysis →
+              </Link>
+            </p>
+          </div>
+        ) : topInsights.map((insight) => {
+          const cfg = severityConfig[insight.severity as keyof typeof severityConfig] ?? severityConfig.info;
           const Icon = cfg.Icon;
           return (
             <div
               key={insight.id}
-              className="p-4 transition-all hover:bg-surface-2 border border-border"
+              className="p-4 rounded-lg transition-all"
               style={{
-                borderLeft: `2px solid ${cfg.border}`,
+                background: cfg.bg,
+                border: `1px solid ${cfg.border}`,
+                borderLeft: `3px solid ${cfg.color}`,
               }}
             >
-              <div className="flex items-start gap-2">
-                <Icon size={14} style={{ color: cfg.color }} className="mt-1 flex-shrink-0" />
+              <div className="flex items-start gap-3">
+                <Icon size={14} style={{ color: cfg.color, marginTop: 2, flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-text-primary">
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span className={cfg.badge}>{cfg.label}</span>
+                    <span className="badge-gold text-[9px]">{insight.category}</span>
+                  </div>
+                  <div className="text-sm font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>
                     {insight.title}
                   </div>
-                  <div className="text-xs text-text-secondary mt-1 line-clamp-2 leading-relaxed">
+                  <div className="text-xs mt-1.5 line-clamp-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                     {insight.description}
                   </div>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-xs font-mono text-text-muted">{insight.createdAt}</span>
-                    <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: cfg.color }}>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>
+                      {new Date(insight.createdAt).toLocaleDateString()}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: cfg.color }}>
                       {insight.confidence}% conf.
-                    </div>
+                    </span>
                   </div>
                 </div>
               </div>
