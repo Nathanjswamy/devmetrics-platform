@@ -24,81 +24,102 @@ export function TopNav({ title, subtitle }: TopNavProps) {
     <header
       className="sticky top-0 z-30 flex items-center justify-between px-6 h-14"
       style={{
-        background: "var(--surface)",
-        borderBottom: "1px solid var(--border)",
+        background: "#000000",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
       }}
     >
-      {/* Left: page title */}
+      {/* Page title */}
       <div>
         <h1
-          className="text-base font-semibold"
-          style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}
+          style={{
+            fontSize: "15px",
+            fontWeight: 600,
+            color: "var(--bone)",
+            letterSpacing: "0.021em",
+          }}
         >
           {title}
         </h1>
         {subtitle && (
-          <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+          <p style={{ fontSize: "12px", color: "var(--smoke)", letterSpacing: "0.05em", marginTop: "1px" }}>
             {subtitle}
           </p>
         )}
       </div>
 
-      {/* Right: controls */}
+      {/* Controls */}
       <div className="flex items-center gap-2">
-        {/* Search */}
+
+        {/* Search — ghost pill */}
         <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs cursor-pointer transition-colors"
+          className="flex items-center gap-2 cursor-pointer transition-colors"
           style={{
-            width: "200px",
-            background: "var(--surface-2)",
-            border: "1px solid var(--border)",
-            color: "var(--text-muted)",
+            width: "180px",
+            padding: "0.375rem 0.875rem",
+            borderRadius: "99px",
+            border: "1px solid rgba(255,255,255,0.10)",
+            color: "var(--smoke)",
+            fontSize: "13px",
+            letterSpacing: "0.021em",
           }}
         >
           <Search size={12} />
           <span>Search…</span>
           <kbd
-            className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-mono"
             style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              color: "var(--text-muted)",
+              marginLeft: "auto",
+              fontSize: "10px",
+              padding: "1px 5px",
+              borderRadius: "4px",
+              border: "1px solid rgba(255,255,255,0.10)",
+              color: "var(--smoke)",
+              background: "transparent",
+              fontFamily: "inherit",
             }}
           >
             ⌘K
           </kbd>
         </div>
 
-        {/* Date range */}
+        {/* Date range — ghost pill */}
         <button
-          className="btn-ghost text-xs"
+          className="btn-ghost"
+          style={{ textTransform: "none", letterSpacing: "0.021em", fontSize: "13px" }}
         >
-          <span>Last 30 days</span>
-          <ChevronDown size={12} />
+          Last 30 days <ChevronDown size={11} />
         </button>
 
         {/* Refresh */}
         <button
           onClick={handleRefresh}
-          className="btn-ghost px-2 py-1.5"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "34px",
+            height: "34px",
+            borderRadius: "99px",
+            border: "1px solid rgba(255,255,255,0.10)",
+            background: "transparent",
+            cursor: "pointer",
+            transition: "border-color 0.15s",
+          }}
           title="Refresh data"
         >
           <RefreshCw
             size={13}
             className={isRefreshing ? "animate-spin" : ""}
-            style={{ color: isRefreshing ? "var(--accent-blue)" : "var(--text-muted)" }}
+            style={{ color: isRefreshing ? "var(--plum)" : "var(--smoke)" }}
           />
         </button>
 
         {/* Live indicator */}
         <div className="flex items-center gap-1.5 pl-1">
           <div className="status-dot-green" />
-          <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
-            Live
-          </span>
+          <span style={{ fontSize: "12px", color: "var(--smoke)", letterSpacing: "0.05em" }}>LIVE</span>
         </div>
 
-        <div className="h-5 w-px mx-1" style={{ background: "var(--border)" }} />
+        <div style={{ width: "1px", height: "18px", background: "rgba(255,255,255,0.07)", margin: "0 4px" }} />
 
         <UserAccountMenu />
       </div>

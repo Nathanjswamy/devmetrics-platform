@@ -1,43 +1,15 @@
 "use client";
 
-import { ArrowRight, AlertTriangle, CheckCircle, XCircle, Info, Loader2, Sparkles } from "lucide-react";
+import { ArrowRight, AlertTriangle, CheckCircle, XCircle, Info, Sparkles } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 import Link from "next/link";
 
 const severityConfig = {
-  info: {
-    Icon: Info,
-    color: "var(--info)",
-    border: "rgba(44,120,115,0.35)",
-    bg: "rgba(44,120,115,0.06)",
-    badge: "badge-info",
-    label: "Info",
-  },
-  warning: {
-    Icon: AlertTriangle,
-    color: "var(--warning)",
-    border: "rgba(184,117,46,0.35)",
-    bg: "rgba(184,117,46,0.06)",
-    badge: "badge-warning",
-    label: "Warning",
-  },
-  critical: {
-    Icon: XCircle,
-    color: "var(--danger)",
-    border: "rgba(166,32,53,0.35)",
-    bg: "rgba(166,32,53,0.06)",
-    badge: "badge-critical",
-    label: "Critical",
-  },
-  success: {
-    Icon: CheckCircle,
-    color: "var(--success)",
-    border: "rgba(74,124,89,0.35)",
-    bg: "rgba(74,124,89,0.06)",
-    badge: "badge-success",
-    label: "Positive",
-  },
+  info:     { Icon: Info,          color: "#8052ff", border: "rgba(128,82,255,0.35)",  bg: "rgba(128,82,255,0.06)",  badge: "badge-info",     label: "Info" },
+  warning:  { Icon: AlertTriangle, color: "#ffb829", border: "rgba(255,184,41,0.35)",  bg: "rgba(255,184,41,0.06)",  badge: "badge-warning",  label: "Warning" },
+  critical: { Icon: XCircle,       color: "#ff4d6a", border: "rgba(255,77,106,0.35)",  bg: "rgba(255,77,106,0.06)",  badge: "badge-critical", label: "Critical" },
+  success:  { Icon: CheckCircle,   color: "#15846e", border: "rgba(21,132,110,0.35)",  bg: "rgba(21,132,110,0.06)",  badge: "badge-success",  label: "Positive" },
 };
 
 export function QuickInsights() {
@@ -49,15 +21,14 @@ export function QuickInsights() {
   if (isLoading || !aiInsights) {
     return (
       <div className="editorial-card h-full flex flex-col gap-4 p-6">
-        <div className="skeleton h-5 w-48" />
+        <div className="skeleton h-3 w-40 mb-2" />
         {[1, 2, 3].map((i) => (
-          <div key={i} className="skeleton h-20 w-full rounded-lg" />
+          <div key={i} className="skeleton h-20 w-full rounded-2xl" />
         ))}
       </div>
     );
   }
 
-  // Sort: critical first, then warning, then others
   const sorted = [...aiInsights].sort((a, b) => {
     const order: Record<string, number> = { critical: 0, warning: 1, info: 2, success: 3 };
     return (order[a.severity] ?? 4) - (order[b.severity] ?? 4);
@@ -65,24 +36,38 @@ export function QuickInsights() {
   const topInsights = sorted.slice(0, 4);
 
   return (
-    <div className="editorial-card h-full flex flex-col">
+    <div className="editorial-card h-full flex flex-col p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <div className="flex items-center gap-2">
-            <Sparkles size={14} style={{ color: "var(--accent-blue)" }} />
-            <h2 className="editorial-header text-base">AI Recommendations</h2>
-          </div>
-          <div className="text-[11px] mt-1 uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-            Highest impact priorities
-          </div>
+        <div className="flex items-center gap-2">
+          <Sparkles size={13} style={{ color: "var(--plum)" }} />
+          <span
+            style={{
+              fontSize: "11px",
+              fontWeight: 600,
+              color: "var(--smoke)",
+              textTransform: "uppercase",
+              letterSpacing: "0.10em",
+            }}
+          >
+            AI Recommendations
+          </span>
         </div>
         <Link
           href="/intelligence"
-          className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-colors"
-          style={{ color: "var(--accent-blue)" }}
+          style={{
+            fontSize: "12px",
+            fontWeight: 600,
+            color: "var(--plum)",
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
         >
-          View all <ArrowRight size={12} />
+          View all <ArrowRight size={11} />
         </Link>
       </div>
 
@@ -90,9 +75,9 @@ export function QuickInsights() {
       <div className="flex-1 space-y-3">
         {topInsights.length === 0 ? (
           <div className="py-10 text-center">
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+            <p style={{ fontSize: "14px", color: "var(--smoke)", letterSpacing: "0.025em" }}>
               No insights yet.{" "}
-              <Link href="/intelligence" className="underline" style={{ color: "var(--accent-blue)" }}>
+              <Link href="/intelligence" style={{ color: "var(--plum)", textDecoration: "underline" }}>
                 Run Analysis →
               </Link>
             </p>
@@ -103,31 +88,50 @@ export function QuickInsights() {
           return (
             <div
               key={insight.id}
-              className="p-4 rounded-lg transition-all"
               style={{
-                background: cfg.bg,
+                padding: "1rem",
+                borderRadius: "1rem",
                 border: `1px solid ${cfg.border}`,
-                borderLeft: `3px solid ${cfg.color}`,
+                borderLeft: `2px solid ${cfg.color}`,
+                background: cfg.bg,
               }}
             >
               <div className="flex items-start gap-3">
-                <Icon size={14} style={{ color: cfg.color, marginTop: 2, flexShrink: 0 }} />
+                <Icon size={13} style={{ color: cfg.color, marginTop: 2, flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                     <span className={cfg.badge}>{cfg.label}</span>
-                    <span className="badge-gold text-[9px]">{insight.category}</span>
+                    <span className="badge-neutral">{insight.category}</span>
                   </div>
-                  <div className="text-sm font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "var(--bone)",
+                      letterSpacing: "0.021em",
+                    }}
+                  >
                     {insight.title}
                   </div>
-                  <div className="text-xs mt-1.5 line-clamp-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--ash)",
+                      marginTop: "4px",
+                      letterSpacing: "0.021em",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
                     {insight.description}
                   </div>
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>
+                    <span style={{ fontSize: "11px", color: "var(--smoke)", fontFamily: "var(--font-mono, monospace)", letterSpacing: "0.05em" }}>
                       {new Date(insight.createdAt).toLocaleDateString()}
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: cfg.color }}>
+                    <span style={{ fontSize: "11px", fontWeight: 600, color: cfg.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                       {insight.confidence}% conf.
                     </span>
                   </div>

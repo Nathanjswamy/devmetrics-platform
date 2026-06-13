@@ -18,7 +18,7 @@ import { createClient } from "../../../utils/supabase/client";
 import { useEffect, useState } from "react";
 import { Loader2, GitPullRequest, Zap, Shield, TrendingUp, Sparkles, Activity, BarChart2 } from "lucide-react";
 
-/* ─── Section wrapper ───────────────────────────────────────── */
+/* ─── Section wrapper ────────────────────────────────────────── */
 function Section({ label, icon: Icon, children, accent = false }: {
   label: string;
   icon?: any;
@@ -29,15 +29,23 @@ function Section({ label, icon: Icon, children, accent = false }: {
     <section>
       <div className="flex items-center gap-3 mb-6">
         {Icon && (
-          <div className="w-7 h-7 rounded-md flex items-center justify-center"
-            style={{ background: accent ? "var(--accent-blue-dim)" : "var(--surface-2)", border: "1px solid var(--border)" }}>
-            <Icon size={14} style={{ color: accent ? "var(--accent-blue)" : "var(--text-muted)" }} />
-          </div>
+          <Icon
+            size={13}
+            style={{ color: accent ? "var(--plum)" : "var(--smoke)", flexShrink: 0 }}
+          />
         )}
-        <h2 className="font-sans font-bold text-lg" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+        <span
+          style={{
+            fontSize: "11px",
+            fontWeight: 600,
+            color: accent ? "var(--plum)" : "var(--smoke)",
+            textTransform: "uppercase",
+            letterSpacing: "0.10em",
+          }}
+        >
           {label}
-        </h2>
-        <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+        </span>
+        <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
       </div>
       {children}
     </section>
@@ -69,14 +77,10 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen items-center justify-center" style={{ background: "var(--bg)" }}>
+      <div className="flex flex-col min-h-screen items-center justify-center" style={{ background: "#000000" }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{ background: "var(--accent-blue-dim)", border: "1px solid var(--accent-blue)" }}>
-            <BarChart2 size={22} style={{ color: "var(--accent-blue)" }} />
-          </div>
-          <Loader2 className="animate-spin w-5 h-5" style={{ color: "var(--text-muted)" }} />
-          <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading your engineering intelligence…</p>
+          <Loader2 className="animate-spin w-5 h-5" style={{ color: "var(--plum)" }} />
+          <p style={{ fontSize: "13px", color: "var(--smoke)", letterSpacing: "0.05em" }}>Loading intelligence…</p>
         </div>
       </div>
     );
@@ -89,17 +93,17 @@ export default function DashboardPage() {
   if (isEmpty) {
     const repoCount = githubData?.repos?.length || 0;
     return (
-      <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
+      <div className="flex flex-col min-h-screen" style={{ background: "#000000" }}>
         <TopNav title="DevMetrics" subtitle="Engineering Intelligence Platform" />
         <main className="flex-1 px-8 py-20 max-w-4xl mx-auto w-full flex flex-col items-center text-center">
           <div className="w-24 h-24 rounded-full flex items-center justify-center mb-8"
-            style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
-            <Activity size={36} style={{ color: "var(--text-muted)" }} />
+            style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+            <Activity size={36} style={{ color: "var(--smoke)" }} />
           </div>
-          <h2 className="font-sans text-3xl mb-4" style={{ color: "var(--text-primary)" }}>
+          <h2 style={{ fontSize: "36px", fontWeight: 200, color: "var(--bone)", letterSpacing: "-0.04em", marginBottom: "16px" }}>
             {repoCount === 0 ? "Connect your first repository" : `${repoCount} repo${repoCount > 1 ? "s" : ""} synced`}
           </h2>
-          <p className="text-base mb-10 max-w-xl" style={{ color: "var(--text-secondary)" }}>
+          <p style={{ fontSize: "15px", color: "var(--ash)", letterSpacing: "0.025em", marginBottom: "40px", maxWidth: "480px" }}>
             {repoCount === 0
               ? "Connect GitHub to start generating real-time developer insights, DORA metrics, and AI recommendations."
               : "Your repositories are synced. Ensure they have pull requests and commits to populate the dashboard."}

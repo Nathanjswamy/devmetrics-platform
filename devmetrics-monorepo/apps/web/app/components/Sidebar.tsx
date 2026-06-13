@@ -19,25 +19,25 @@ const navItems = [
   {
     section: "Overview",
     items: [
-      { href: "/", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/recommendations", label: "Recommendations", icon: Sparkles },
-      { href: "/intelligence", label: "AI Intelligence", icon: Brain },
-      { href: "/activity", label: "Live Activity", icon: Activity },
+      { href: "/",               label: "Dashboard",      icon: LayoutDashboard },
+      { href: "/recommendations",label: "Recommendations", icon: Sparkles },
+      { href: "/intelligence",   label: "AI Intelligence", icon: Brain },
+      { href: "/activity",       label: "Live Activity",   icon: Activity },
     ],
   },
   {
     section: "Engineering",
     items: [
-      { href: "/reviews", label: "Code Review", icon: GitPullRequest },
-      { href: "/leaderboard", label: "Leaderboard", icon: Users },
-      { href: "/analytics", label: "Analytics", icon: BarChart3 },
+      { href: "/reviews",     label: "Code Review",  icon: GitPullRequest },
+      { href: "/leaderboard", label: "Leaderboard",  icon: Users },
+      { href: "/analytics",   label: "Analytics",    icon: BarChart3 },
     ],
   },
   {
     section: "System",
     items: [
       { href: "/integrations", label: "Integrations", icon: Zap },
-      { href: "/settings", label: "Settings", icon: Settings },
+      { href: "/settings",     label: "Settings",     icon: Settings },
     ],
   },
 ];
@@ -49,30 +49,30 @@ export function Sidebar() {
     <aside
       className="fixed left-0 top-0 h-screen w-56 flex flex-col z-40"
       style={{
-        background: "var(--surface)",
-        borderRight: "1px solid var(--border)",
+        background: "#000000",
+        borderRight: "1px solid rgba(255,255,255,0.07)",
       }}
     >
       {/* Brand */}
       <div
         className="h-14 flex items-center px-4"
-        style={{ borderBottom: "1px solid var(--border)" }}
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
       >
         <BrandLogo iconOnly={true} size="md" href="/dashboard" />
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-5">
+      <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-6">
         {navItems.map((section) => (
           <div key={section.section}>
-            <div className="px-2 mb-1">
+            <div className="px-3 mb-2">
               <span
                 style={{
-                  fontSize: "11px",
+                  fontSize: "10px",
                   fontWeight: 600,
-                  color: "var(--text-muted)",
+                  color: "var(--smoke)",
                   textTransform: "uppercase",
-                  letterSpacing: "0.06em",
+                  letterSpacing: "0.10em",
                 }}
               >
                 {section.section}
@@ -85,7 +85,10 @@ export function Sidebar() {
                 return (
                   <li key={item.href}>
                     <Link href={item.href} className={`sidebar-link ${isActive ? "active" : ""}`}>
-                      <Icon size={15} />
+                      <Icon
+                        size={14}
+                        style={{ color: isActive ? "var(--plum)" : "inherit", flexShrink: 0 }}
+                      />
                       <span>{item.label}</span>
                     </Link>
                   </li>
@@ -96,14 +99,13 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="p-3" style={{ borderTop: "1px solid var(--border)" }}>
-        <div
-          className="flex items-center gap-2 px-2 py-1.5 text-xs"
-          style={{ color: "var(--text-muted)" }}
-        >
+      {/* Operational status */}
+      <div className="px-4 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="flex items-center gap-2">
           <div className="status-dot-green" />
-          <span>All systems operational</span>
+          <span style={{ fontSize: "12px", color: "var(--smoke)", letterSpacing: "0.021em" }}>
+            All systems operational
+          </span>
         </div>
       </div>
     </aside>
