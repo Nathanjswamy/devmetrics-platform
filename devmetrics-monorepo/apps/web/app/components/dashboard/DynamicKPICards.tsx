@@ -37,8 +37,8 @@ export function DynamicKPICards({ userId }: { userId?: string }) {
         const isPositiveTrend =
           metric.trendDirection === "up" ? metric.isGoodUp : !metric.isGoodUp;
         const trendColor = isPositiveTrend
-          ? "var(--severity-success)"
-          : "var(--severity-critical)";
+          ? "var(--success)"
+          : "var(--danger)";
 
         const TrendIcon = metric.trend === 0
           ? Minus
@@ -53,7 +53,7 @@ export function DynamicKPICards({ userId }: { userId?: string }) {
           <div
             key={metric.name}
             className="editorial-card flex flex-col justify-between p-6 min-h-[140px]"
-            style={isFirst ? { borderTop: "2px solid var(--accent-maroon)" } : {}}
+            style={isFirst ? { borderTop: "2px solid var(--accent-blue)" } : {}}
           >
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
@@ -77,7 +77,7 @@ export function DynamicKPICards({ userId }: { userId?: string }) {
 
             {/* Value */}
             <div className="flex items-baseline gap-2">
-              <span className="font-serif text-4xl font-bold leading-none" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>
+              <span className="font-sans text-4xl font-bold leading-none" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>
                 {metric.value}
               </span>
               {metric.unit && (

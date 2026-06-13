@@ -14,7 +14,7 @@ export function HealthScoreWidget() {
     return (
       <div className="editorial-card flex flex-col gap-4 p-6">
         <div className="skeleton h-5 w-40" />
-        <div className="skeleton h-40 w-40 rounded-full mx-auto" />
+        <div className="skeleton h-36 w-36 rounded-full mx-auto" />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => <div key={i} className="skeleton h-2 w-full" />)}
         </div>
@@ -23,12 +23,11 @@ export function HealthScoreWidget() {
   }
 
   const score = healthScore.overall;
-  // Luxury palette — no neon
   const scoreColor =
-    score >= 85 ? "#3A9B95"   // teal
-    : score >= 70 ? "#C9A96E" // gold
-    : score >= 55 ? "#B8752E" // amber
-    : "#A62035";              // maroon/crimson
+    score >= 85 ? "#10B981"   // emerald
+    : score >= 70 ? "#2563EB" // blue
+    : score >= 55 ? "#F59E0B" // amber
+    : "#EF4444";              // red
 
   const radialData = [{ value: score, fill: scoreColor }];
   const getLabel = (s: number) =>
@@ -36,19 +35,19 @@ export function HealthScoreWidget() {
 
   return (
     <div className="editorial-card flex flex-col h-full p-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="editorial-header text-base">Engineering Health</h2>
-          <div className="text-[11px] mt-1 uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+          <h2 className="editorial-header text-sm">Engineering Health</h2>
+          <div className="text-xs mt-0.5 uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
             Composite score
           </div>
         </div>
         <span
-          className="text-xs font-bold px-2.5 py-1 rounded-sm uppercase tracking-widest"
+          className="text-xs font-semibold px-2.5 py-1 rounded-full"
           style={{
-            background: `${scoreColor}18`,
+            background: `${scoreColor}15`,
             color: scoreColor,
-            border: `1px solid ${scoreColor}40`,
+            border: `1px solid ${scoreColor}30`,
           }}
         >
           {getLabel(score)}
@@ -56,7 +55,7 @@ export function HealthScoreWidget() {
       </div>
 
       {/* Radial gauge */}
-      <div className="flex items-center justify-center relative" style={{ height: "150px" }}>
+      <div className="flex items-center justify-center relative" style={{ height: "140px" }}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
             cx="50%" cy="50%"
@@ -67,7 +66,7 @@ export function HealthScoreWidget() {
           >
             <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
             <RadialBar
-              background={{ fill: "var(--surface-3)" }}
+              background={{ fill: "var(--surface-2)" }}
               dataKey="value"
               angleAxisId={0}
               cornerRadius={4}
@@ -75,29 +74,29 @@ export function HealthScoreWidget() {
           </RadialBarChart>
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-serif text-4xl font-bold" style={{ color: scoreColor, letterSpacing: "-0.03em" }}>
+          <span className="text-4xl font-bold" style={{ color: scoreColor, letterSpacing: "-0.03em" }}>
             {score}
           </span>
-          <span className="text-[10px] uppercase tracking-widest mt-1" style={{ color: "var(--text-muted)" }}>
+          <span className="text-xs mt-1 uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
             out of 100
           </span>
         </div>
       </div>
 
       {/* Dimension bars */}
-      <div className="mt-6 space-y-3.5">
+      <div className="mt-5 space-y-3">
         {healthScore.dimensions.map((dim) => (
           <div key={dim.label} className="flex items-center gap-3">
-            <div className="w-20 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+            <div className="w-20 text-xs font-medium" style={{ color: "var(--text-muted)" }}>
               {dim.label}
             </div>
-            <div className="flex-1 h-[2px] rounded-full" style={{ background: "var(--surface-3)" }}>
+            <div className="flex-1 h-1.5 rounded-full" style={{ background: "var(--surface-2)" }}>
               <div
-                className="h-full rounded-full transition-all duration-1000"
+                className="h-full rounded-full transition-all duration-700"
                 style={{ width: `${dim.score}%`, background: scoreColor }}
               />
             </div>
-            <div className="w-7 text-xs font-bold text-right font-serif" style={{ color: "var(--text-primary)" }}>
+            <div className="w-7 text-xs font-semibold text-right" style={{ color: "var(--text-primary)" }}>
               {dim.score}
             </div>
           </div>

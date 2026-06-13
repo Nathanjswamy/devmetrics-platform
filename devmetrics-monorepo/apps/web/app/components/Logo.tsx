@@ -100,7 +100,7 @@ export function Logo({ iconOnly = false, className = "", href = "/" }: LogoProps
       <LogoIcon />
       
       {!iconOnly && (
-        <div className="font-serif font-bold text-xl md:text-2xl tracking-tight flex items-center">
+        <div className="font-sans font-bold text-xl md:text-2xl tracking-tight flex items-center">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-text-primary to-text-secondary">
             Dev
           </span>

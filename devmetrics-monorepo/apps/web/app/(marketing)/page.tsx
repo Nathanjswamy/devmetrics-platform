@@ -33,7 +33,7 @@ export default async function MarketingPage() {
 
       {/* Hero Section */}
       <main className="w-full flex-1 flex flex-col items-center text-center px-4 mt-24 mb-32">
-        <h1 className="text-5xl md:text-7xl font-serif text-text-primary tracking-tight max-w-4xl mb-6 leading-tight">
+        <h1 className="text-5xl md:text-7xl font-sans text-text-primary tracking-tight max-w-4xl mb-6 leading-tight">
           Engineering Intelligence <br /> <span className="text-[#2B6B6D]">For High-Performing Teams</span>
         </h1>
         <p className="text-lg md:text-xl text-text-secondary max-w-2xl mb-10 leading-relaxed">

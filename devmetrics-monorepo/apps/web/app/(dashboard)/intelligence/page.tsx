@@ -26,48 +26,48 @@ import { api } from "../../lib/api";
 import { useState, useEffect } from "react";
 import { createClient } from "../../../utils/supabase/client";
 
-/* ─── Severity config (luxury palette) ─────────────────────── */
+/* ─── Severity config (enterprise light palette) ────────────── */
 const severityConfig = {
   info: {
     Icon: Info,
-    color: "var(--severity-info)",
-    colorRaw: "#2C7873",
-    bg: "rgba(44,120,115,0.06)",
-    border: "rgba(44,120,115,0.25)",
-    tagBg: "rgba(44,120,115,0.12)",
+    color: "#3730A3",
+    colorRaw: "#6366F1",
+    bg: "#EEF2FF",
+    border: "#C7D2FE",
+    tagBg: "#EEF2FF",
     badge: "badge-info",
     label: "Info",
     cardClass: "insight-card-info",
   },
   warning: {
     Icon: AlertTriangle,
-    color: "var(--severity-warning)",
-    colorRaw: "#B8752E",
-    bg: "rgba(184,117,46,0.06)",
-    border: "rgba(184,117,46,0.25)",
-    tagBg: "rgba(184,117,46,0.12)",
+    color: "#92400E",
+    colorRaw: "#F59E0B",
+    bg: "#FFFBEB",
+    border: "#FDE68A",
+    tagBg: "#FFFBEB",
     badge: "badge-warning",
     label: "Warning",
     cardClass: "insight-card-warning",
   },
   critical: {
     Icon: XCircle,
-    color: "var(--severity-critical)",
-    colorRaw: "#A62035",
-    bg: "rgba(166,32,53,0.06)",
-    border: "rgba(166,32,53,0.25)",
-    tagBg: "rgba(166,32,53,0.12)",
+    color: "#991B1B",
+    colorRaw: "#EF4444",
+    bg: "#FEF2F2",
+    border: "#FECACA",
+    tagBg: "#FEF2F2",
     badge: "badge-critical",
     label: "Critical",
     cardClass: "insight-card-critical",
   },
   success: {
     Icon: CheckCircle,
-    color: "var(--severity-success)",
-    colorRaw: "#4A7C59",
-    bg: "rgba(74,124,89,0.06)",
-    border: "rgba(74,124,89,0.25)",
-    tagBg: "rgba(74,124,89,0.12)",
+    color: "#065F46",
+    colorRaw: "#10B981",
+    bg: "#ECFDF5",
+    border: "#A7F3D0",
+    tagBg: "#ECFDF5",
     badge: "badge-success",
     label: "Positive",
     cardClass: "insight-card-success",
@@ -105,12 +105,12 @@ function ConfidenceRing({ value, color }: { value: number; color: string }) {
 /* ─── Stat card ─────────────────────────────────────────────── */
 function StatCard({ label, value, color, icon: Icon }: { label: string; value: number; color: string; icon: any }) {
   return (
-    <div className="editorial-card flex flex-col gap-4 p-5" style={{ borderTop: `2px solid ${color}` }}>
+    <div className="editorial-card flex flex-col gap-3 p-5">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: "var(--text-muted)" }}>{label}</span>
+        <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{label}</span>
         <Icon size={14} style={{ color }} />
       </div>
-      <div className="font-serif text-4xl font-bold" style={{ color, letterSpacing: "-0.03em" }}>{value}</div>
+      <div className="text-3xl font-bold" style={{ color, letterSpacing: "-0.02em" }}>{value}</div>
     </div>
   );
 }
@@ -201,8 +201,8 @@ export default function IntelligencePage() {
         <TopNav title="AI Intelligence" subtitle="Real-time engineering analysis" />
         <main className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--accent-maroon-dim)", border: "1px solid var(--accent-maroon)" }}>
-              <Brain size={22} style={{ color: "var(--accent-maroon-light)" }} />
+            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--accent-blue-dim)", border: "1px solid var(--accent-blue)" }}>
+              <Brain size={22} style={{ color: "var(--accent-blue)" }} />
             </div>
             <Loader2 className="animate-spin" size={18} style={{ color: "var(--text-muted)" }} />
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading intelligence engine…</p>
@@ -229,21 +229,21 @@ export default function IntelligencePage() {
         {/* ── Hero stats row ────────────────────────────────── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard label="Total Insights" value={aiInsights.length} color="var(--text-secondary)" icon={Brain} />
-          <StatCard label="Critical" value={criticalCount} color="var(--severity-critical)" icon={XCircle} />
-          <StatCard label="Warnings" value={warningCount} color="var(--severity-warning)" icon={AlertTriangle} />
-          <StatCard label="Positive" value={positiveCount} color="var(--severity-success)" icon={CheckCircle} />
+          <StatCard label="Critical" value={criticalCount} color="var(--danger)" icon={XCircle} />
+          <StatCard label="Warnings" value={warningCount} color="var(--warning)" icon={AlertTriangle} />
+          <StatCard label="Positive" value={positiveCount} color="var(--success)" icon={CheckCircle} />
         </div>
 
         {/* ── Engine status + Run Analysis ─────────────────── */}
         <div className="editorial-card p-5 flex items-center justify-between gap-6"
-          style={{ borderLeft: "3px solid var(--accent-maroon)" }}>
+          style={{ borderLeft: "3px solid var(--accent-blue)" }}>
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ background: "var(--accent-maroon-dim)", border: "1px solid var(--accent-maroon)" }}>
-              <Sparkles size={18} style={{ color: "var(--accent-maroon-light)" }} />
+              style={{ background: "var(--accent-blue-dim)", border: "1px solid var(--accent-blue)" }}>
+              <Sparkles size={18} style={{ color: "var(--accent-blue)" }} />
             </div>
             <div>
-              <div className="font-serif font-bold text-sm" style={{ color: "var(--text-primary)", letterSpacing: "0.02em" }}>
+              <div className="font-sans font-bold text-sm" style={{ color: "var(--text-primary)", letterSpacing: "0.02em" }}>
                 AI Intelligence Engine
               </div>
               <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
@@ -291,9 +291,9 @@ export default function IntelligencePage() {
               onClick={() => setFilter(key)}
               className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-all"
               style={{
-                background: filter === key ? "var(--accent-maroon)" : "var(--surface-2)",
+                background: filter === key ? "var(--accent-blue)" : "var(--surface-2)",
                 color: filter === key ? "var(--text-primary)" : "var(--text-muted)",
-                border: `1px solid ${filter === key ? "var(--accent-maroon)" : "var(--border)"}`,
+                border: `1px solid ${filter === key ? "var(--accent-blue)" : "var(--border)"}`,
               }}
             >
               {label}
@@ -309,9 +309,9 @@ export default function IntelligencePage() {
               <Brain size={28} style={{ color: "var(--text-muted)" }} />
             </div>
             <div>
-              <p className="font-serif text-xl" style={{ color: "var(--text-primary)" }}>No insights yet</p>
+              <p className="font-sans text-xl" style={{ color: "var(--text-primary)" }}>No insights yet</p>
               <p className="text-sm mt-2" style={{ color: "var(--text-muted)" }}>
-                Click <strong style={{ color: "var(--accent-maroon-light)" }}>Run Analysis</strong> to generate AI insights from your real repository data.
+                Click <strong style={{ color: "var(--accent-blue)" }}>Run Analysis</strong> to generate AI insights from your real repository data.
               </p>
             </div>
             <button onClick={() => generateMutation.mutate()} disabled={generateMutation.isPending} className="btn-primary">
@@ -353,7 +353,7 @@ export default function IntelligencePage() {
 
                     {/* Title row */}
                     <div className="flex items-start justify-between gap-4 mb-3">
-                      <h3 className="font-serif text-lg font-bold leading-snug" style={{ color: "var(--text-primary)" }}>
+                      <h3 className="font-sans text-lg font-bold leading-snug" style={{ color: "var(--text-primary)" }}>
                         {insight.title}
                       </h3>
                       <ConfidenceRing value={insight.confidence} color={cfg.colorRaw} />
@@ -459,7 +459,7 @@ export default function IntelligencePage() {
 
                             {issueResult ? (
                               <div className="flex items-center gap-3 p-4 rounded-lg" style={{ background: "rgba(74,124,89,0.08)", border: "1px solid rgba(74,124,89,0.25)" }}>
-                                <CheckCircle size={16} style={{ color: "var(--severity-success)" }} />
+                                <CheckCircle size={16} style={{ color: "var(--success)" }} />
                                 <div>
                                   <p className="text-sm font-semibold" style={{ color: "#82C49A" }}>Issue created successfully!</p>
                                   <a href={issueResult.url} target="_blank" rel="noopener noreferrer"
@@ -506,7 +506,7 @@ export default function IntelligencePage() {
                                         : <><GitBranch size={13} /> Push to GitHub Issues</>}
                                     </button>
                                     {issueMutation.isError && (
-                                      <p className="text-xs" style={{ color: "var(--severity-critical)" }}>
+                                      <p className="text-xs" style={{ color: "var(--danger)" }}>
                                         Failed to create issue. Check your GitHub integration.
                                       </p>
                                     )}
@@ -514,7 +514,7 @@ export default function IntelligencePage() {
                                 ) : (
                                   <div className="text-sm p-4 rounded-lg" style={{ background: "var(--surface-2)", color: "var(--text-muted)" }}>
                                     No repositories found. Connect GitHub in{" "}
-                                    <a href="/integrations" className="underline" style={{ color: "var(--accent-maroon-light)" }}>Integrations</a>.
+                                    <a href="/integrations" className="underline" style={{ color: "var(--accent-blue)" }}>Integrations</a>.
                                   </div>
                                 )}
                               </div>

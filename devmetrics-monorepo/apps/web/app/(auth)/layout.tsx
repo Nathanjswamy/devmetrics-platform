@@ -55,7 +55,7 @@ export default function AuthLayout({
 
           {/* Value Prop */}
           <div className="relative z-20 p-12 pb-24 max-w-2xl">
-            <h1 className="text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6 text-white drop-shadow-lg">
+            <h1 className="text-5xl lg:text-6xl font-sans font-bold leading-tight mb-6 text-white drop-shadow-lg">
               Know Your Developer DNA.
             </h1>
             <p className="text-xl text-blue-100 font-light drop-shadow-md">

@@ -30,11 +30,11 @@ function Section({ label, icon: Icon, children, accent = false }: {
       <div className="flex items-center gap-3 mb-6">
         {Icon && (
           <div className="w-7 h-7 rounded-md flex items-center justify-center"
-            style={{ background: accent ? "var(--accent-maroon-dim)" : "var(--surface-2)", border: "1px solid var(--border)" }}>
-            <Icon size={14} style={{ color: accent ? "var(--accent-maroon-light)" : "var(--text-muted)" }} />
+            style={{ background: accent ? "var(--accent-blue-dim)" : "var(--surface-2)", border: "1px solid var(--border)" }}>
+            <Icon size={14} style={{ color: accent ? "var(--accent-blue)" : "var(--text-muted)" }} />
           </div>
         )}
-        <h2 className="font-serif font-bold text-lg" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+        <h2 className="font-sans font-bold text-lg" style={{ color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
           {label}
         </h2>
         <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
@@ -72,8 +72,8 @@ export default function DashboardPage() {
       <div className="flex flex-col min-h-screen items-center justify-center" style={{ background: "var(--bg)" }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{ background: "var(--accent-maroon-dim)", border: "1px solid var(--accent-maroon)" }}>
-            <BarChart2 size={22} style={{ color: "var(--accent-maroon-light)" }} />
+            style={{ background: "var(--accent-blue-dim)", border: "1px solid var(--accent-blue)" }}>
+            <BarChart2 size={22} style={{ color: "var(--accent-blue)" }} />
           </div>
           <Loader2 className="animate-spin w-5 h-5" style={{ color: "var(--text-muted)" }} />
           <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading your engineering intelligence…</p>
@@ -96,7 +96,7 @@ export default function DashboardPage() {
             style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
             <Activity size={36} style={{ color: "var(--text-muted)" }} />
           </div>
-          <h2 className="font-serif text-3xl mb-4" style={{ color: "var(--text-primary)" }}>
+          <h2 className="font-sans text-3xl mb-4" style={{ color: "var(--text-primary)" }}>
             {repoCount === 0 ? "Connect your first repository" : `${repoCount} repo${repoCount > 1 ? "s" : ""} synced`}
           </h2>
           <p className="text-base mb-10 max-w-xl" style={{ color: "var(--text-secondary)" }}>

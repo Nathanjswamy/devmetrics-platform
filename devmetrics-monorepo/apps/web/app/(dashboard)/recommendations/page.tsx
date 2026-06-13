@@ -39,7 +39,7 @@ export default function RecommendationsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
           <div>
-            <h2 className="font-serif text-2xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+            <h2 className="font-sans text-2xl font-bold" style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
               Top Priorities
             </h2>
             <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
@@ -51,7 +51,7 @@ export default function RecommendationsPage() {
               className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-widest"
               style={{ background: "var(--surface-2)", border: "1px solid var(--border)", color: "var(--text-primary)" }}
             >
-              <Target size={13} style={{ color: "var(--accent-maroon-light)" }} />
+              <Target size={13} style={{ color: "var(--accent-blue)" }} />
               {actions.length} action{actions.length !== 1 && "s"}
             </div>
             <Link
@@ -68,10 +68,10 @@ export default function RecommendationsPage() {
           <div className="editorial-card p-16 flex flex-col items-center text-center gap-6">
             <div className="w-16 h-16 rounded-full flex items-center justify-center"
               style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
-              <CheckCircle size={28} style={{ color: "var(--severity-success)" }} />
+              <CheckCircle size={28} style={{ color: "var(--success)" }} />
             </div>
             <div>
-              <h3 className="font-serif text-xl" style={{ color: "var(--text-primary)" }}>All caught up!</h3>
+              <h3 className="font-sans text-xl" style={{ color: "var(--text-primary)" }}>All caught up!</h3>
               <p className="text-sm mt-2" style={{ color: "var(--text-secondary)" }}>
                 No critical or warning-level issues found. Your codebase looks healthy.
               </p>
@@ -88,7 +88,7 @@ export default function RecommendationsPage() {
           <div className="space-y-4">
             {actions.map((action, index) => {
               const isCritical = action.severity === "critical";
-              const accentColor = isCritical ? "var(--severity-critical)" : "var(--severity-warning)";
+              const accentColor = isCritical ? "var(--danger)" : "var(--warning)";
               const accentBg = isCritical ? "rgba(166,32,53,0.08)" : "rgba(184,117,46,0.08)";
               const accentBorder = isCritical ? "rgba(166,32,53,0.25)" : "rgba(184,117,46,0.25)";
 
@@ -106,7 +106,7 @@ export default function RecommendationsPage() {
                     {/* Rank number */}
                     <div className="flex flex-col items-center flex-shrink-0">
                       <div
-                        className="w-9 h-9 rounded-md flex items-center justify-center font-serif text-base font-bold"
+                        className="w-9 h-9 rounded-md flex items-center justify-center font-sans text-base font-bold"
                         style={{ background: "var(--surface-3)", border: `1px solid ${accentBorder}`, color: accentColor }}
                       >
                         {index + 1}
@@ -129,7 +129,7 @@ export default function RecommendationsPage() {
                         )}
                       </div>
 
-                      <h3 className="font-serif text-lg font-bold mb-3 leading-snug" style={{ color: "var(--text-primary)" }}>
+                      <h3 className="font-sans text-lg font-bold mb-3 leading-snug" style={{ color: "var(--text-primary)" }}>
                         {action.title}
                       </h3>
 

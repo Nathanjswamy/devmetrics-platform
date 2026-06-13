@@ -1,7 +1,7 @@
 export default function PrivacyPage() {
   return (
     <div className="w-full max-w-4xl mx-auto px-8 py-24 min-h-[60vh]">
-      <h1 className="text-4xl font-serif text-text-primary mb-8">Privacy Policy</h1>
+      <h1 className="text-4xl font-sans text-text-primary mb-8">Privacy Policy</h1>
       <div className="prose prose-invert max-w-none text-text-secondary">
         <p>Effective Date: {new Date().toLocaleDateString()}</p>
         <p className="mt-4">

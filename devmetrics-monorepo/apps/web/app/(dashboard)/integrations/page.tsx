@@ -39,7 +39,7 @@ export default function IntegrationsPage() {
                       </button>
                     )}
                   </div>
-                  <div className="font-serif text-lg font-bold text-text-primary mb-1">{int.name}</div>
+                  <div className="font-sans text-lg font-bold text-text-primary mb-1">{int.name}</div>
                   <div className="text-sm text-text-secondary mb-4">{int.desc}</div>
                   {int.stats && <div className="text-xs font-medium text-text-primary font-mono">{int.stats}</div>}
                 </>

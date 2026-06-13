@@ -52,7 +52,7 @@ function AvatarBadge({ initials, size = 28 }: { initials?: string; size?: number
   const color = colors[safeInitials.charCodeAt(0) % colors.length];
   return (
     <div
-      className="rounded-full flex items-center justify-center text-[10px] font-serif font-bold text-text-primary border border-border bg-surface flex-shrink-0"
+      className="rounded-full flex items-center justify-center text-[10px] font-sans font-bold text-text-primary border border-border bg-surface flex-shrink-0"
       style={{ width: size, height: size }}
     >
       {safeInitials}
@@ -186,12 +186,12 @@ export default function CodeReviewPage() {
                 style={{ background: cfg.headerBg }}
               >
                 <div className="w-3 h-3 rounded-full" style={{ background: cfg.dot }} />
-                <div className="font-serif font-bold text-lg text-text-primary">
+                <div className="font-sans font-bold text-lg text-text-primary">
                   {cfg.label}
                 </div>
                 <div className="text-text-secondary text-sm">{cfg.subtitle}</div>
                 <div
-                  className="ml-auto text-2xl font-serif"
+                  className="ml-auto text-2xl font-sans"
                   style={{ color: cfg.color }}
                 >
                   {prs.length}
@@ -214,7 +214,7 @@ export default function CodeReviewPage() {
                     {cfg.label}
                   </span>
                   <span
-                    className="ml-auto text-xs font-serif font-bold text-text-primary"
+                    className="ml-auto text-xs font-sans font-bold text-text-primary"
                   >
                     {prs.length}
                   </span>

@@ -13,7 +13,7 @@ export default function UpdatePasswordPage({
         <div className="w-8 h-8 rounded flex items-center justify-center bg-[#060c18]">
           <Sparkles size={16} className="text-white" />
         </div>
-        <span className="text-xl font-serif font-bold tracking-tight text-gray-900">DevMetrics</span>
+        <span className="text-xl font-sans font-bold tracking-tight text-gray-900">DevMetrics</span>
       </div>
 
       <div className="mb-8">

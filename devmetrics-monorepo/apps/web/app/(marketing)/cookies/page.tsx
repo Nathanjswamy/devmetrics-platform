@@ -5,7 +5,7 @@ export default function CookiesPage() {
     <div className="flex-1 w-full bg-background min-h-screen">
       <TopNav title="Cookie Policy" />
       <div className="p-8 max-w-3xl mx-auto mt-8">
-        <h1 className="text-3xl font-serif font-bold text-text-primary mb-6">Cookie Policy</h1>
+        <h1 className="text-3xl font-sans font-bold text-text-primary mb-6">Cookie Policy</h1>
         <div className="prose prose-sm prose-invert text-text-secondary">
           <p className="mb-4">Last updated: June 10, 2026</p>
           <p className="mb-4">

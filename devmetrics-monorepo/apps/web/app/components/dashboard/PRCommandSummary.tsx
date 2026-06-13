@@ -72,7 +72,7 @@ export function PRCommandSummary() {
         </div>
         <Link href="/reviews"
           className="text-xs font-bold uppercase tracking-widest flex items-center gap-1 transition-colors"
-          style={{ color: "var(--accent-maroon-light)" }}>
+          style={{ color: "var(--accent-blue)" }}>
           View all →
         </Link>
       </div>
@@ -80,14 +80,14 @@ export function PRCommandSummary() {
       {/* Summary stat row */}
       <div className="grid grid-cols-3 gap-3 mb-5">
         {[
-          { label: "Fresh", count: data.fresh.length, color: "var(--severity-success)", icon: CheckCircle2 },
-          { label: "Aging", count: data.aging.length, color: "var(--severity-warning)", icon: Clock },
-          { label: "Stale", count: data.stale.length, color: "var(--severity-critical)", icon: AlertCircle },
+          { label: "Fresh", count: data.fresh.length, color: "var(--success)", icon: CheckCircle2 },
+          { label: "Aging", count: data.aging.length, color: "var(--warning)", icon: Clock },
+          { label: "Stale", count: data.stale.length, color: "var(--danger)", icon: AlertCircle },
         ].map(({ label, count, color, icon: Icon }) => (
           <div key={label} className="rounded-lg p-3 text-center"
             style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
             <Icon size={14} style={{ color, margin: "0 auto 4px" }} />
-            <div className="font-serif text-2xl font-bold" style={{ color }}>{count}</div>
+            <div className="font-sans text-2xl font-bold" style={{ color }}>{count}</div>
             <div className="text-[10px] font-bold uppercase tracking-widest mt-0.5" style={{ color: "var(--text-muted)" }}>{label}</div>
           </div>
         ))}
@@ -96,13 +96,13 @@ export function PRCommandSummary() {
       {/* PR rows — stale first (most urgent) */}
       <div className="flex-1 overflow-y-auto space-y-0" style={{ maxHeight: "260px" }}>
         {data.stale.slice(0, 3).map((pr) => (
-          <PRRow key={pr.id} pr={pr} accent="var(--severity-critical)" />
+          <PRRow key={pr.id} pr={pr} accent="var(--danger)" />
         ))}
         {data.aging.slice(0, 3).map((pr) => (
-          <PRRow key={pr.id} pr={pr} accent="var(--severity-warning)" />
+          <PRRow key={pr.id} pr={pr} accent="var(--warning)" />
         ))}
         {data.fresh.slice(0, 2).map((pr) => (
-          <PRRow key={pr.id} pr={pr} accent="var(--severity-success)" />
+          <PRRow key={pr.id} pr={pr} accent="var(--success)" />
         ))}
         {totalPRs === 0 && (
           <div className="py-10 text-center text-sm" style={{ color: "var(--text-muted)" }}>

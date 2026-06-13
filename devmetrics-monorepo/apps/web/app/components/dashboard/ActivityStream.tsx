@@ -7,25 +7,25 @@ import { api } from "../../lib/api";
 const eventConfig = {
   deploy: {
     Icon: Rocket,
-    color: "var(--accent-gold)",
+    color: "var(--warning)",
     bg: "rgba(201,169,110,0.12)",
     label: "Deploy",
   },
   pr_merged: {
     Icon: GitMerge,
-    color: "var(--severity-success)",
+    color: "var(--success)",
     bg: "rgba(74,124,89,0.12)",
     label: "Merged",
   },
   incident: {
     Icon: AlertCircle,
-    color: "var(--severity-critical)",
+    color: "var(--danger)",
     bg: "rgba(166,32,53,0.12)",
     label: "Incident",
   },
   review: {
     Icon: Star,
-    color: "var(--accent-teal-light)",
+    color: "var(--success)",
     bg: "rgba(58,155,149,0.12)",
     label: "Review",
   },
@@ -37,7 +37,7 @@ const eventConfig = {
   },
   alert: {
     Icon: Bell,
-    color: "var(--severity-warning)",
+    color: "var(--warning)",
     bg: "rgba(184,117,46,0.12)",
     label: "Alert",
   },
@@ -53,7 +53,7 @@ function AvatarBadge({ initials }: { initials?: string }) {
     );
   }
   return (
-    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-serif font-bold flex-shrink-0"
+    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-sans font-bold flex-shrink-0"
       style={{ background: "var(--surface-3)", border: "1px solid var(--border)", color: "var(--text-secondary)" }}>
       {s.slice(0, 2).toUpperCase()}
     </div>
@@ -130,7 +130,7 @@ export function ActivityStream() {
                 </div>
                 <div className="flex items-center gap-3 mt-1.5 ml-7">
                   {event.repo && (
-                    <span className="text-[10px] font-mono" style={{ color: "var(--accent-teal)" }}>
+                    <span className="text-[10px] font-mono" style={{ color: "var(--success)" }}>
                       {event.repo}
                     </span>
                   )}

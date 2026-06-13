@@ -70,7 +70,7 @@ export default function GitHubIntegrationPage() {
                   <GitBranch size={24} className="text-text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-serif font-bold text-text-primary">Connected as {data.integration.profileId}</h2>
+                  <h2 className="text-lg font-sans font-bold text-text-primary">Connected as {data.integration.profileId}</h2>
                   <p className="text-sm text-text-muted">Connected at {new Date(data.integration.connectedAt).toLocaleDateString()}</p>
                 </div>
               </div>

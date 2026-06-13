@@ -46,7 +46,7 @@ export function RepositoryStatusPanel({ userId }: RepositoryStatusPanelProps) {
     return (
       <div className="editorial-card p-8 flex flex-col items-center justify-center text-center bg-surface w-full max-w-2xl mt-8">
         <GitBranch size={32} className="mb-4 text-text-muted" />
-        <h3 className="text-xl font-serif text-text-primary mb-2">GitHub Not Connected</h3>
+        <h3 className="text-xl font-sans text-text-primary mb-2">GitHub Not Connected</h3>
         <p className="text-text-secondary mb-6 text-sm">
           Connect your GitHub account to import repositories and begin generating metrics.
         </p>

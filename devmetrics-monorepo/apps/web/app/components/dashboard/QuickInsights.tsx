@@ -8,7 +8,7 @@ import Link from "next/link";
 const severityConfig = {
   info: {
     Icon: Info,
-    color: "var(--severity-info)",
+    color: "var(--info)",
     border: "rgba(44,120,115,0.35)",
     bg: "rgba(44,120,115,0.06)",
     badge: "badge-info",
@@ -16,7 +16,7 @@ const severityConfig = {
   },
   warning: {
     Icon: AlertTriangle,
-    color: "var(--severity-warning)",
+    color: "var(--warning)",
     border: "rgba(184,117,46,0.35)",
     bg: "rgba(184,117,46,0.06)",
     badge: "badge-warning",
@@ -24,7 +24,7 @@ const severityConfig = {
   },
   critical: {
     Icon: XCircle,
-    color: "var(--severity-critical)",
+    color: "var(--danger)",
     border: "rgba(166,32,53,0.35)",
     bg: "rgba(166,32,53,0.06)",
     badge: "badge-critical",
@@ -32,7 +32,7 @@ const severityConfig = {
   },
   success: {
     Icon: CheckCircle,
-    color: "var(--severity-success)",
+    color: "var(--success)",
     border: "rgba(74,124,89,0.35)",
     bg: "rgba(74,124,89,0.06)",
     badge: "badge-success",
@@ -70,7 +70,7 @@ export function QuickInsights() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <Sparkles size={14} style={{ color: "var(--accent-maroon-light)" }} />
+            <Sparkles size={14} style={{ color: "var(--accent-blue)" }} />
             <h2 className="editorial-header text-base">AI Recommendations</h2>
           </div>
           <div className="text-[11px] mt-1 uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
@@ -80,7 +80,7 @@ export function QuickInsights() {
         <Link
           href="/intelligence"
           className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-colors"
-          style={{ color: "var(--accent-maroon-light)" }}
+          style={{ color: "var(--accent-blue)" }}
         >
           View all <ArrowRight size={12} />
         </Link>
@@ -92,7 +92,7 @@ export function QuickInsights() {
           <div className="py-10 text-center">
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>
               No insights yet.{" "}
-              <Link href="/intelligence" className="underline" style={{ color: "var(--accent-maroon-light)" }}>
+              <Link href="/intelligence" className="underline" style={{ color: "var(--accent-blue)" }}>
                 Run Analysis →
               </Link>
             </p>

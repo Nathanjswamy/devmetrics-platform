@@ -106,7 +106,7 @@ export function BrandLogo({ iconOnly = false, className = "", href = "/", size =
       <LogoIcon />
       
       {!iconOnly && (
-        <div className={`font-serif font-bold tracking-tight flex items-center ${currentSize.text}`}>
+        <div className={`font-sans font-bold tracking-tight flex items-center ${currentSize.text}`}>
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-text-primary to-text-secondary">
             Dev
           </span>

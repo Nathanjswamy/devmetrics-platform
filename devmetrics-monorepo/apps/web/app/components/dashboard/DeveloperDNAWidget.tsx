@@ -48,7 +48,7 @@ export function DeveloperDNAWidget() {
           <div className="text-xs text-text-secondary uppercase tracking-wider mb-6">Profile Synthesis</div>
           
           <div className="flex items-end gap-3 mb-2">
-            <div className="text-4xl font-serif font-bold text-text-primary leading-none">{data.archetype}</div>
+            <div className="text-4xl font-sans font-bold text-text-primary leading-none">{data.archetype}</div>
           </div>
           <div className="text-sm font-medium text-text-muted mb-6">Overall Score: <span className="text-text-primary font-bold">{data.score}/100</span></div>
 

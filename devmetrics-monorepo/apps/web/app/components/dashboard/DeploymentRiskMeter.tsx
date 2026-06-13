@@ -5,10 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 
 const riskConfig = {
-  low: { color: "#3A9B95", bg: "rgba(58,155,149,0.1)", border: "rgba(58,155,149,0.25)", label: "Low Risk", Icon: CheckCircle },
-  medium: { color: "#C9A96E", bg: "rgba(201,169,110,0.1)", border: "rgba(201,169,110,0.25)", label: "Medium Risk", Icon: AlertTriangle },
-  high: { color: "#B8752E", bg: "rgba(184,117,46,0.1)", border: "rgba(184,117,46,0.25)", label: "High Risk", Icon: AlertTriangle },
-  critical: { color: "#A62035", bg: "rgba(166,32,53,0.12)", border: "rgba(166,32,53,0.3)", label: "Critical Risk", Icon: AlertTriangle },
+  low: { color: "#10B981", bg: "#ECFDF5", border: "#A7F3D0", label: "Low Risk", Icon: CheckCircle },
+  medium: { color: "#F59E0B", bg: "#FFFBEB", border: "#FDE68A", label: "Medium Risk", Icon: AlertTriangle },
+  high: { color: "#EF4444", bg: "#FEF2F2", border: "#FECACA", label: "High Risk", Icon: AlertTriangle },
+  critical: { color: "#DC2626", bg: "#FEF2F2", border: "#FECACA", label: "Critical Risk", Icon: AlertTriangle },
 };
 
 export function DeploymentRiskMeter() {
@@ -85,7 +85,7 @@ export function DeploymentRiskMeter() {
             })}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-            <span className="text-4xl font-serif" style={{ color: cfg.color }}>
+            <span className="text-4xl font-sans" style={{ color: cfg.color }}>
               {score}
             </span>
             <span className="text-[10px] tracking-widest uppercase" style={{ color: "var(--text-muted)" }}>/ 100</span>
@@ -94,9 +94,9 @@ export function DeploymentRiskMeter() {
 
         {/* Scale labels */}
         <div className="flex justify-between w-36 -mt-1">
-          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#3A9B95" }}>Low</span>
-          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#C9A96E" }}>Med</span>
-          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#A62035" }}>High</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#10B981" }}>Low</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#F59E0B" }}>Med</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#EF4444" }}>High</span>
         </div>
       </div>
 
@@ -109,7 +109,7 @@ export function DeploymentRiskMeter() {
         {factors.map((f) => (
           <div key={f.label} className="flex items-center justify-between">
             <span className="text-xs text-text-secondary flex-1">{f.label}</span>
-            <span className="text-xs font-serif text-text-primary">{f.value}</span>
+            <span className="text-xs font-sans text-text-primary">{f.value}</span>
           </div>
         ))}
       </div>

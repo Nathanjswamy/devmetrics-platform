@@ -42,7 +42,7 @@ export default function StatusPage() {
     <div className="flex flex-col min-h-screen">
       <TopNav title="System Status" subtitle="Real-time infrastructure health" />
       <main className="flex-1 px-8 py-10 max-w-5xl mx-auto w-full">
-        <h2 className="text-2xl font-serif text-text-primary mb-6">Service Health</h2>
+        <h2 className="text-2xl font-sans text-text-primary mb-6">Service Health</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <StatusCard 
@@ -113,7 +113,7 @@ function StatusCard({ title, value, subtitle, status }: { title: string, value: 
         {icon}
       </h3>
       <div>
-        <p className={`text-2xl font-serif capitalize tracking-tight ${valueColor}`}>{value}</p>
+        <p className={`text-2xl font-sans capitalize tracking-tight ${valueColor}`}>{value}</p>
         {subtitle && <p className="text-xs text-text-muted mt-1">{subtitle}</p>}
       </div>
     </div>

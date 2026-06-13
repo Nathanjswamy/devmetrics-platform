@@ -12,7 +12,6 @@ import {
   Settings,
   Activity,
   Sparkles,
-  ChevronRight,
 } from "lucide-react";
 import { BrandLogo } from "./BrandLogo";
 
@@ -48,25 +47,33 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen w-60 flex flex-col z-40"
+      className="fixed left-0 top-0 h-screen w-56 flex flex-col z-40"
       style={{
         background: "var(--surface)",
         borderRight: "1px solid var(--border)",
       }}
     >
       {/* Brand */}
-      <div className="h-14 flex items-center px-5" style={{ borderBottom: "1px solid var(--border)" }}>
+      <div
+        className="h-14 flex items-center px-4"
+        style={{ borderBottom: "1px solid var(--border)" }}
+      >
         <BrandLogo iconOnly={true} size="md" href="/dashboard" />
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-6">
+      <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-5">
         {navItems.map((section) => (
           <div key={section.section}>
-            <div className="px-2 mb-1.5">
+            <div className="px-2 mb-1">
               <span
-                className="text-[9px] font-bold uppercase tracking-[0.18em]"
-                style={{ color: "var(--text-muted)" }}
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  color: "var(--text-muted)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
               >
                 {section.section}
               </span>
@@ -78,11 +85,8 @@ export function Sidebar() {
                 return (
                   <li key={item.href}>
                     <Link href={item.href} className={`sidebar-link ${isActive ? "active" : ""}`}>
-                      <Icon size={14} style={{ flexShrink: 0 }} />
-                      <span className="flex-1 text-[13px]">{item.label}</span>
-                      {isActive && (
-                        <ChevronRight size={11} style={{ color: "var(--accent-maroon-light)", opacity: 0.7 }} />
-                      )}
+                      <Icon size={15} />
+                      <span>{item.label}</span>
                     </Link>
                   </li>
                 );
@@ -92,14 +96,14 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer badge */}
-      <div className="p-4" style={{ borderTop: "1px solid var(--border)" }}>
+      {/* Footer */}
+      <div className="p-3" style={{ borderTop: "1px solid var(--border)" }}>
         <div
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-xs"
-          style={{ background: "var(--accent-maroon-dim)", border: "1px solid rgba(139,26,42,0.25)" }}
+          className="flex items-center gap-2 px-2 py-1.5 text-xs"
+          style={{ color: "var(--text-muted)" }}
         >
           <div className="status-dot-green" />
-          <span style={{ color: "var(--text-secondary)" }}>All systems operational</span>
+          <span>All systems operational</span>
         </div>
       </div>
     </aside>
