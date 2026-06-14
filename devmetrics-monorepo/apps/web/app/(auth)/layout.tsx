@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import "../globals.css";
-import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import { BrandLogo } from "../components/BrandLogo";
 
 export const metadata: Metadata = {
   title: "DevMetrics",
@@ -32,42 +30,47 @@ export default function AuthLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-text-primary antialiased min-h-screen flex flex-col md:flex-row m-0 p-0 overflow-hidden">
-        {/* Left Panel - Visuals (70%) */}
-        <div className="hidden lg:flex flex-col justify-between w-[70%] bg-[#060c18] relative overflow-hidden">
-          {/* Background Hero Image */}
-          <Image 
-            src="/hero-globe.png" 
-            alt="DevMetrics Background" 
-            fill
-            className="object-cover opacity-60 z-0 mix-blend-screen"
-            priority
-          />
-          
-          {/* Dark gradient overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#060c18] via-[#060c18]/40 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#060c18]/80 to-transparent z-10 pointer-events-none"></div>
+      <body className="antialiased m-0 p-0 overflow-hidden" style={{ background: '#111111' }}>
+        <div className="min-h-screen flex flex-col lg:flex-row">
+          {/* Left Panel - Decorative with floating orbs */}
+          <div className="hidden lg:flex flex-col w-1/2 relative overflow-hidden" style={{ background: '#0e0e0e' }}>
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: 'radial-gradient(ellipse at 30% 60%, rgba(255,255,255,0.02) 0%, transparent 70%)'
+            }} />
 
-          {/* Branding Header */}
-          <div className="relative z-20 flex items-center gap-2 p-12">
-            <BrandLogo href="/" />
+            {/* Brand name */}
+            <div className="relative z-20 p-10 pt-10">
+              <Link href="/" className="inline-flex items-center gap-2.5 no-underline group">
+                <span className="text-sm font-semibold tracking-[0.2em] uppercase" style={{ color: '#e0e0e0' }}>
+                  DevMetrics
+                </span>
+                <span className="text-[8px] align-super font-medium" style={{ color: '#666' }}>®</span>
+              </Link>
+            </div>
+
+            {/* Floating orbs image - centered */}
+            <div className="flex-1 relative flex items-center justify-center">
+              <div className="relative w-[70%] h-[70%]">
+                <Image
+                  src="/auth-orbs.png"
+                  alt="Decorative floating orbs"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Value Prop */}
-          <div className="relative z-20 p-12 pb-24 max-w-2xl">
-            <h1 className="text-5xl lg:text-6xl font-sans font-bold leading-tight mb-6 text-white drop-shadow-lg">
-              Know Your Developer DNA.
-            </h1>
-            <p className="text-xl text-blue-100 font-light drop-shadow-md">
-              Transform commits, pull requests, code reviews, and deployments into actionable engineering intelligence.
-            </p>
-          </div>
-        </div>
-
-        {/* Right Panel - Auth Form (30%) */}
-        <div className="w-full lg:w-[30%] flex items-center justify-center p-8 bg-white text-gray-900 h-screen overflow-y-auto">
-          <div className="w-full max-w-sm">
-            {children}
+          {/* Right Panel - Auth Form */}
+          <div className="w-full lg:w-1/2 flex items-center justify-center min-h-screen relative" style={{ background: '#141414' }}>
+            {/* Subtle left border separator */}
+            <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+            
+            <div className="w-full max-w-sm px-8 py-12 lg:px-0">
+              {children}
+            </div>
           </div>
         </div>
       </body>

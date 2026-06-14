@@ -3,15 +3,16 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { GitBranch, Sparkles } from "lucide-react";
+import { GitBranch, Eye, EyeOff } from "lucide-react";
 import { createClient } from "../../../utils/supabase/client";
-import { BrandLogo } from "../../components/BrandLogo";
 
 function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(searchParams?.get("error") || null);
   const [message, setMessage] = useState<string | null>(searchParams?.get("message") || null);
 
@@ -83,123 +84,283 @@ function SignupContent() {
     }
   };
 
+  // Shared input styles
+  const inputClass = "w-full px-5 py-3.5 text-sm rounded-full outline-none transition-all duration-200 disabled:opacity-50";
+  const inputStyle = {
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    color: '#e0e0e0',
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
+    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+    e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+  };
+
   return (
-    <div className="w-full pb-8">
-      {/* Mobile-only Header */}
-      <div className="lg:hidden flex items-center justify-center mb-8 mt-4">
-        <BrandLogo href="/" size="md" />
+    <div className="w-full flex flex-col items-center pb-8">
+      {/* Dot pattern logo */}
+      <div className="mb-8 flex justify-center">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="8" r="3" fill="white" />
+          <circle cx="28" cy="8" r="3" fill="white" />
+          <circle cx="8" cy="20" r="3" fill="white" />
+          <circle cx="20" cy="20" r="3" fill="white" />
+          <circle cx="32" cy="20" r="3" fill="white" />
+          <circle cx="12" cy="32" r="3" fill="white" />
+          <circle cx="28" cy="32" r="3" fill="white" />
+        </svg>
       </div>
 
-      <div className="mb-6 mt-4 lg:mt-0">
-        <h2 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">Create your Account</h2>
-        <p className="text-sm text-gray-500">
-          Join engineers improving their craft with DevMetrics.
-        </p>
-      </div>
+      {/* Heading */}
+      <h2 className="text-3xl font-light tracking-tight mb-3" style={{ color: '#ffffff', fontFamily: 'Inter, system-ui, sans-serif' }}>
+        Create account
+      </h2>
+      
+      <p className="text-sm mb-10" style={{ color: '#777' }}>
+        or{" "}
+        <Link href="/login" className="underline underline-offset-2 transition-colors hover:text-white" style={{ color: '#999' }}>
+          sign in to existing account
+        </Link>
+      </p>
 
+      {/* Messages */}
       {message && (
-        <div className="p-3 mb-6 text-sm text-green-700 bg-green-50 border border-green-200 rounded">
+        <div className="w-full p-3 mb-5 text-sm rounded-lg" style={{ 
+          background: 'rgba(21, 132, 110, 0.1)', 
+          border: '1px solid rgba(21, 132, 110, 0.25)',
+          color: '#4db89e' 
+        }}>
           {message}
         </div>
       )}
 
       {error && (
-        <div className="p-3 mb-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded">
+        <div className="w-full p-3 mb-5 text-sm rounded-lg" style={{ 
+          background: 'rgba(255, 77, 106, 0.1)', 
+          border: '1px solid rgba(255, 77, 106, 0.25)',
+          color: '#ff8099' 
+        }}>
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSignUp} className="space-y-4">
-        {/* Primary Action - GitHub */}
-        <button
-          type="button"
-          onClick={handleGithubSignIn}
+      {/* GitHub button */}
+      <button
+        type="button"
+        onClick={handleGithubSignIn}
+        disabled={isLoading}
+        className="w-full flex items-center justify-center gap-3 py-3 px-4 text-sm font-medium transition-all duration-200 rounded-full mb-6 disabled:opacity-50"
+        style={{
+          background: 'transparent',
+          border: '1px solid rgba(255,255,255,0.15)',
+          color: '#ccc',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+          e.currentTarget.style.color = '#fff';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+          e.currentTarget.style.color = '#ccc';
+        }}
+      >
+        <GitBranch size={16} /> Sign up with GitHub
+      </button>
+
+      {/* Divider */}
+      <div className="relative w-full my-2 mb-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full" style={{ height: '1px', background: 'rgba(255,255,255,0.08)' }} />
+        </div>
+        <div className="relative flex justify-center text-xs">
+          <span className="px-3 uppercase font-medium tracking-wider" style={{ background: '#141414', color: '#555' }}>
+            or register with email
+          </span>
+        </div>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSignUp} className="w-full space-y-3.5">
+        {/* Name row */}
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            id="firstName"
+            name="firstName"
+            type="text"
+            required
+            disabled={isLoading}
+            className={inputClass}
+            placeholder="First name"
+            style={inputStyle}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
+          <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            required
+            disabled={isLoading}
+            className={inputClass}
+            placeholder="Last name"
+            style={inputStyle}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
+        </div>
+
+        {/* Email */}
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 py-2.5 px-4 text-sm font-medium text-gray-700 transition-colors bg-white hover:bg-gray-50 rounded-md border border-gray-300 shadow-sm disabled:opacity-50"
-        >
-          <GitBranch size={16} /> Sign up with GitHub
-        </button>
-        
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-white px-2 text-gray-400 uppercase font-semibold tracking-wider">or register with email</span>
-          </div>
+          className={inputClass}
+          placeholder="Email address"
+          style={inputStyle}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+        />
+
+        {/* GitHub & Company row */}
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            id="githubUsername"
+            name="githubUsername"
+            type="text"
+            required
+            disabled={isLoading}
+            className={inputClass}
+            placeholder="GitHub username"
+            style={inputStyle}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
+          <input
+            id="company"
+            name="company"
+            type="text"
+            disabled={isLoading}
+            className={inputClass}
+            placeholder="Company (opt.)"
+            style={inputStyle}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1.5">First Name</label>
-            <input id="firstName" name="firstName" type="text" required disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="Jane" />
-          </div>
-          <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1.5">Last Name</label>
-            <input id="lastName" name="lastName" type="text" required disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="Doe" />
-          </div>
+        {/* Password */}
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            disabled={isLoading}
+            className={`${inputClass} pr-12`}
+            placeholder="Password"
+            style={inputStyle}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+            style={{ color: '#555' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#999'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#555'; }}
+            tabIndex={-1}
+          >
+            {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
         </div>
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
-          <input id="email" name="email" type="email" required disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="you@company.com" />
+        {/* Confirm Password */}
+        <div className="relative">
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            required
+            disabled={isLoading}
+            className={`${inputClass} pr-12`}
+            placeholder="Confirm password"
+            style={inputStyle}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+            style={{ color: '#555' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#999'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#555'; }}
+            tabIndex={-1}
+          >
+            {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="githubUsername" className="block text-sm font-medium text-gray-700 mb-1.5">GitHub Username</label>
-            <input id="githubUsername" name="githubUsername" type="text" required disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="janedoe" />
-          </div>
-          <div>
-            <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1.5">Company <span className="text-gray-400 font-normal">(optional)</span></label>
-            <input id="company" name="company" type="text" disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="Acme Inc" />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-            <input id="password" name="password" type="password" required disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="••••••••" />
-          </div>
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1.5">Confirm Password</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" required disabled={isLoading} className="w-full px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-[#060c18]/20 transition-shadow bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 disabled:opacity-50" placeholder="••••••••" />
-          </div>
-        </div>
-
-        <div className="flex items-start mt-4 mb-6">
+        {/* Terms checkbox */}
+        <div className="flex items-start pt-2 pb-1">
           <div className="flex items-center h-5">
-            <input id="terms" name="terms" type="checkbox" required disabled={isLoading} className="w-4 h-4 text-[#060c18] bg-gray-50 border-gray-300 rounded focus:ring-[#060c18] disabled:opacity-50" />
+            <input 
+              id="terms" 
+              name="terms" 
+              type="checkbox" 
+              required 
+              disabled={isLoading} 
+              className="w-4 h-4 rounded disabled:opacity-50 cursor-pointer"
+              style={{ 
+                accentColor: '#fff',
+                background: 'rgba(255,255,255,0.06)',
+                borderColor: 'rgba(255,255,255,0.15)',
+              }}
+            />
           </div>
-          <label htmlFor="terms" className="ml-2 text-xs text-gray-500">
-            By continuing, you agree to our <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>.
+          <label htmlFor="terms" className="ml-2.5 text-xs leading-relaxed" style={{ color: '#777' }}>
+            By continuing, you agree to our{" "}
+            <Link href="/terms" className="underline underline-offset-2 hover:text-white transition-colors" style={{ color: '#999' }}>Terms</Link>
+            {" "}and{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-white transition-colors" style={{ color: '#999' }}>Privacy Policy</Link>.
           </label>
         </div>
 
+        {/* Submit button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full flex items-center justify-center py-2.5 px-4 text-sm font-medium text-white transition-colors bg-[#060c18] hover:bg-[#060c18]/90 rounded-md shadow-sm disabled:opacity-50"
+          className="w-full py-3.5 px-4 text-sm font-semibold transition-all duration-200 rounded-full mt-1 disabled:opacity-50"
+          style={{
+            background: '#ffffff',
+            color: '#111111',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#e8e8e8';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#ffffff';
+          }}
         >
           {isLoading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
-
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-500">
-          Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline font-medium">
-            Sign in
-          </Link>
-        </p>
-      </div>
     </div>
   );
 }
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="w-full flex justify-center py-8">Loading...</div>}>
+    <Suspense fallback={<div className="w-full flex justify-center py-8" style={{ color: '#555' }}>Loading...</div>}>
       <SignupContent />
     </Suspense>
   );
