@@ -13,7 +13,6 @@ import {
   Torus,
   Lightformer
 } from "@react-three/drei";
-import { EffectComposer, Bloom, DepthOfField } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 // ─── Engineering Theme Materials ──────────────────────────────────────
@@ -161,25 +160,6 @@ function SceneLighting() {
   );
 }
 
-// ─── Post-processing Effects ────────────────────────────────────────
-
-function PostProcessing() {
-  return (
-    <EffectComposer multisampling={4}>
-      <Bloom 
-        luminanceThreshold={1} 
-        mipmapBlur 
-        intensity={0.5} 
-      />
-      <DepthOfField 
-        focusDistance={0.0} 
-        focalLength={0.02} 
-        bokehScale={2} 
-        height={480} 
-      />
-    </EffectComposer>
-  );
-}
 
 // ─── Main Component ─────────────────────────────────────────────────
 
@@ -195,14 +175,13 @@ export default function Scene3D({
       <Canvas 
         camera={{ position: [0, 0, 8], fov: 45 }} 
         dpr={[1, 1.5]} // Limit DPR to 1.5 for performance (60fps target)
-        gl={{ antialias: false }} // Post-processing handles anti-aliasing
+        gl={{ antialias: true }} 
       >
         <color attach="background" args={["#0a0a0a"]} />
         <fog attach="fog" args={["#0a0a0a", 5, 20]} /> {/* Depth fog */}
         
         <SceneLighting />
         <SceneObjects />
-        <PostProcessing />
       </Canvas>
     </div>
   );
