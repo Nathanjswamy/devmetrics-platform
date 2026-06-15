@@ -27,7 +27,7 @@ export class InsightsService {
 
   async getCritical() {
     return this.db.insight.findMany({
-      where: { severity: 'critical' },
+      where: { priority: 'critical' },
       orderBy: { confidence: 'desc' },
     });
   }
@@ -122,16 +122,26 @@ export class InsightsService {
       if (Array.isArray(insights)) {
         await this.db.insight.deleteMany();
         for (const insight of insights) {
-          const formattedDescription = `**Problem:** ${insight.problem || insight.description || 'Unknown problem'}\n\n**Impact:** ${insight.impact || 'Unknown impact'}`;
+          // Find the repoId if affectedTeam matches a repo name
+          let repoId: string | undefined = undefined;
+          if (insight.affectedTeam) {
+            const repo = allRepos.find(r => r.name === insight.affectedTeam);
+            if (repo) repoId = repo.id;
+          }
+
           await this.db.insight.create({
             data: {
               title: insight.title,
-              description: formattedDescription,
-              severity: insight.priority || insight.severity || 'info',
+              problem: insight.problem || insight.description || 'Unknown problem',
+              impact: insight.impact || 'Unknown impact',
+              priority: insight.priority || insight.severity || 'info',
               category: insight.category,
               affectedTeam: insight.affectedTeam,
               confidence: insight.confidence,
               recommendation: insight.recommendation,
+              effort: insight.effort || 'Unknown',
+              expectedOutcome: insight.expectedOutcome || 'General Improvement',
+              repoId: repoId
             }
           });
         }
@@ -148,36 +158,48 @@ export class InsightsService {
       for (const repo of staleRepos.slice(0, 2)) {
         systemInsights.push({
           title: `Archive or update ${repo.name}`,
-          description: `**Problem:** ${repo.name} has had no commits for over 60 days.\n\n**Impact:** Clutters the engineering workspace and creates confusion around active vs abandoned code.`,
-          severity: 'warning',
+          problem: `${repo.name} has had no commits for over 60 days.`,
+          impact: `Clutters the engineering workspace and creates confusion around active vs abandoned code.`,
+          priority: 'medium',
           category: 'Stale Repos',
           confidence: 100,
           affectedTeam: repo.name,
-          recommendation: `Archive ${repo.name} to reduce clutter, or assign an owner to revive it.`
+          recommendation: `Archive ${repo.name} to reduce clutter, or assign an owner to revive it.`,
+          effort: '10 minutes',
+          expectedOutcome: 'Cleaner workspace and less cognitive load',
+          repoId: repo.id
         });
       }
       
       for (const pr of stalePrs.slice(0, 2)) {
         systemInsights.push({
           title: `Review aging PR in ${pr.repo.name}`,
-          description: `**Problem:** PR #${pr.id} by ${pr.author.name || 'Unknown'} has been open for > 4 days.\n\n**Impact:** Blocks deployment velocity, increases merge conflicts, and wastes developer context.`,
-          severity: 'warning',
+          problem: `PR #${pr.id} by ${pr.author.name || 'Unknown'} has been open for > 4 days.`,
+          impact: `Blocks deployment velocity, increases merge conflicts, and wastes developer context.`,
+          priority: 'high',
           category: 'Aging PRs',
           confidence: 100,
           affectedTeam: pr.repo.name,
-          recommendation: `Assign a reviewer to unblock ${pr.author.name || 'this developer'}.`
+          recommendation: `Assign a reviewer to unblock ${pr.author.name || 'this developer'}.`,
+          effort: '15 minutes',
+          expectedOutcome: 'Unblocked pipeline and faster time to merge',
+          repoId: pr.repoId
         });
       }
 
       for (const bus of busFactorRepos.slice(0, 2)) {
         systemInsights.push({
           title: `Bus factor risk in ${bus.repo}`,
-          description: `**Problem:** ${bus.topAuthor} accounts for ${bus.percentage}% of recent commits in ${bus.repo}.\n\n**Impact:** Creates a severe knowledge silo; if the developer leaves, the project velocity will collapse.`,
-          severity: 'critical',
+          problem: `${bus.topAuthor} accounts for ${bus.percentage}% of recent commits in ${bus.repo}.`,
+          impact: `Creates a severe knowledge silo; if the developer leaves, the project velocity will collapse.`,
+          priority: 'critical',
           category: 'Knowledge Silos',
           confidence: 100,
           affectedTeam: bus.repo,
-          recommendation: `Onboard additional developers to ${bus.repo} to distribute knowledge.`
+          recommendation: `Onboard additional developers to ${bus.repo} to distribute knowledge.`,
+          effort: '2 weeks',
+          expectedOutcome: 'Distributed context and lower key-person risk',
+          repoId: activeRepos.find(r => r.name === bus.repo)?.id
         });
       }
       

@@ -13,6 +13,8 @@ import { ActivityModule } from './activity/activity.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { ActionsModule } from './actions/actions.module';
+import { IntelligenceModule } from './intelligence/intelligence.module';
+import { CoachModule } from './coach/coach.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
@@ -34,6 +36,8 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
     AnalyticsModule,
     WebhooksModule,
     ActionsModule,
+    IntelligenceModule,
+    CoachModule,
   ],
   controllers: [AppController],
   providers: [

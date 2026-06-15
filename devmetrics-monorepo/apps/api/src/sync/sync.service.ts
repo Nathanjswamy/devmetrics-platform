@@ -1,13 +1,17 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DatabaseService } from '../database/database.service';
+import { IntelligenceService } from '../intelligence/intelligence.service';
 import { Octokit } from '@octokit/rest';
 
 @Injectable()
 export class SyncService implements OnModuleInit {
   private readonly logger = new Logger(SyncService.name);
 
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly intelligenceService: IntelligenceService
+  ) {}
 
   onModuleInit() {
     this.logger.log('Sync Service initialized');
@@ -403,6 +407,58 @@ export class SyncService implements OnModuleInit {
           }
         } catch(e) {
           this.logger.error(`Error syncing Issues for ${repo.name}`, e);
+        }
+
+        // 5. Fetch File Tree and Core Files for Intelligence
+        try {
+          this.logger.log(`[AUDIT] Fetching file tree for repo ${repo.name}`);
+          const { data: commitObj } = await octokit.repos.getCommit({
+            owner: repo.owner.login,
+            repo: repo.name,
+            ref: repo.default_branch || 'main'
+          });
+          const treeSha = commitObj.commit.tree.sha;
+          
+          const { data: tree } = await octokit.git.getTree({
+            owner: repo.owner.login,
+            repo: repo.name,
+            tree_sha: treeSha,
+            recursive: 'true'
+          });
+          
+          let packageJson = '';
+          try {
+            const { data: pkgData } = await octokit.repos.getContent({
+              owner: repo.owner.login,
+              repo: repo.name,
+              path: 'package.json'
+            });
+            if (!Array.isArray(pkgData) && pkgData.type === 'file' && pkgData.content) {
+              packageJson = Buffer.from(pkgData.content, 'base64').toString('utf8');
+            }
+          } catch(e) { /* ignore */ }
+
+          let readme = '';
+          try {
+            const { data: readmeData } = await octokit.repos.getReadme({
+              owner: repo.owner.login,
+              repo: repo.name,
+            });
+            readme = Buffer.from(readmeData.content, 'base64').toString('utf8');
+          } catch(e) { /* ignore */ }
+
+          // TRIGGER INTELLIGENCE GENERATION HERE
+          this.logger.log(`[AUDIT] Triggering Intelligence Service for ${repo.name}`);
+          await this.intelligenceService.generateRepositoryIntelligence(dbRepo.id, {
+            tree: tree.tree.map(t => t.path),
+            packageJson,
+            readme,
+            name: repo.name,
+            owner: repo.owner.login
+          });
+          
+        } catch(e) {
+          this.logger.error(`Error fetching intelligence data for ${repo.name}`, e);
         }
 
         // Mark repo as synced

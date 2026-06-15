@@ -20,7 +20,7 @@ const navItems = [
     section: "Overview",
     items: [
       { href: "/",               label: "Dashboard",      icon: LayoutDashboard },
-      { href: "/recommendations",label: "Recommendations", icon: Sparkles },
+      { href: "/priorities",     label: "Engineering Priorities", icon: Sparkles },
       { href: "/intelligence",   label: "AI Intelligence", icon: Brain },
       { href: "/activity",       label: "Live Activity",   icon: Activity },
     ],

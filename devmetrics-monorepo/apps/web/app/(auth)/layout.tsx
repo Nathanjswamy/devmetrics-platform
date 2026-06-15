@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { PixelCanvas } from "../components/PixelCanvas";
+import { Scene3DWrapper } from "../components/Scene3DWrapper";
 
 export default function AuthLayout({
   children,
@@ -34,9 +34,9 @@ export default function AuthLayout({
     <html lang="en">
       <body className="antialiased m-0 p-0 overflow-hidden" style={{ background: '#0a0a0a' }}>
         
-        {/* Full screen Pixel Canvas running behind everything */}
+        {/* Full screen 3D Scene running behind everything */}
         <div className="absolute inset-0 z-0">
-          <PixelCanvas />
+          <Scene3DWrapper />
         </div>
 
         <div className="min-h-screen flex flex-col lg:flex-row relative z-10 pointer-events-none">

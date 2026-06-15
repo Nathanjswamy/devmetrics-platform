@@ -44,14 +44,36 @@ export interface PullRequest {
 
 export interface AIInsight {
   id: string;
+  repoId?: string;
   title: string;
-  description: string;
-  severity: "info" | "warning" | "critical" | "success";
+  problem?: string;
+  impact?: string;
   recommendation: string;
+  priority: "info" | "low" | "medium" | "high" | "critical";
   confidence: number;
   category: string;
+  effort?: string;
+  expectedOutcome?: string;
   createdAt: string;
   affectedTeam?: string;
+}
+
+export interface RepositoryScore {
+  id: string;
+  repoId: string;
+  projectScore: number;
+  securityScore: number;
+  architectureScore: number;
+  testingScore: number;
+  documentationScore: number;
+  dependencyScore: number;
+  techDebtScore: number;
+  maintainabilityScore: number;
+  strengths: string;
+  weaknesses: string;
+  risks: string;
+  recommendedActions: string;
+  updatedAt: string;
 }
 
 export interface ActivityEvent {

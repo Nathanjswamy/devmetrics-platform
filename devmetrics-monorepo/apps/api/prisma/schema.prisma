@@ -68,6 +68,8 @@ model Repository {
   prs         PullRequest[]
   commits     Commit[]
   issues      Issue[]
+  insights    Insight[]
+  score       RepositoryScore?
 }
 
 model PullRequest {
@@ -164,13 +166,37 @@ model RequestedReviewer {
 model Insight {
   id             String   @id @default(uuid())
   title          String
-  description    String
-  severity       String   // 'info', 'warning', 'critical', 'success'
-  category       String
-  affectedTeam   String?
-  confidence     Int
+  problem        String?
+  impact         String?
   recommendation String
+  priority       String   // 'info', 'low', 'medium', 'high', 'critical'
+  confidence     Int
+  category       String   // e.g., 'security', 'architecture', 'tech_debt', 'testing', 'documentation', 'dependency'
+  effort         String?
+  expectedOutcome String?
+  affectedTeam   String?
+  repoId         String?
+  repo           Repository? @relation(fields: [repoId], references: [id])
   createdAt      DateTime @default(now())
+}
+
+model RepositoryScore {
+  id               String   @id @default(uuid())
+  repoId           String   @unique
+  repo             Repository @relation(fields: [repoId], references: [id])
+  projectScore     Int
+  securityScore    Int
+  architectureScore Int
+  testingScore     Int
+  documentationScore Int
+  dependencyScore  Int
+  techDebtScore    Int
+  maintainabilityScore Int
+  strengths        String   // JSON string array
+  weaknesses       String   // JSON string array
+  risks            String   // JSON string array
+  recommendedActions String // JSON string array
+  updatedAt        DateTime @updatedAt
 }
 
 model Issue {

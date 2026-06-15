@@ -70,7 +70,7 @@ export class ActionsService {
     const insight = await this.db.insight.findUnique({ where: { id: insightId } });
     if (!insight) throw new Error('Insight not found');
 
-    const prompt = `Based on this engineering insight:\n\nTitle: ${insight.title}\nDescription: ${insight.description}\nRecommendation: ${insight.recommendation}\n\nGenerate a concrete, step-by-step refactoring plan to address this issue.`;
+    const prompt = `Based on this engineering insight:\n\nTitle: ${insight.title}\nProblem: ${insight.problem}\nImpact: ${insight.impact}\nRecommendation: ${insight.recommendation}\n\nGenerate a concrete, step-by-step refactoring plan to address this issue.`;
 
     try {
       this.logger.log(`Requesting refactor suggestion from Gemini for insight: ${insight.title}`);

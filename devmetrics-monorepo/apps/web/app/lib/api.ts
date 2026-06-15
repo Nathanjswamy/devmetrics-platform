@@ -8,6 +8,7 @@ import type {
   SprintData,
   ActivityEvent,
   DeveloperMetric,
+  RepositoryScore,
 } from "../types";
 
 const apiClient = axios.create({
@@ -111,4 +112,16 @@ export const api = {
       return data;
     },
   },
+  coach: {
+    askQuestion: async (repoId: string, question: string) => {
+      const { data } = await apiClient.post<{ answer: string }>(`/coach/${repoId}`, { question });
+      return data;
+    }
+  },
+  intelligence: {
+    getRepository: async (repoId: string) => {
+      const { data } = await apiClient.get<any>(`/intelligence/${repoId}`);
+      return data;
+    }
+  }
 };
