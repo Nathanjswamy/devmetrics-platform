@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { PixelCanvas } from "../components/PixelCanvas";
+
 export default function AuthLayout({
   children,
 }: {
@@ -30,17 +32,23 @@ export default function AuthLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased m-0 p-0 overflow-hidden" style={{ background: '#111111' }}>
-        <div className="min-h-screen flex flex-col lg:flex-row">
-          {/* Left Panel - Decorative with floating orbs */}
-          <div className="hidden lg:flex flex-col w-1/2 relative overflow-hidden" style={{ background: '#0e0e0e' }}>
-            {/* Subtle gradient overlay */}
-            <div className="absolute inset-0 pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at 30% 60%, rgba(255,255,255,0.02) 0%, transparent 70%)'
+      <body className="antialiased m-0 p-0 overflow-hidden" style={{ background: '#0a0a0a' }}>
+        
+        {/* Full screen Pixel Canvas running behind everything */}
+        <div className="absolute inset-0 z-0">
+          <PixelCanvas />
+        </div>
+
+        <div className="min-h-screen flex flex-col lg:flex-row relative z-10 pointer-events-none">
+          {/* Left Panel - Branding */}
+          <div className="hidden lg:flex flex-col w-1/2 relative p-10 pt-10">
+            {/* Subtle gradient overlay to darken edges slightly */}
+            <div className="absolute inset-0" style={{
+              background: 'radial-gradient(ellipse at 30% 60%, rgba(10,10,10,0) 0%, rgba(10,10,10,0.8) 100%)'
             }} />
 
             {/* Brand name */}
-            <div className="relative z-20 p-10 pt-10">
+            <div className="relative z-20 pointer-events-auto">
               <Link href="/" className="inline-flex items-center gap-2.5 no-underline group">
                 <span className="text-sm font-semibold tracking-[0.2em] uppercase" style={{ color: '#e0e0e0' }}>
                   DevMetrics
@@ -48,27 +56,17 @@ export default function AuthLayout({
                 <span className="text-[8px] align-super font-medium" style={{ color: '#666' }}>®</span>
               </Link>
             </div>
-
-            {/* Floating orbs image - centered */}
-            <div className="flex-1 relative flex items-center justify-center">
-              <div className="relative w-[70%] h-[70%]">
-                <Image
-                  src="/auth-orbs.png"
-                  alt="Decorative floating orbs"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </div>
           </div>
 
           {/* Right Panel - Auth Form */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center min-h-screen relative" style={{ background: '#141414' }}>
-            {/* Subtle left border separator */}
-            <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
-            
-            <div className="w-full max-w-sm px-8 py-12 lg:px-0">
+          <div 
+            className="w-full lg:w-1/2 flex items-center justify-center min-h-screen relative pointer-events-auto" 
+            style={{ 
+              background: 'linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.85) 15%, rgba(10,10,10,1) 100%)',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <div className="w-full max-w-sm px-8 py-12 lg:px-0 relative z-20">
               {children}
             </div>
           </div>

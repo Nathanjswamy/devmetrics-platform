@@ -46,7 +46,7 @@ export class AppController {
     const lastSyncTime = integration?.connectedAt || null;
     
     // Check AI status (just verify key is present for MVP)
-    const aiStatus = process.env.OPENAI_API_KEY ? 'operational' : 'unavailable';
+    const aiStatus = process.env.GEMINI_API_KEY ? 'operational' : 'unavailable';
     
     return {
       githubConnection: githubStatus,
@@ -56,5 +56,29 @@ export class AppController {
       aiServiceStatus: aiStatus,
       databaseHealth: dbStatus,
     };
+  }
+
+  @Get('health/ai')
+  async checkAI() {
+    try {
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: 'Ping. Reply with exactly one word: Pong.',
+      });
+
+      return { 
+        connected: true, 
+        provider: 'Google Gemini', 
+        model: 'gemini-2.5-flash' 
+      };
+    } catch (error: any) {
+      return {
+        connected: false,
+        error: error.message || String(error),
+      };
+    }
   }
 }

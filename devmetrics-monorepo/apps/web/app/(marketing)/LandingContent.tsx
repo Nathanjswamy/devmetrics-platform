@@ -5,9 +5,11 @@ import Image from "next/image";
 import { ArrowRight, ArrowUpRight, GitBranch, BarChart3, Shield, Zap, LineChart, GitPullRequest, Users, Code2, Activity, Layers, ChevronRight } from "lucide-react";
 import { KineticTextReveal } from "../components/KineticTextReveal";
 
+import { PixelCanvas } from "../components/PixelCanvas";
+
 export default function LandingContent() {
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0a', color: '#e0e0e0' }}>
+    <div className="min-h-screen relative" style={{ background: '#0a0a0a', color: '#e0e0e0' }}>
       
       {/* ═══════════════════════ NAVIGATION ═══════════════════════ */}
       <nav className="w-full max-w-7xl mx-auto px-6 md:px-10 py-5 flex items-center justify-between relative z-50">
@@ -40,57 +42,52 @@ export default function LandingContent() {
       </nav>
 
       {/* ═══════════════════════ HERO ═══════════════════════ */}
-      <section className="w-full max-w-6xl mx-auto px-6 md:px-10 pt-20 pb-16 text-center">
-        <p className="text-xs uppercase tracking-[0.25em] mb-8 font-medium" style={{ color: '#555' }}>
-          Engineering Intelligence Platform
-        </p>
-        
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-[1.1] tracking-tight mb-8" style={{ color: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
-          <KineticTextReveal
-            splitBy="words"
-            direction="up"
-            blur={true}
-            stagger={0.08}
-            autoPlay={true}
-          >
-            Home to your product team's performance and productivity
-          </KineticTextReveal>
-        </h1>
-        
-        <p className="text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed" style={{ color: '#777' }}>
-          Transform commits, pull requests, code reviews, and deployments into actionable engineering intelligence. Know your Developer DNA.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-          <Link 
-            href="/signup" 
-            className="inline-flex items-center gap-2 text-sm font-medium px-7 py-3 rounded-full transition-all duration-200"
-            style={{ background: '#fff', color: '#0a0a0a' }}
-          >
-            Get Started Free <ArrowRight size={16} />
-          </Link>
-          <Link 
-            href="/docs" 
-            className="inline-flex items-center gap-2 text-sm font-medium px-7 py-3 rounded-full transition-all duration-200"
-            style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: '#aaa' }}
-          >
-            Documentation <ArrowUpRight size={14} />
-          </Link>
+      <section className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-32 pb-40">
+        <div className="absolute inset-0 z-0">
+          <PixelCanvas />
+          {/* Subtle bottom fade to blend with the rest of the page */}
+          <div className="absolute inset-x-0 bottom-0 h-64 pointer-events-none" style={{
+            background: 'linear-gradient(to top, #0a0a0a 0%, transparent 100%)'
+          }} />
         </div>
 
-        {/* Hero Product Preview */}
-        <div className="w-full rounded-2xl overflow-hidden relative group" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="absolute inset-0 pointer-events-none z-10" style={{
-            background: 'linear-gradient(to top, #0a0a0a 0%, transparent 30%)'
-          }} />
-          <Image 
-            src="/hero-product.png" 
-            alt="DevMetrics Dashboard Preview"
-            width={1200}
-            height={700}
-            className="w-full h-auto object-cover"
-            priority
-          />
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-10 text-center pointer-events-none">
+          <p className="text-xs uppercase tracking-[0.25em] mb-8 font-medium pointer-events-auto" style={{ color: '#aaa' }}>
+            Engineering Intelligence Platform
+          </p>
+          
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-[1.1] tracking-tight mb-8 drop-shadow-2xl" style={{ color: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
+            <KineticTextReveal
+              splitBy="words"
+              direction="up"
+              blur={true}
+              stagger={0.08}
+              autoPlay={true}
+            >
+              Home to your product team's performance and productivity
+            </KineticTextReveal>
+          </h1>
+          
+          <p className="text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed pointer-events-auto" style={{ color: '#aaa', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
+            Transform commits, pull requests, code reviews, and deployments into actionable engineering intelligence. Know your Developer DNA.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
+            <Link 
+              href="/signup" 
+              className="inline-flex items-center gap-2 text-sm font-medium px-7 py-3 rounded-full transition-all duration-200 shadow-lg"
+              style={{ background: '#fff', color: '#0a0a0a' }}
+            >
+              Get Started Free <ArrowRight size={16} />
+            </Link>
+            <Link 
+              href="/docs" 
+              className="inline-flex items-center gap-2 text-sm font-medium px-7 py-3 rounded-full transition-all duration-200 bg-black/50 backdrop-blur-md"
+              style={{ border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+            >
+              Documentation <ArrowUpRight size={14} />
+            </Link>
+          </div>
         </div>
       </section>
 

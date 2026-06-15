@@ -20,7 +20,7 @@ export class InsightsController {
   }
 
   @Post('generate')
-  @ApiOperation({ summary: 'Generate new insights using OpenAI' })
+  @ApiOperation({ summary: 'Generate new insights using Gemini' })
   generate() {
     return this.service.generateInsights();
   }

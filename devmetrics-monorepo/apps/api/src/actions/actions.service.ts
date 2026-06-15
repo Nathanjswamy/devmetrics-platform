@@ -1,15 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { Octokit } from '@octokit/rest';
-import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 
 @Injectable()
 export class ActionsService {
   private readonly logger = new Logger(ActionsService.name);
-  private openai: OpenAI;
+  private ai: GoogleGenAI;
 
   constructor(private readonly db: DatabaseService) {
-    this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    this.logger.log('Initializing Google Gemini AI client in ActionsService');
+    try {
+      this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      this.logger.log('Google Gemini AI client initialized successfully');
+    } catch (error) {
+      this.logger.error('Failed to initialize Google Gemini AI client', error);
+    }
   }
 
   async createGitHubIssue(userId: string, repoId: string, title: string, body: string) {
@@ -47,13 +53,15 @@ export class ActionsService {
     const prompt = `You are an AI code reviewer. Based on the following commit messages for PR "${pr.title}", write a concise PR summary description (2-3 paragraphs max) that highlights the what, why, and how of the changes.\n\nCommits:\n${commitMessages}`;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: prompt }]
+      this.logger.log(`Requesting PR summary from Gemini for PR: ${pr.title}`);
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt
       });
-      return { success: true, summary: response.choices[0].message.content };
-    } catch (error) {
-      this.logger.error('OpenAI draft PR summary error', error);
+      this.logger.log(`Received PR summary response from Gemini for PR: ${pr.title}`);
+      return { success: true, summary: response.text };
+    } catch (error: any) {
+      this.logger.error(`Gemini draft PR summary error: ${error.message || String(error)}`, error);
       return { success: false, summary: 'AI service unavailable to draft summary. Please manually review the commits.' };
     }
   }
@@ -65,13 +73,15 @@ export class ActionsService {
     const prompt = `Based on this engineering insight:\n\nTitle: ${insight.title}\nDescription: ${insight.description}\nRecommendation: ${insight.recommendation}\n\nGenerate a concrete, step-by-step refactoring plan to address this issue.`;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: prompt }]
+      this.logger.log(`Requesting refactor suggestion from Gemini for insight: ${insight.title}`);
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt
       });
-      return { success: true, suggestion: response.choices[0].message.content };
-    } catch (error) {
-      this.logger.error('OpenAI refactor suggest error', error);
+      this.logger.log(`Received refactor suggestion response from Gemini for insight: ${insight.title}`);
+      return { success: true, suggestion: response.text };
+    } catch (error: any) {
+      this.logger.error(`Gemini refactor suggest error: ${error.message || String(error)}`, error);
       return { success: false, suggestion: 'AI service unavailable. Please follow standard refactoring guidelines.' };
     }
   }

@@ -5,11 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
 import Link from "next/link";
 
-const severityConfig = {
-  info:     { Icon: Info,          color: "#8052ff", border: "rgba(128,82,255,0.35)",  bg: "rgba(128,82,255,0.06)",  badge: "badge-info",     label: "Info" },
-  warning:  { Icon: AlertTriangle, color: "#ffb829", border: "rgba(255,184,41,0.35)",  bg: "rgba(255,184,41,0.06)",  badge: "badge-warning",  label: "Warning" },
-  critical: { Icon: XCircle,       color: "#ff4d6a", border: "rgba(255,77,106,0.35)",  bg: "rgba(255,77,106,0.06)",  badge: "badge-critical", label: "Critical" },
-  success:  { Icon: CheckCircle,   color: "#15846e", border: "rgba(21,132,110,0.35)",  bg: "rgba(21,132,110,0.06)",  badge: "badge-success",  label: "Positive" },
+const priorityConfig = {
+  info:     { Icon: Info,          color: "#8052ff", border: "rgba(128,82,255,0.35)",  bg: "rgba(128,82,255,0.06)",  badge: "badge-info",     label: "Low Priority" },
+  warning:  { Icon: AlertTriangle, color: "#ffb829", border: "rgba(255,184,41,0.35)",  bg: "rgba(255,184,41,0.06)",  badge: "badge-warning",  label: "Med Priority" },
+  critical: { Icon: XCircle,       color: "#ff4d6a", border: "rgba(255,77,106,0.35)",  bg: "rgba(255,77,106,0.06)",  badge: "badge-critical", label: "High Priority" },
+  success:  { Icon: CheckCircle,   color: "#15846e", border: "rgba(21,132,110,0.35)",  bg: "rgba(21,132,110,0.06)",  badge: "badge-success",  label: "Resolved" },
 };
 
 export function QuickInsights() {
@@ -50,7 +50,7 @@ export function QuickInsights() {
               letterSpacing: "0.10em",
             }}
           >
-            AI Recommendations
+            Engineering Priorities
           </span>
         </div>
         <Link
@@ -83,7 +83,7 @@ export function QuickInsights() {
             </p>
           </div>
         ) : topInsights.map((insight) => {
-          const cfg = severityConfig[insight.severity as keyof typeof severityConfig] ?? severityConfig.info;
+          const cfg = priorityConfig[insight.severity as keyof typeof priorityConfig] ?? priorityConfig.info;
           const Icon = cfg.Icon;
           return (
             <div
@@ -125,7 +125,7 @@ export function QuickInsights() {
                       overflow: "hidden",
                     }}
                   >
-                    {insight.description}
+                    {insight.description.replace(/\*\*/g, '').replace(/Problem:/g, 'Problem:').replace(/\n/g, ' ')}
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span style={{ fontSize: "11px", color: "var(--smoke)", fontFamily: "var(--font-mono, monospace)", letterSpacing: "0.05em" }}>

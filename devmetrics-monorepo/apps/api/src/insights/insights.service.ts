@@ -1,16 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 
 @Injectable()
 export class InsightsService {
   private readonly logger = new Logger(InsightsService.name);
-  private openai: OpenAI;
+  private ai: GoogleGenAI;
 
   constructor(private readonly db: DatabaseService) {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    this.logger.log('Initializing Google Gemini AI client in InsightsService');
+    try {
+      this.ai = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY,
+      });
+      this.logger.log('Google Gemini AI client initialized successfully');
+    } catch (error) {
+      this.logger.error('Failed to initialize Google Gemini AI client', error);
+    }
   }
 
   async findAll() {
@@ -80,6 +86,7 @@ export class InsightsService {
 
     const prompt = `
       You are an elite Engineering Manager. Analyze the following problematic areas detected in the engineering repositories.
+      Focus on generating Engineering Priorities such as: Stale repositories, Aging pull requests, Repositories with no recent activity, Documentation gaps, and Testing gaps.
       You must convert these facts into EXACTLY ${Math.min(5, contextArr.length * 2)} actionable recommendations.
 
       Data:
@@ -88,33 +95,39 @@ export class InsightsService {
       Respond with a JSON array of insight objects. Do NOT use generic titles like "Repository Health Risk". Use exact repository names and actionable titles.
       Each object must have:
       - "title" (string, max 80 chars, e.g. "Archive white-rose-archive or assign owner")
-      - "description" (string, EXACTLY why it is problematic using the provided facts)
-      - "severity" (string, exactly one of: 'warning', 'critical')
-      - "category" (string, e.g., 'Velocity', 'Bus Factor', 'Maintenance')
+      - "problem" (string, what the exact issue is)
+      - "impact" (string, why this is problematic for the engineering team)
+      - "recommendation" (string, highly actionable, exactly what the developer should do next)
+      - "priority" (string, exactly one of: 'info', 'warning', 'critical')
+      - "category" (string, e.g., 'Testing Gaps', 'Documentation', 'Stale Repos', 'Aging PRs')
       - "affectedTeam" (string or null, use the repo name or author name)
       - "confidence" (number, 90-100)
-      - "recommendation" (string, highly actionable, exactly what the developer should do next)
     `;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
+      this.logger.log('Requesting insights generation from Gemini');
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+        }
       });
+      this.logger.log('Received insights response from Gemini');
 
-      const content = response.choices[0].message.content;
+      const content = response.text;
       const parsed = JSON.parse(content || '{}');
       const insights = parsed.insights || parsed;
 
       if (Array.isArray(insights)) {
         await this.db.insight.deleteMany();
         for (const insight of insights) {
+          const formattedDescription = `**Problem:** ${insight.problem || insight.description || 'Unknown problem'}\n\n**Impact:** ${insight.impact || 'Unknown impact'}`;
           await this.db.insight.create({
             data: {
               title: insight.title,
-              description: insight.description,
-              severity: insight.severity,
+              description: formattedDescription,
+              severity: insight.priority || insight.severity || 'info',
               category: insight.category,
               affectedTeam: insight.affectedTeam,
               confidence: insight.confidence,
@@ -135,9 +148,9 @@ export class InsightsService {
       for (const repo of staleRepos.slice(0, 2)) {
         systemInsights.push({
           title: `Archive or update ${repo.name}`,
-          description: `${repo.name} has had no commits for over 60 days.`,
+          description: `**Problem:** ${repo.name} has had no commits for over 60 days.\n\n**Impact:** Clutters the engineering workspace and creates confusion around active vs abandoned code.`,
           severity: 'warning',
-          category: 'Maintenance',
+          category: 'Stale Repos',
           confidence: 100,
           affectedTeam: repo.name,
           recommendation: `Archive ${repo.name} to reduce clutter, or assign an owner to revive it.`
@@ -147,9 +160,9 @@ export class InsightsService {
       for (const pr of stalePrs.slice(0, 2)) {
         systemInsights.push({
           title: `Review aging PR in ${pr.repo.name}`,
-          description: `PR #${pr.id} by ${pr.author.name || 'Unknown'} has been open for > 4 days.`,
+          description: `**Problem:** PR #${pr.id} by ${pr.author.name || 'Unknown'} has been open for > 4 days.\n\n**Impact:** Blocks deployment velocity, increases merge conflicts, and wastes developer context.`,
           severity: 'warning',
-          category: 'Velocity',
+          category: 'Aging PRs',
           confidence: 100,
           affectedTeam: pr.repo.name,
           recommendation: `Assign a reviewer to unblock ${pr.author.name || 'this developer'}.`
@@ -159,9 +172,9 @@ export class InsightsService {
       for (const bus of busFactorRepos.slice(0, 2)) {
         systemInsights.push({
           title: `Bus factor risk in ${bus.repo}`,
-          description: `${bus.topAuthor} accounts for ${bus.percentage}% of recent commits in ${bus.repo}.`,
+          description: `**Problem:** ${bus.topAuthor} accounts for ${bus.percentage}% of recent commits in ${bus.repo}.\n\n**Impact:** Creates a severe knowledge silo; if the developer leaves, the project velocity will collapse.`,
           severity: 'critical',
-          category: 'Bus Factor',
+          category: 'Knowledge Silos',
           confidence: 100,
           affectedTeam: bus.repo,
           recommendation: `Onboard additional developers to ${bus.repo} to distribute knowledge.`

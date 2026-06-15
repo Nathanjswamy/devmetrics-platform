@@ -60,11 +60,12 @@ export class MetricsService {
         }
       }
 
-      const avgLeadTime = validLead > 0 ? (leadTimeSum / validLead).toFixed(1) : '0.0';
+      const fallbackStr = 'Not enough pull request history';
+      const avgLeadTime = validLead > 0 ? (leadTimeSum / validLead).toFixed(1) : fallbackStr;
       const avgCycleTime = validCycle > 0 ? (cycleTimeSum / validCycle).toFixed(1) : avgLeadTime;
-      const avgReviewTime = validReview > 0 ? (reviewTimeSum / validReview).toFixed(1) : '0.0';
+      const avgReviewTime = validReview > 0 ? (reviewTimeSum / validReview).toFixed(1) : fallbackStr;
       
-      const deploymentFreq = validLead > 0 ? (validLead / 30).toFixed(1) : '0.0';
+      const deploymentFreq = validLead > 0 ? (validLead / 30).toFixed(1) : fallbackStr;
       
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const issues = await this.db.issue.findMany({
@@ -86,8 +87,8 @@ export class MetricsService {
         }
       }
 
-      const changeFailureRate = validLead > 0 ? ((bugCount / validLead) * 100).toFixed(1) : '0.0';
-      const mttr = validRecovery > 0 ? (recoveryTimeSum / validRecovery).toFixed(1) : '0.0';
+      const changeFailureRate = validLead > 0 ? ((bugCount / validLead) * 100).toFixed(1) : fallbackStr;
+      const mttr = validRecovery > 0 ? (recoveryTimeSum / validRecovery).toFixed(1) : fallbackStr;
 
       const healthScore = this.getHealthScore().overall.toString();
 

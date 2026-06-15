@@ -27,7 +27,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "../../../utils/supabase/client";
 
 /* ─── Severity config (enterprise light palette) ────────────── */
-const severityConfig = {
+const priorityConfig = {
   info: {
     Icon: Info,
     color: "#3730A3",
@@ -36,7 +36,7 @@ const severityConfig = {
     border: "#C7D2FE",
     tagBg: "#EEF2FF",
     badge: "badge-info",
-    label: "Info",
+    label: "Low Priority",
     cardClass: "insight-card-info",
   },
   warning: {
@@ -47,7 +47,7 @@ const severityConfig = {
     border: "#FDE68A",
     tagBg: "#FFFBEB",
     badge: "badge-warning",
-    label: "Warning",
+    label: "Med Priority",
     cardClass: "insight-card-warning",
   },
   critical: {
@@ -58,7 +58,7 @@ const severityConfig = {
     border: "#FECACA",
     tagBg: "#FEF2F2",
     badge: "badge-critical",
-    label: "Critical",
+    label: "High Priority",
     cardClass: "insight-card-critical",
   },
   success: {
@@ -69,7 +69,7 @@ const severityConfig = {
     border: "#A7F3D0",
     tagBg: "#ECFDF5",
     badge: "badge-success",
-    label: "Positive",
+    label: "Resolved",
     cardClass: "insight-card-success",
   },
 };
@@ -198,40 +198,40 @@ export default function IntelligencePage() {
   if (isLoading || !aiInsights) {
     return (
       <div className="flex flex-col min-h-screen">
-        <TopNav title="AI Intelligence" subtitle="Real-time engineering analysis" />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--accent-blue-dim)", border: "1px solid var(--accent-blue)" }}>
-              <Brain size={22} style={{ color: "var(--accent-blue)" }} />
+          <TopNav title="Engineering Priorities" subtitle="Actionable engineering analysis" />
+          <main className="flex-1 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--accent-blue-dim)", border: "1px solid var(--accent-blue)" }}>
+                <Brain size={22} style={{ color: "var(--accent-blue)" }} />
+              </div>
+              <Loader2 className="animate-spin" size={18} style={{ color: "var(--text-muted)" }} />
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading priorities…</p>
             </div>
-            <Loader2 className="animate-spin" size={18} style={{ color: "var(--text-muted)" }} />
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading intelligence engine…</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  /* ── derived ── */
-  const criticalCount = aiInsights.filter((i) => i.severity === "critical").length;
-  const warningCount = aiInsights.filter((i) => i.severity === "warning").length;
-  const positiveCount = aiInsights.filter((i) => i.severity === "success").length;
-  const infoCount = aiInsights.filter((i) => i.severity === "info").length;
-
-  const filtered = filter === "all" ? aiInsights : aiInsights.filter((i) => i.severity === filter);
-
-  return (
-    <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
-      <TopNav title="AI Intelligence" subtitle="Real-time engineering analysis powered by your data" />
+          </main>
+        </div>
+      );
+    }
+  
+    /* ── derived ── */
+    const criticalCount = aiInsights.filter((i) => i.severity === "critical").length;
+    const warningCount = aiInsights.filter((i) => i.severity === "warning").length;
+    const positiveCount = aiInsights.filter((i) => i.severity === "success").length;
+    const infoCount = aiInsights.filter((i) => i.severity === "info").length;
+  
+    const filtered = filter === "all" ? aiInsights : aiInsights.filter((i) => i.severity === filter);
+  
+    return (
+      <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
+        <TopNav title="Engineering Priorities" subtitle="Actionable priorities generated from your data" />
 
       <main className="flex-1 p-8 max-w-7xl mx-auto w-full space-y-8">
 
         {/* ── Hero stats row ────────────────────────────────── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard label="Total Insights" value={aiInsights.length} color="var(--text-secondary)" icon={Brain} />
-          <StatCard label="Critical" value={criticalCount} color="var(--danger)" icon={XCircle} />
-          <StatCard label="Warnings" value={warningCount} color="var(--warning)" icon={AlertTriangle} />
-          <StatCard label="Positive" value={positiveCount} color="var(--success)" icon={CheckCircle} />
+          <StatCard label="Total Priorities" value={aiInsights.length} color="var(--text-secondary)" icon={Brain} />
+          <StatCard label="High Priority" value={criticalCount} color="var(--danger)" icon={XCircle} />
+          <StatCard label="Med Priority" value={warningCount} color="var(--warning)" icon={AlertTriangle} />
+          <StatCard label="Resolved" value={positiveCount} color="var(--success)" icon={CheckCircle} />
         </div>
 
         {/* ── Engine status + Run Analysis ─────────────────── */}
@@ -252,7 +252,7 @@ export default function IntelligencePage() {
                   : generateMutation.isSuccess
                   ? `Analysis complete · ${generateMutation.data?.count ?? 0} insights generated`
                   : generateMutation.isError
-                  ? "Analysis failed — check OpenAI key in API .env"
+                  ? "Analysis failed — check Gemini key in API .env"
                   : "Reads live database aggregations — no mock data"}
               </div>
             </div>
@@ -261,7 +261,7 @@ export default function IntelligencePage() {
           <div className="flex items-center gap-3 flex-shrink-0">
             <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-muted)" }}>
               <Activity size={12} />
-              <span className="font-mono uppercase tracking-widest">GPT-4o</span>
+              <span className="font-mono uppercase tracking-widest">gemini-2.5-flash</span>
             </div>
             <div className="h-4 w-px" style={{ background: "var(--border)" }} />
             <button
@@ -323,7 +323,7 @@ export default function IntelligencePage() {
         {/* ── Insights list ─────────────────────────────────── */}
         <div className="space-y-4">
           {filtered.map((insight, idx) => {
-            const cfg = severityConfig[insight.severity as keyof typeof severityConfig] ?? severityConfig.info;
+            const cfg = priorityConfig[insight.severity as keyof typeof priorityConfig] ?? priorityConfig.info;
             const SeverityIcon = cfg.Icon;
             const isActive = activeInsight === insight.id;
 
@@ -360,9 +360,16 @@ export default function IntelligencePage() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
-                      {insight.description}
-                    </p>
+                    <div className="text-sm leading-relaxed mb-5 space-y-2" style={{ color: "var(--text-secondary)" }}>
+                      {insight.description.split('\n\n').map((para: string, i: number) => {
+                        if (para.startsWith('**Problem:**')) {
+                           return <p key={i}><strong style={{ color: "var(--text-primary)" }}>Problem:</strong> {para.replace('**Problem:**', '')}</p>
+                        } else if (para.startsWith('**Impact:**')) {
+                           return <p key={i}><strong style={{ color: "var(--text-primary)" }}>Impact:</strong> {para.replace('**Impact:**', '')}</p>
+                        }
+                        return <p key={i}>{para.replace(/\*\*/g, '')}</p>
+                      })}
+                    </div>
 
                     {/* AI Recommendation box */}
                     <div className="rounded-lg p-4 mb-4 flex items-start gap-3"
@@ -431,12 +438,12 @@ export default function IntelligencePage() {
                             {refactorMutation.isPending && (
                               <div className="flex items-center gap-3 text-sm p-4 rounded-lg" style={{ background: "var(--surface-2)" }}>
                                 <Loader2 size={16} className="animate-spin" style={{ color: cfg.color }} />
-                                <span style={{ color: "var(--text-secondary)" }}>GPT-4o is generating your step-by-step plan…</span>
+                                <span style={{ color: "var(--text-secondary)" }}>gemini-2.5-flash is generating your step-by-step plan…</span>
                               </div>
                             )}
                             {refactorMutation.isError && (
                               <div className="p-4 rounded-lg text-sm" style={{ background: "rgba(166,32,53,0.08)", border: "1px solid rgba(166,32,53,0.25)", color: "#E8929F" }}>
-                                Failed to generate plan. Ensure your OpenAI API key is valid in <code className="font-mono text-xs">apps/api/.env</code>.
+                                Failed to generate plan. Ensure your Gemini API key is valid in <code className="font-mono text-xs">apps/api/.env</code>.
                               </div>
                             )}
                             {refactorMutation.isSuccess && (
