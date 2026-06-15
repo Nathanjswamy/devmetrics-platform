@@ -15,7 +15,7 @@ export function ProjectCoach({ repoId, repoName }: { repoId: string; repoName: s
     {
       id: "intro",
       role: "coach",
-      content: \`Hi! I'm your Project Coach AI. I've analyzed \${repoName}'s code structure, dependencies, and metrics. What would you like to know about its architecture, security, or tech debt?\`
+      content: `Hi! I'm your Project Coach AI. I've analyzed ${repoName}'s code structure, dependencies, and metrics. What would you like to know about its architecture, security, or tech debt?`
     }
   ]);
   const [input, setInput] = useState("");
@@ -70,18 +70,18 @@ export function ProjectCoach({ repoId, repoName }: { repoId: string; repoName: s
 
       <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-4">
         {messages.map(msg => (
-          <div key={msg.id} className={\`flex gap-3 \${msg.role === 'user' ? 'justify-end' : 'justify-start'}\`}>
+          <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'coach' && (
               <div className="w-8 h-8 rounded-full bg-plum/10 border border-plum/30 flex items-center justify-center shrink-0">
                 <Bot size={16} className="text-plum" />
               </div>
             )}
             
-            <div className={\`px-4 py-3 rounded-2xl max-w-[85%] text-sm leading-relaxed \${
+            <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-sm leading-relaxed ${
               msg.role === 'user' 
                 ? 'bg-plum text-white rounded-br-sm' 
                 : 'bg-white/5 border border-white/10 text-gray-200 rounded-bl-sm'
-            }\`}>
+            }`}>
               <div className="whitespace-pre-wrap">{msg.content}</div>
             </div>
 

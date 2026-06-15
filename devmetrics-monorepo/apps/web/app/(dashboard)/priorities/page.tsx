@@ -78,11 +78,11 @@ export default function PrioritiesPage() {
 
       <div className="grid grid-cols-1 gap-4">
         {insights.map((insight) => (
-          <div key={insight.id} className="editorial-card flex flex-col gap-4" style={{ borderLeft: \`3px solid \${getPriorityColor(insight.priority)}\` }}>
+          <div key={insight.id} className="editorial-card flex flex-col gap-4" style={{ borderLeft: `3px solid ${getPriorityColor(insight.priority)}` }}>
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className={\`badge-\${insight.priority === 'critical' ? 'critical' : insight.priority === 'high' ? 'warning' : 'info'}\`}>
+                  <span className={`badge-${insight.priority === 'critical' ? 'critical' : insight.priority === 'high' ? 'warning' : 'info'}`}>
                     {insight.priority.toUpperCase()} PRIORITY
                   </span>
                   <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold flex items-center gap-1">
@@ -96,7 +96,7 @@ export default function PrioritiesPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-white">{insight.title}</h3>
                 {insight.affectedTeam && (
-                  <Link href={\`/repository/\${insight.repoId}\`} className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors mt-1 inline-flex items-center gap-1">
+                  <Link href={`/repository/${insight.repoId}`} className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors mt-1 inline-flex items-center gap-1">
                     Repository: {insight.affectedTeam} <ArrowRight size={12} />
                   </Link>
                 )}

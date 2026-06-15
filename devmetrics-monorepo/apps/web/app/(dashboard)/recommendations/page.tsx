@@ -28,8 +28,8 @@ export default function RecommendationsPage() {
   }
 
   const actions = [...aiInsights]
-    .filter((i) => i.severity === "critical" || i.severity === "warning")
-    .sort((a) => (a.severity === "critical" ? -1 : 1));
+    .filter((i) => i.priority === "critical" || i.priority === "high")
+    .sort((a) => (a.priority === "critical" ? -1 : 1));
 
   return (
     <div className="flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
@@ -87,7 +87,7 @@ export default function RecommendationsPage() {
         ) : (
           <div className="space-y-4">
             {actions.map((action, index) => {
-              const isCritical = action.severity === "critical";
+              const isCritical = action.priority === "critical";
               const accentColor = isCritical ? "var(--danger)" : "var(--warning)";
               const accentBg = isCritical ? "rgba(166,32,53,0.08)" : "rgba(184,117,46,0.08)";
               const accentBorder = isCritical ? "rgba(166,32,53,0.25)" : "rgba(184,117,46,0.25)";
@@ -141,7 +141,7 @@ export default function RecommendationsPage() {
                               The Problem
                             </span>
                             <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                              {action.description}
+                              {action.problem}
                             </p>
                           </div>
                         </div>

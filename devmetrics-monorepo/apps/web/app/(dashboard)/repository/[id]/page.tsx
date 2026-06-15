@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "../../../lib/api";
 import { ProjectCoach } from "../../../components/coach/ProjectCoach";
-import { Loader2, Shield, Database, LayoutTemplate, CheckCircle2, FileText, Package, AlertTriangle, Github } from "lucide-react";
+import { Loader2, Shield, Database, LayoutTemplate, CheckCircle2, FileText, Package, AlertTriangle, GitBranch } from "lucide-react";
 import { AIInsight, RepositoryScore } from "../../../types";
 
 export default function RepositoryDrilldownPage() {
@@ -76,14 +76,14 @@ export default function RepositoryDrilldownPage() {
       <div className="flex items-center justify-between border-b border-white/5 pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Github size={20} className="text-gray-400" />
+            <GitBranch size={20} className="text-gray-400" />
             <h1 className="text-2xl font-bold tracking-tight">{repo.name}</h1>
           </div>
           <p className="text-gray-500 text-sm">Engineering Intelligence & Repository Health</p>
         </div>
         <div className="text-right">
           <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Project Score</div>
-          <div className={\`text-4xl font-light \${score.projectScore > 80 ? 'text-lichen' : score.projectScore > 60 ? 'text-warning' : 'text-danger'}\`}>
+          <div className={`text-4xl font-light ${score.projectScore > 80 ? 'text-lichen' : score.projectScore > 60 ? 'text-warning' : 'text-danger'}`}>
             {score.projectScore}
           </div>
         </div>
@@ -125,7 +125,7 @@ export default function RepositoryDrilldownPage() {
               {insights.map(insight => (
                 <div key={insight.id} className="editorial-card bg-white/[0.02] hover:bg-white/[0.04] transition-colors p-4">
                   <div className="flex justify-between items-start mb-2">
-                    <span className={\`badge-\${insight.priority === 'critical' ? 'critical' : insight.priority === 'high' ? 'warning' : 'info'}\`}>
+                    <span className={`badge-${insight.priority === 'critical' ? 'critical' : insight.priority === 'high' ? 'warning' : 'info'}`}>
                       {insight.priority.toUpperCase()} PRIORITY
                     </span>
                     <span className="text-xs text-gray-500">{insight.category}</span>

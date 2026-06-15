@@ -31,7 +31,7 @@ export function QuickInsights() {
 
   const sorted = [...aiInsights].sort((a, b) => {
     const order: Record<string, number> = { critical: 0, warning: 1, info: 2, success: 3 };
-    return (order[a.severity] ?? 4) - (order[b.severity] ?? 4);
+    return (order[a.priority] ?? 4) - (order[b.priority] ?? 4);
   });
   const topInsights = sorted.slice(0, 4);
 
@@ -83,7 +83,7 @@ export function QuickInsights() {
             </p>
           </div>
         ) : topInsights.map((insight) => {
-          const cfg = priorityConfig[insight.severity as keyof typeof priorityConfig] ?? priorityConfig.info;
+          const cfg = priorityConfig[insight.priority as keyof typeof priorityConfig] ?? priorityConfig.info;
           const Icon = cfg.Icon;
           return (
             <div
@@ -125,7 +125,7 @@ export function QuickInsights() {
                       overflow: "hidden",
                     }}
                   >
-                    {insight.description.replace(/\*\*/g, '').replace(/Problem:/g, 'Problem:').replace(/\n/g, ' ')}
+                    {(insight.problem || "").replace(/\*\*/g, '').replace(/Problem:/g, 'Problem:').replace(/\n/g, ' ')}
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span style={{ fontSize: "11px", color: "var(--smoke)", fontFamily: "var(--font-mono, monospace)", letterSpacing: "0.05em" }}>
