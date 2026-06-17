@@ -3,9 +3,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight, GitBranch, BarChart3, Shield, Zap, LineChart, GitPullRequest, Users, Code2, Activity, Layers, ChevronRight } from "lucide-react";
-import { KineticTextReveal } from "../components/KineticTextReveal";
+import dynamic from "next/dynamic";
 
-import { PixelCanvas } from "../components/PixelCanvas";
+const KineticTextReveal = dynamic(
+  () => import("../components/KineticTextReveal").then((mod) => mod.KineticTextReveal),
+  { ssr: false }
+);
+
+const PixelCanvas = dynamic(
+  () => import("../components/PixelCanvas").then((mod) => mod.PixelCanvas),
+  { ssr: false }
+);
 
 export default function LandingContent() {
   return (

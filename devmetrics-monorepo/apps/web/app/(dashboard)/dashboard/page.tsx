@@ -17,7 +17,8 @@ import { PRCommandSummary } from "../../components/dashboard/PRCommandSummary";
 import { createClient } from "../../../utils/supabase/client";
 import { useEffect, useState } from "react";
 import { Loader2, GitPullRequest, Zap, Shield, TrendingUp, Sparkles, Activity, BarChart2 } from "lucide-react";
-import { PixelCanvas } from "../../components/PixelCanvas";
+import dynamic from "next/dynamic";
+const PixelCanvas = dynamic(() => import("../../components/PixelCanvas").then(mod => mod.PixelCanvas), { ssr: false });
 
 /* ─── Section wrapper ────────────────────────────────────────── */
 function Section({ label, icon: Icon, children, accent = false }: {
