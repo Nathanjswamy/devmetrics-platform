@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, RefreshCw, ChevronDown } from "lucide-react";
+import { RefreshCw, ChevronDown } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { UserAccountMenu } from "./UserAccountMenu";
