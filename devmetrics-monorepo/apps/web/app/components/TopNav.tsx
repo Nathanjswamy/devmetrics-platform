@@ -50,36 +50,6 @@ export function TopNav({ title, subtitle }: TopNavProps) {
       {/* Controls */}
       <div className="flex items-center gap-2">
 
-        {/* Search — ghost pill */}
-        <div
-          className="flex items-center gap-2 cursor-pointer transition-colors"
-          style={{
-            width: "180px",
-            padding: "0.375rem 0.875rem",
-            borderRadius: "99px",
-            border: "1px solid rgba(255,255,255,0.10)",
-            color: "var(--smoke)",
-            fontSize: "13px",
-            letterSpacing: "0.021em",
-          }}
-        >
-          <Search size={12} />
-          <span>Search…</span>
-          <kbd
-            style={{
-              marginLeft: "auto",
-              fontSize: "10px",
-              padding: "1px 5px",
-              borderRadius: "4px",
-              border: "1px solid rgba(255,255,255,0.10)",
-              color: "var(--smoke)",
-              background: "transparent",
-              fontFamily: "inherit",
-            }}
-          >
-            ⌘K
-          </kbd>
-        </div>
 
         {/* Date range — ghost pill */}
         <button
