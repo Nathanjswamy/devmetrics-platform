@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api";
-import { Loader2, Fingerprint, Star, Zap, Target, Users, Code2 } from "lucide-react";
+import { Loader2, Fingerprint, Star, Zap, Target, Users, Code2, ShieldAlert } from "lucide-react";
+import { EmptyMetricState } from "./EmptyMetricState";
 
 export function DeveloperDNAWidget() {
   const { data, isLoading } = useQuery({
@@ -15,8 +16,12 @@ export function DeveloperDNAWidget() {
 
   if (isLoading || !data) {
     return (
-      <div className="editorial-card h-64 flex flex-col items-center justify-center">
-        <Loader2 className="animate-spin text-text-muted" />
+      <div className="editorial-card h-full flex flex-col">
+        <EmptyMetricState
+          icon={isLoading ? Loader2 : Fingerprint}
+          message={isLoading ? "Analyzing developer profile..." : "Not enough data to synthesize Developer DNA"}
+          subtext={!isLoading ? "Continue merging PRs to build a DNA profile." : undefined}
+        />
       </div>
     );
   }

@@ -62,10 +62,16 @@ export function DynamicKPICards({ userId }: { userId?: string }) {
               {metric.trend !== undefined && (
                 <div
                   className="flex items-center gap-1"
-                  style={{ fontSize: "11px", fontWeight: 600, color: trendColor }}
+                  style={{ fontSize: "11px", fontWeight: 600, color: (metric.trend === 0 || metric.value === 0 || metric.value === "0.0") ? "var(--smoke)" : trendColor }}
                 >
-                  <TrendIcon size={12} strokeWidth={2.5} />
-                  {Math.abs(metric.trend)}%
+                  {(metric.trend === 0 || metric.value === 0 || metric.value === "0.0") ? (
+                    <span className="px-1 text-slate-500">-</span>
+                  ) : (
+                    <>
+                      <TrendIcon size={12} strokeWidth={2.5} />
+                      {Math.abs(metric.trend)}%
+                    </>
+                  )}
                 </div>
               )}
             </div>

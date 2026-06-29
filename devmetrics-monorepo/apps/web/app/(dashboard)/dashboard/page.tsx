@@ -13,6 +13,7 @@ import { HealthScoreWidget } from "../../components/dashboard/HealthScoreWidget"
 import { DeploymentRiskMeter } from "../../components/dashboard/DeploymentRiskMeter";
 import { ActivityStream } from "../../components/dashboard/ActivityStream";
 import { RecentActivityFeed } from "../../components/dashboard/RecentActivityFeed";
+import { EmptyMetricState } from "../../components/dashboard/EmptyMetricState";
 import { RepositoryStatusPanel } from "../../components/dashboard/RepositoryStatusPanel";
 import { PRCommandSummary } from "../../components/dashboard/PRCommandSummary";
 import { createClient } from "../../../utils/supabase/client";
@@ -189,9 +190,12 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="editorial-card p-12 text-center" style={{ background: "var(--surface-2)", border: "1px dashed var(--border)" }}>
-              <p className="font-sans text-lg" style={{ color: "var(--text-primary)" }}>Not enough pull request history.</p>
-              <p className="text-sm mt-2 max-w-md mx-auto" style={{ color: "var(--text-muted)" }}>DORA metrics require merged pull requests to calculate lead time and deployment frequency.</p>
+            <div className="editorial-card h-full flex flex-col" style={{ background: "var(--surface-2)", border: "1px dashed var(--border)" }}>
+              <EmptyMetricState
+                icon={TrendingUp}
+                message="Not enough pull request history."
+                subtext="DORA metrics require merged pull requests to calculate lead time and deployment frequency."
+              />
             </div>
           )}
         </Section>

@@ -23,18 +23,18 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div
         className="rounded-xl p-3 text-xs"
         style={{
-          background: "var(--surface)",
+          background: "#1E293B",
           border: "1px solid var(--border)",
-          boxShadow: "4px 4px 0px 0px rgba(44,42,38,0.05)",
-          borderRadius: "0px"
+          boxShadow: "0px 4px 12px rgba(0,0,0,0.5)",
+          borderRadius: "8px"
         }}
       >
-        <div className="font-semibold text-text-primary mb-2">{label}</div>
+        <div className="font-semibold text-white mb-2">{label}</div>
         {payload.map((p: any) => (
           <div key={p.dataKey} className="flex items-center gap-2 mb-1">
             <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-            <span className="text-text-muted">{p.name}:</span>
-            <span className="font-semibold text-text-primary">{p.value}</span>
+            <span className="text-slate-300">{p.name}:</span>
+            <span className="font-semibold text-white">{p.value}</span>
           </div>
         ))}
       </div>
@@ -91,6 +91,8 @@ export function SparklineChart() {
               <CartesianGrid strokeDasharray="1 3" stroke="var(--border)" vertical={false} />
               <XAxis
                 dataKey="sprint"
+                scale="point"
+                padding={{ left: 30, right: 30 }}
                 tick={{ fill: "#8C867A", fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}

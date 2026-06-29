@@ -17,6 +17,11 @@ export function DeploymentRiskMeter() {
     queryFn: api.metrics.getRisk,
   });
 
+  const { data: prData } = useQuery({
+    queryKey: ["prCommandCenter"],
+    queryFn: api.prs.getCommandCenter,
+  });
+
   if (isLoading || !deploymentRisk) {
     return (
       <div className="editorial-card h-full flex flex-col gap-4 p-6">
@@ -106,12 +111,17 @@ export function DeploymentRiskMeter() {
           <Info size={14} className="text-text-muted" />
           <span className="text-xs text-text-primary font-medium uppercase tracking-widest">Risk Factors</span>
         </div>
-        {factors.map((f) => (
-          <div key={f.label} className="flex items-center justify-between">
-            <span className="text-xs text-text-secondary flex-1">{f.label}</span>
-            <span className="text-xs font-sans text-text-primary">{f.value}</span>
-          </div>
-        ))}
+        {factors.map((f: any) => {
+          const isStalePRs = f.label === "Stale PRs";
+          const displayValue = isStalePRs && prData ? prData.stale.length.toString() : f.value;
+          
+          return (
+            <div key={f.label} className="flex items-center justify-between">
+              <span className="text-xs text-text-secondary flex-1">{f.label}</span>
+              <span className="text-xs font-sans text-text-primary">{displayValue}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
