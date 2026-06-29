@@ -7,6 +7,7 @@ import ReviewQueuePage from './pages/ReviewQueuePage';
 import Analytics from './pages/Analytics';
 import PlatformConfig from './pages/PlatformConfig';
 import Landing from './pages/Landing';
+import ResolutionCenter from './pages/ResolutionCenter';
 import { Layout } from './components/layout/Layout';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/team" element={<EngineeringTeam />} />
                 <Route path="/review-queue" element={<ReviewQueuePage />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/resolution-center" element={<ResolutionCenter />} />
                 <Route path="/config" element={<PlatformConfig />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Routes>

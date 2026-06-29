@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Activity, Users, Settings, BarChart3, GitPullRequest, Zap } from 'lucide-react';
+import { LayoutDashboard, Activity, Users, Settings, BarChart3, GitPullRequest, Zap, ShieldAlert } from 'lucide-react';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Command Center', path: '/dashboard' },
+  { icon: ShieldAlert, label: 'Resolution Center', path: '/resolution-center' },
   { icon: Activity, label: 'Live Activity', path: '/activity' },
   { icon: Users, label: 'Engineering Team', path: '/team' },
   { icon: GitPullRequest, label: 'Review Queue', path: '/review-queue' },
