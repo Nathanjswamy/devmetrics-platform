@@ -12,6 +12,7 @@ import { SparklineChart } from "../../components/dashboard/SparklineChart";
 import { HealthScoreWidget } from "../../components/dashboard/HealthScoreWidget";
 import { DeploymentRiskMeter } from "../../components/dashboard/DeploymentRiskMeter";
 import { ActivityStream } from "../../components/dashboard/ActivityStream";
+import { RecentActivityFeed } from "../../components/dashboard/RecentActivityFeed";
 import { RepositoryStatusPanel } from "../../components/dashboard/RepositoryStatusPanel";
 import { PRCommandSummary } from "../../components/dashboard/PRCommandSummary";
 import { createClient } from "../../../utils/supabase/client";
@@ -152,8 +153,9 @@ export default function DashboardPage() {
         {/* ── Section 2: Repository Intelligence ── */}
         <Section label="Repository Intelligence" icon={Activity}>
           <div className="grid grid-cols-12 gap-6 items-start">
-            <div className="col-span-12 lg:col-span-8">
+            <div className="col-span-12 lg:col-span-8 space-y-6">
               <CommitAnalyticsWidget />
+              <RecentActivityFeed />
             </div>
             <div className="col-span-12 lg:col-span-4 space-y-6">
               <HealthScoreWidget />

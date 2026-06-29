@@ -51,18 +51,18 @@ export function CommitAnalyticsWidget() {
     );
   }
 
-  if (isError || !data || (data.dailyActivity && data.dailyActivity.length === 0)) {
+  if (isError || !data || !data.dailyActivity || data.dailyActivity.length === 0) {
     return (
-      <div className="editorial-card h-64 flex flex-col items-center justify-center space-y-2 p-6 text-center">
-        <GitCommit className="text-text-muted mb-2 w-8 h-8 opacity-50" />
-        <p className="text-sm font-medium text-text-primary">No commit data available</p>
-        <p className="text-xs text-text-muted">Connect GitHub or push code to begin analysis.</p>
+      <div className="bg-slate-900 rounded-xl h-[300px] flex flex-col items-center justify-center p-6 text-center shadow-lg border border-slate-800">
+        <GitCommit className="text-slate-600 mb-3 w-10 h-10" />
+        <p className="text-slate-200 font-medium text-lg mb-1">No recent commit activity found.</p>
+        <p className="text-slate-400 text-sm">Push code to generate trends.</p>
       </div>
     );
   }
 
   return (
-    <div className="editorial-card h-full flex flex-col p-6">
+    <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-800 h-[300px] flex flex-col p-6">
       <div className="flex items-start justify-between mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
@@ -79,7 +79,7 @@ export function CommitAnalyticsWidget() {
         </div>
       </div>
 
-      <div className="flex-1 min-h-[200px]">
+      <div className="flex-1 min-h-0 w-full relative">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data.dailyActivity}>
             <defs>
